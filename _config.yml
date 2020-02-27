@@ -1,4 +1,5 @@
-plugins: [jekyll-paginate]
+plugins_dir:
+gems: [jekyll-paginate]
 
 permalink: /:categories/:title/
 
