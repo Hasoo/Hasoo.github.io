@@ -22,7 +22,7 @@ categories: Etc
 * 지킬 테마 다운로드
 	* <http://jekyllthemes.org/themes/tiffany/> 에서 Download
 	* 테마를 내 로컬 저장소에 복사
-	* __config.yml" 수정
+	* \_config.yml 수정
 	* swiftype, gitment 필요시 수정, 현재 수정 하지 않음
 * github 에 등록
 	* git commit -a -m ...
