@@ -36,8 +36,8 @@ swiftype:
   searchId: KftGQVzGb3gx_1TakBi_
 gitment:
     repo:
-    client_id:
-    client_secret:
+    client_id: 6b57bef48fbefbbc06cc
+    client_secret: 0039fb3e1456a08e903cf4c4557ec547bd2cf122
 
 url: "https://hasoo.github.io"
 imgrepo: "https://hasoo.github.io/static/img"
