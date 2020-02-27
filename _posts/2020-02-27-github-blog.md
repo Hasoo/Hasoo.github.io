@@ -25,6 +25,12 @@ categories: Etc
 	>* 테마를 내 로컬 저장소에 복사
 	>* \_config.yml 수정
 	>* swiftype, gitment 필요시 수정, 현재 수정 하지 않음
-* git commit, push to repository
+* 저장소에 올리기
+	>* git commit, push to repository
 * posting
 	>* <https://devinlife.com/howto/>
+
+# 초안작성
+>* sudo apt install ruby-bundler jekyll
+>* mkdir _drafts
+>* _drafts 에 초안 생성 후 jekyll serve --drafts 실행
