@@ -9,6 +9,7 @@ categories: Etc
 * 정적 사이트 생성기
 	* ruby
 	* markdown
+	* <https://jekyllrb-ko.github.io/>
 * 테마
 	*<http://jekyllthemes.org/>
 
