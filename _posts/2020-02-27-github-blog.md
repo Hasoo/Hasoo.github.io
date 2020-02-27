@@ -16,8 +16,9 @@ categories: Etc
 # hasoo.github.io
 * ruby 설치
 	* sudo apt install ruby-dev
-	* gem update \-\-system  
-	  
+	* gem update \-\-system
+<br>
+<br>
 * github 에 저장소 생성
 	* Hasoo.github.io 이름으로 Repository 생성
 	* git clone 저장소주소
