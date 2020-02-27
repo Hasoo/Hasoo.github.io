@@ -11,7 +11,7 @@ categories: Etc
 	* markdown
 	* <https://jekyllrb-ko.github.io/>
 * 테마
-	*<http://jekyllthemes.org/>
+	* <http://jekyllthemes.org/>
 
 # hasoo.github.io
 * ruby 설치
