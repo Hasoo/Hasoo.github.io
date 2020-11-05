@@ -1,7 +1,7 @@
 ---
 layout: post
 title: oracle 12c resource role
-tags: [ oracle, resouce ]
+tags: [ oracle ]
 categories: db
 ---
 
