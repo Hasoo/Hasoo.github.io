@@ -54,15 +54,20 @@ windows 의 wsl2 를 사용하여 linux 환경에서 개발을 할 수 있으며
 > suo vi /etc/profile.d/fcitx.sh
 >
 > ```
->#!/bin/bash
+> #!/bin/bash
 > export QT_IM_MODULE=fcitx
 > export GTK_IM_MODULE=fcitx
 > export XMODIFIERS=@im=fcitx
 > export DefaultIMModule=fcitx
 > 
-> fcitx-autostart >/dev/null 2>&1
+> #사용자가에게 적용이 되지 않아 각 계정의 .bashrc 에서 실행
+> #fcitx-autostart >/dev/null 2>&1
 > ```
-> 
+>
+> vi ~/.bashrc
+>
+> > fcitx-autostart >/dev/null 2>&1
+>
 > fcitx-config-gtk3
 >
 > Keyboard - Korean 삭제 및 Hangul 추가, Global Config 에 한/영 키 추가
