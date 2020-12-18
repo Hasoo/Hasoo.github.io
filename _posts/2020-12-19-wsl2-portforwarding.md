@@ -53,20 +53,23 @@ PS C:\Users\vaxzee> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Cur
 
 ### 작업 스케쥴 등록
 
->작업 만들기
->
-><일반 - 보안 옵션>
->
->사용자가 로그온할 때만 실행, 가장 높은 수준의 권한으로 실행
->
->구성대상 Windows 10
->
-><트리거>
->
->로그온할 때, 특정 사용자
->
-><동작>
->
->프로그램/스크립트: %SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe
->
->인수추가: -File C:\Users\vaxze\wsl-connect-external.ps1
+```
+작업 만들기
+
+<일반 - 보안 옵션>
+
+사용자가 로그온할 때만 실행, 가장 높은 수준의 권한으로 실행
+
+구성대상 Windows 10
+
+<트리거>
+
+로그온할 때, 특정 사용자
+
+<동작>
+
+프로그램/스크립트: %SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe
+
+인수추가: -File C:\Users\vaxze\wsl2-port-forwarding.ps1
+```
+
