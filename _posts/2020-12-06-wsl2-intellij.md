@@ -74,7 +74,7 @@ Windows 10 의 WSL2 를 이용하여 개발 환경을 구축해 보았다.
 
 ## Intellij
 
-> wget https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.18.7609.tar.gz?_ga=2.124379146.1025243524.1607222342-1452864861.1587042752
+> wget https://download.jetbrains.com/toolbox/jetbrains-toolbox-current-version.tar.gz
 >
 > tar xzvf jetbrains-toolbox-*.tar.gz && ./jetbrains-toolbox
 >
