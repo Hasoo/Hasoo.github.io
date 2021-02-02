@@ -7,17 +7,13 @@ categories: java
 
 
 
-Linux 개발환경에서 Desktop/Laptop 의 OS 는 Linux Mint 와 macOS 를 선호하며 개발툴은 vim,  vscode 로 c++ 및 python code 를 작성하며 intellij 로 java code 를 작성하고 있다. 
+Linux 개발환경에서 Desktop/Laptop 의 OS 는 Linux Mint 와 macOS 를 선호한다.
 
+c++ 코드는 vim 과 vscode 를 사용하며 java 코드는 intellij 를 사용하여 코드를 작성하고 있다.
 
+리눅스 개발 환경에서 작업을 하다보니 Windows 10 은 기피하게 되었지만 Windows 10 에 WSL2 가 도입되어 리눅스 개발환경 구축이 용이해졌다.
 
-Linux 개발환경에서 Desktop/Laptop 의 OS 는 Linux Mint 와 macOS 를 선호하며 개발툴은 vim,  vscode 로 c++ 및 python code 를 작성하며 intellij 로 java code 를 작성하고 있다.  Windows 10 에 wsl2 가 도입되어 Linux 개발환경 구축이 용이해졌다.
-
-내가 선호하는 OS 는 Linux Mint 와 macOS 이며 IDE 는 intellij, vscode, vim 을 사용하고 있다. 리눅스 커널 기반에서 실행되는 Docker 는 Windows 와 macOS 에서는 native 로 실행되지 않아 더욱 더 Linux Mint 를 선호한다.
-
-리눅스 개발 환경에서 작업을 하다보니 Windows 10 은 더 기피하게 되었다. 하지만 Windows 10 에 WSL2 가 도입되어 리눅스 개발환경 구축이 용이해졌다.
-
-아래 링크의 벤치마크를 보고 WSL2 에서 개발환경을 구축해보았다.
+아래 링크의 벤치마크 참고
 
 [Development under Windows under Linux with WSL2 (IntelliJ)](https://medium.com/@ragin/development-under-windows-under-linux-with-wsl2-intellij-860daf601b61)
 
