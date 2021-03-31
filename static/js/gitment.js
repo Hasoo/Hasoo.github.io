@@ -1,3751 +1,2714 @@
-var Gitment =
-    /******/ (function(modules) { // webpackBootstrap
-    /******/ 	// The module cache
-    /******/ 	var installedModules = {};
-    /******/
-    /******/ 	// The require function
-    /******/ 	function __webpack_require__(moduleId) {
-        /******/
-        /******/ 		// Check if module is in cache
-        /******/ 		if(installedModules[moduleId])
-        /******/ 			return installedModules[moduleId].exports;
-        /******/
-        /******/ 		// Create a new module (and put it into the cache)
-        /******/ 		var module = installedModules[moduleId] = {
-            /******/ 			i: moduleId,
-            /******/ 			l: false,
-            /******/ 			exports: {}
-            /******/ 		};
-        /******/
-        /******/ 		// Execute the module function
-        /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-        /******/
-        /******/ 		// Flag the module as loaded
-        /******/ 		module.l = true;
-        /******/
-        /******/ 		// Return the exports of the module
-        /******/ 		return module.exports;
-        /******/ 	}
-    /******/
-    /******/
-    /******/ 	// expose the modules object (__webpack_modules__)
-    /******/ 	__webpack_require__.m = modules;
-    /******/
-    /******/ 	// expose the module cache
-    /******/ 	__webpack_require__.c = installedModules;
-    /******/
-    /******/ 	// identity function for calling harmony imports with the correct context
-    /******/ 	__webpack_require__.i = function(value) { return value; };
-    /******/
-    /******/ 	// define getter function for harmony exports
-    /******/ 	__webpack_require__.d = function(exports, name, getter) {
-        /******/ 		if(!__webpack_require__.o(exports, name)) {
-            /******/ 			Object.defineProperty(exports, name, {
-                /******/ 				configurable: false,
-                /******/ 				enumerable: true,
-                /******/ 				get: getter
-                /******/ 			});
-            /******/ 		}
-        /******/ 	};
-    /******/
-    /******/ 	// getDefaultExport function for compatibility with non-harmony modules
-    /******/ 	__webpack_require__.n = function(module) {
-        /******/ 		var getter = module && module.__esModule ?
-            /******/ 			function getDefault() { return module['default']; } :
-            /******/ 			function getModuleExports() { return module; };
-        /******/ 		__webpack_require__.d(getter, 'a', getter);
-        /******/ 		return getter;
-        /******/ 	};
-    /******/
-    /******/ 	// Object.prototype.hasOwnProperty.call
-    /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-    /******/
-    /******/ 	// __webpack_public_path__
-    /******/ 	__webpack_require__.p = "";
-    /******/
-    /******/ 	// Load entry module and return exports
-    /******/ 	return __webpack_require__(__webpack_require__.s = 5);
-    /******/ })
-/************************************************************************/
-/******/ ([
-    /* 0 */
-    /***/ (function(module, exports, __webpack_require__) {
-
-        "use strict";
-
-
-        Object.defineProperty(exports, "__esModule", {
-            value: true
-        });
-        var LS_ACCESS_TOKEN_KEY = exports.LS_ACCESS_TOKEN_KEY = 'gitment-comments-token';
-        var LS_USER_KEY = exports.LS_USER_KEY = 'gitment-user-info';
-
-        var NOT_INITIALIZED_ERROR = exports.NOT_INITIALIZED_ERROR = new Error('Comments Not Initialized');
-
-        /***/ }),
-    /* 1 */
-    /***/ (function(module, exports, __webpack_require__) {
-
-        "use strict";
-        /* WEBPACK VAR INJECTION */(function(global) {
-
-            var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-            var __extends = undefined && undefined.__extends || function () {
-                var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
-                    d.__proto__ = b;
-                } || function (d, b) {
-                    for (var p in b) {
-                        if (b.hasOwnProperty(p)) d[p] = b[p];
-                    }
-                };
-                return function (d, b) {
-                    extendStatics(d, b);
-                    function __() {
-                        this.constructor = d;
-                    }
-                    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-                };
-            }();
-            Object.defineProperty(exports, "__esModule", { value: true });
-            registerGlobals();
-            exports.extras = {
-                allowStateChanges: allowStateChanges,
-                deepEqual: deepEqual,
-                getAtom: getAtom,
-                getDebugName: getDebugName,
-                getDependencyTree: getDependencyTree,
-                getAdministration: getAdministration,
-                getGlobalState: getGlobalState,
-                getObserverTree: getObserverTree,
-                isComputingDerivation: isComputingDerivation,
-                isSpyEnabled: isSpyEnabled,
-                onReactionError: onReactionError,
-                resetGlobalState: resetGlobalState,
-                shareGlobalState: shareGlobalState,
-                spyReport: spyReport,
-                spyReportEnd: spyReportEnd,
-                spyReportStart: spyReportStart,
-                setReactionScheduler: setReactionScheduler
-            };
-            if ((typeof __MOBX_DEVTOOLS_GLOBAL_HOOK__ === "undefined" ? "undefined" : _typeof(__MOBX_DEVTOOLS_GLOBAL_HOOK__)) === "object") {
-                __MOBX_DEVTOOLS_GLOBAL_HOOK__.injectMobx(module.exports);
-            }
-            module.exports.default = module.exports;
-            var actionFieldDecorator = createClassPropertyDecorator(function (target, key, value, args, originalDescriptor) {
-                var actionName = args && args.length === 1 ? args[0] : value.name || key || "<unnamed action>";
-                var wrappedAction = action(actionName, value);
-                addHiddenProp(target, key, wrappedAction);
-            }, function (key) {
-                return this[key];
-            }, function () {
-                invariant(false, getMessage("m001"));
-            }, false, true);
-            var boundActionDecorator = createClassPropertyDecorator(function (target, key, value) {
-                defineBoundAction(target, key, value);
-            }, function (key) {
-                return this[key];
-            }, function () {
-                invariant(false, getMessage("m001"));
-            }, false, false);
-            var action = function action(arg1, arg2, arg3, arg4) {
-                if (arguments.length === 1 && typeof arg1 === "function") return createAction(arg1.name || "<unnamed action>", arg1);
-                if (arguments.length === 2 && typeof arg2 === "function") return createAction(arg1, arg2);
-                if (arguments.length === 1 && typeof arg1 === "string") return namedActionDecorator(arg1);
-                return namedActionDecorator(arg2).apply(null, arguments);
-            };
-            exports.action = action;
-            action.bound = function boundAction(arg1, arg2, arg3) {
-                if (typeof arg1 === "function") {
-                    var action_1 = createAction("<not yet bound action>", arg1);
-                    action_1.autoBind = true;
-                    return action_1;
-                }
-                return boundActionDecorator.apply(null, arguments);
-            };
-            function namedActionDecorator(name) {
-                return function (target, prop, descriptor) {
-                    if (descriptor && typeof descriptor.value === "function") {
-                        descriptor.value = createAction(name, descriptor.value);
-                        descriptor.enumerable = false;
-                        descriptor.configurable = true;
-                        return descriptor;
-                    }
-                    return actionFieldDecorator(name).apply(this, arguments);
-                };
-            }
-            function runInAction(arg1, arg2, arg3) {
-                var actionName = typeof arg1 === "string" ? arg1 : arg1.name || "<unnamed action>";
-                var fn = typeof arg1 === "function" ? arg1 : arg2;
-                var scope = typeof arg1 === "function" ? arg2 : arg3;
-                invariant(typeof fn === "function", getMessage("m002"));
-                invariant(fn.length === 0, getMessage("m003"));
-                invariant(typeof actionName === "string" && actionName.length > 0, "actions should have valid names, got: '" + actionName + "'");
-                return executeAction(actionName, fn, scope, undefined);
-            }
-            exports.runInAction = runInAction;
-            function isAction(thing) {
-                return typeof thing === "function" && thing.isMobxAction === true;
-            }
-            exports.isAction = isAction;
-            function defineBoundAction(target, propertyName, fn) {
-                var res = function res() {
-                    return executeAction(propertyName, fn, target, arguments);
-                };
-                res.isMobxAction = true;
-                addHiddenProp(target, propertyName, res);
-            }
-            function autorun(arg1, arg2, arg3) {
-                var name, view, scope;
-                if (typeof arg1 === "string") {
-                    name = arg1;
-                    view = arg2;
-                    scope = arg3;
-                } else {
-                    name = arg1.name || "Autorun@" + getNextId();
-                    view = arg1;
-                    scope = arg2;
-                }
-                invariant(typeof view === "function", getMessage("m004"));
-                invariant(isAction(view) === false, getMessage("m005"));
-                if (scope) view = view.bind(scope);
-                var reaction = new Reaction(name, function () {
-                    this.track(reactionRunner);
-                });
-                function reactionRunner() {
-                    view(reaction);
-                }
-                reaction.schedule();
-                return reaction.getDisposer();
-            }
-            exports.autorun = autorun;
-            function when(arg1, arg2, arg3, arg4) {
-                var name, predicate, effect, scope;
-                if (typeof arg1 === "string") {
-                    name = arg1;
-                    predicate = arg2;
-                    effect = arg3;
-                    scope = arg4;
-                } else {
-                    name = "When@" + getNextId();
-                    predicate = arg1;
-                    effect = arg2;
-                    scope = arg3;
-                }
-                var disposer = autorun(name, function (r) {
-                    if (predicate.call(scope)) {
-                        r.dispose();
-                        var prevUntracked = untrackedStart();
-                        effect.call(scope);
-                        untrackedEnd(prevUntracked);
-                    }
-                });
-                return disposer;
-            }
-            exports.when = when;
-            function autorunAsync(arg1, arg2, arg3, arg4) {
-                var name, func, delay, scope;
-                if (typeof arg1 === "string") {
-                    name = arg1;
-                    func = arg2;
-                    delay = arg3;
-                    scope = arg4;
-                } else {
-                    name = arg1.name || "AutorunAsync@" + getNextId();
-                    func = arg1;
-                    delay = arg2;
-                    scope = arg3;
-                }
-                invariant(isAction(func) === false, getMessage("m006"));
-                if (delay === void 0) delay = 1;
-                if (scope) func = func.bind(scope);
-                var isScheduled = false;
-                var r = new Reaction(name, function () {
-                    if (!isScheduled) {
-                        isScheduled = true;
-                        setTimeout(function () {
-                            isScheduled = false;
-                            if (!r.isDisposed) r.track(reactionRunner);
-                        }, delay);
-                    }
-                });
-                function reactionRunner() {
-                    func(r);
-                }
-                r.schedule();
-                return r.getDisposer();
-            }
-            exports.autorunAsync = autorunAsync;
-            function reaction(expression, effect, arg3) {
-                if (arguments.length > 3) {
-                    fail(getMessage("m007"));
-                }
-                if (isModifierDescriptor(expression)) {
-                    fail(getMessage("m008"));
-                }
-                var opts;
-                if ((typeof arg3 === "undefined" ? "undefined" : _typeof(arg3)) === "object") {
-                    opts = arg3;
-                } else {
-                    opts = {};
-                }
-                opts.name = opts.name || expression.name || effect.name || "Reaction@" + getNextId();
-                opts.fireImmediately = arg3 === true || opts.fireImmediately === true;
-                opts.delay = opts.delay || 0;
-                opts.compareStructural = opts.compareStructural || opts.struct || false;
-                effect = action(opts.name, opts.context ? effect.bind(opts.context) : effect);
-                if (opts.context) {
-                    expression = expression.bind(opts.context);
-                }
-                var firstTime = true;
-                var isScheduled = false;
-                var nextValue;
-                var r = new Reaction(opts.name, function () {
-                    if (firstTime || opts.delay < 1) {
-                        reactionRunner();
-                    } else if (!isScheduled) {
-                        isScheduled = true;
-                        setTimeout(function () {
-                            isScheduled = false;
-                            reactionRunner();
-                        }, opts.delay);
-                    }
-                });
-                function reactionRunner() {
-                    if (r.isDisposed) return;
-                    var changed = false;
-                    r.track(function () {
-                        var v = expression(r);
-                        changed = valueDidChange(opts.compareStructural, nextValue, v);
-                        nextValue = v;
-                    });
-                    if (firstTime && opts.fireImmediately) effect(nextValue, r);
-                    if (!firstTime && changed === true) effect(nextValue, r);
-                    if (firstTime) firstTime = false;
-                }
-                r.schedule();
-                return r.getDisposer();
-            }
-            exports.reaction = reaction;
-            function createComputedDecorator(compareStructural) {
-                return createClassPropertyDecorator(function (target, name, _, __, originalDescriptor) {
-                    invariant(typeof originalDescriptor !== "undefined", getMessage("m009"));
-                    invariant(typeof originalDescriptor.get === "function", getMessage("m010"));
-                    var adm = asObservableObject(target, "");
-                    defineComputedProperty(adm, name, originalDescriptor.get, originalDescriptor.set, compareStructural, false);
-                }, function (name) {
-                    var observable = this.$mobx.values[name];
-                    if (observable === undefined) return undefined;
-                    return observable.get();
-                }, function (name, value) {
-                    this.$mobx.values[name].set(value);
-                }, false, false);
-            }
-            var computedDecorator = createComputedDecorator(false);
-            var computedStructDecorator = createComputedDecorator(true);
-            var computed = function computed(arg1, arg2, arg3) {
-                if (typeof arg2 === "string") {
-                    return computedDecorator.apply(null, arguments);
-                }
-                invariant(typeof arg1 === "function", getMessage("m011"));
-                invariant(arguments.length < 3, getMessage("m012"));
-                var opts = (typeof arg2 === "undefined" ? "undefined" : _typeof(arg2)) === "object" ? arg2 : {};
-                opts.setter = typeof arg2 === "function" ? arg2 : opts.setter;
-                return new ComputedValue(arg1, opts.context, opts.compareStructural || opts.struct || false, opts.name || arg1.name || "", opts.setter);
-            };
-            exports.computed = computed;
-            computed.struct = computedStructDecorator;
-            function createTransformer(transformer, onCleanup) {
-                invariant(typeof transformer === "function" && transformer.length < 2, "createTransformer expects a function that accepts one argument");
-                var objectCache = {};
-                var resetId = globalState.resetId;
-                var Transformer = function (_super) {
-                    __extends(Transformer, _super);
-                    function Transformer(sourceIdentifier, sourceObject) {
-                        var _this = _super.call(this, function () {
-                            return transformer(sourceObject);
-                        }, undefined, false, "Transformer-" + transformer.name + "-" + sourceIdentifier, undefined) || this;
-                        _this.sourceIdentifier = sourceIdentifier;
-                        _this.sourceObject = sourceObject;
-                        return _this;
-                    }
-                    Transformer.prototype.onBecomeUnobserved = function () {
-                        var lastValue = this.value;
-                        _super.prototype.onBecomeUnobserved.call(this);
-                        delete objectCache[this.sourceIdentifier];
-                        if (onCleanup) onCleanup(lastValue, this.sourceObject);
-                    };
-                    return Transformer;
-                }(ComputedValue);
-                return function (object) {
-                    if (resetId !== globalState.resetId) {
-                        objectCache = {};
-                        resetId = globalState.resetId;
-                    }
-                    var identifier = getMemoizationId(object);
-                    var reactiveTransformer = objectCache[identifier];
-                    if (reactiveTransformer) return reactiveTransformer.get();
-                    reactiveTransformer = objectCache[identifier] = new Transformer(identifier, object);
-                    return reactiveTransformer.get();
-                };
-            }
-            exports.createTransformer = createTransformer;
-            function getMemoizationId(object) {
-                if (object === null || (typeof object === "undefined" ? "undefined" : _typeof(object)) !== "object") throw new Error("[mobx] transform expected some kind of object, got: " + object);
-                var tid = object.$transformId;
-                if (tid === undefined) {
-                    tid = getNextId();
-                    addHiddenProp(object, "$transformId", tid);
-                }
-                return tid;
-            }
-            function expr(expr, scope) {
-                if (!isComputingDerivation()) console.warn(getMessage("m013"));
-                return computed(expr, { context: scope }).get();
-            }
-            exports.expr = expr;
-            function extendObservable(target) {
-                var properties = [];
-                for (var _i = 1; _i < arguments.length; _i++) {
-                    properties[_i - 1] = arguments[_i];
-                }
-                return extendObservableHelper(target, deepEnhancer, properties);
-            }
-            exports.extendObservable = extendObservable;
-            function extendShallowObservable(target) {
-                var properties = [];
-                for (var _i = 1; _i < arguments.length; _i++) {
-                    properties[_i - 1] = arguments[_i];
-                }
-                return extendObservableHelper(target, referenceEnhancer, properties);
-            }
-            exports.extendShallowObservable = extendShallowObservable;
-            function extendObservableHelper(target, defaultEnhancer, properties) {
-                invariant(arguments.length >= 2, getMessage("m014"));
-                invariant((typeof target === "undefined" ? "undefined" : _typeof(target)) === "object", getMessage("m015"));
-                invariant(!isObservableMap(target), getMessage("m016"));
-                properties.forEach(function (propSet) {
-                    invariant((typeof propSet === "undefined" ? "undefined" : _typeof(propSet)) === "object", getMessage("m017"));
-                    invariant(!isObservable(propSet), getMessage("m018"));
-                });
-                var adm = asObservableObject(target);
-                var definedProps = {};
-                for (var i = properties.length - 1; i >= 0; i--) {
-                    var propSet = properties[i];
-                    for (var key in propSet) {
-                        if (definedProps[key] !== true && hasOwnProperty(propSet, key)) {
-                            definedProps[key] = true;
-                            if (target === propSet && !isPropertyConfigurable(target, key)) continue;
-                            var descriptor = Object.getOwnPropertyDescriptor(propSet, key);
-                            defineObservablePropertyFromDescriptor(adm, key, descriptor, defaultEnhancer);
-                        }
-                    }
-                }
-                return target;
-            }
-            function getDependencyTree(thing, property) {
-                return nodeToDependencyTree(getAtom(thing, property));
-            }
-            function nodeToDependencyTree(node) {
-                var result = {
-                    name: node.name
-                };
-                if (node.observing && node.observing.length > 0) result.dependencies = unique(node.observing).map(nodeToDependencyTree);
-                return result;
-            }
-            function getObserverTree(thing, property) {
-                return nodeToObserverTree(getAtom(thing, property));
-            }
-            function nodeToObserverTree(node) {
-                var result = {
-                    name: node.name
-                };
-                if (hasObservers(node)) result.observers = getObservers(node).map(nodeToObserverTree);
-                return result;
-            }
-            function intercept(thing, propOrHandler, handler) {
-                if (typeof handler === "function") return interceptProperty(thing, propOrHandler, handler);else return interceptInterceptable(thing, propOrHandler);
-            }
-            exports.intercept = intercept;
-            function interceptInterceptable(thing, handler) {
-                return getAdministration(thing).intercept(handler);
-            }
-            function interceptProperty(thing, property, handler) {
-                return getAdministration(thing, property).intercept(handler);
-            }
-            function isComputed(value, property) {
-                if (value === null || value === undefined) return false;
-                if (property !== undefined) {
-                    if (isObservableObject(value) === false) return false;
-                    var atom = getAtom(value, property);
-                    return isComputedValue(atom);
-                }
-                return isComputedValue(value);
-            }
-            exports.isComputed = isComputed;
-            function isObservable(value, property) {
-                if (value === null || value === undefined) return false;
-                if (property !== undefined) {
-                    if (isObservableArray(value) || isObservableMap(value)) throw new Error(getMessage("m019"));else if (isObservableObject(value)) {
-                        var o = value.$mobx;
-                        return o.values && !!o.values[property];
-                    }
-                    return false;
-                }
-                return isObservableObject(value) || !!value.$mobx || isAtom(value) || isReaction(value) || isComputedValue(value);
-            }
-            exports.isObservable = isObservable;
-            var deepDecorator = createDecoratorForEnhancer(deepEnhancer);
-            var shallowDecorator = createDecoratorForEnhancer(shallowEnhancer);
-            var refDecorator = createDecoratorForEnhancer(referenceEnhancer);
-            var deepStructDecorator = createDecoratorForEnhancer(deepStructEnhancer);
-            var refStructDecorator = createDecoratorForEnhancer(refStructEnhancer);
-            function createObservable(v) {
-                if (v === void 0) {
-                    v = undefined;
-                }
-                if (typeof arguments[1] === "string") return deepDecorator.apply(null, arguments);
-                invariant(arguments.length <= 1, getMessage("m021"));
-                invariant(!isModifierDescriptor(v), getMessage("m020"));
-                if (isObservable(v)) return v;
-                var res = deepEnhancer(v, undefined, undefined);
-                if (res !== v) return res;
-                return observable.box(v);
-            }
-            var IObservableFactories = function () {
-                function IObservableFactories() {}
-                IObservableFactories.prototype.box = function (value, name) {
-                    if (arguments.length > 2) incorrectlyUsedAsDecorator("box");
-                    return new ObservableValue(value, deepEnhancer, name);
-                };
-                IObservableFactories.prototype.shallowBox = function (value, name) {
-                    if (arguments.length > 2) incorrectlyUsedAsDecorator("shallowBox");
-                    return new ObservableValue(value, referenceEnhancer, name);
-                };
-                IObservableFactories.prototype.array = function (initialValues, name) {
-                    if (arguments.length > 2) incorrectlyUsedAsDecorator("array");
-                    return new ObservableArray(initialValues, deepEnhancer, name);
-                };
-                IObservableFactories.prototype.shallowArray = function (initialValues, name) {
-                    if (arguments.length > 2) incorrectlyUsedAsDecorator("shallowArray");
-                    return new ObservableArray(initialValues, referenceEnhancer, name);
-                };
-                IObservableFactories.prototype.map = function (initialValues, name) {
-                    if (arguments.length > 2) incorrectlyUsedAsDecorator("map");
-                    return new ObservableMap(initialValues, deepEnhancer, name);
-                };
-                IObservableFactories.prototype.shallowMap = function (initialValues, name) {
-                    if (arguments.length > 2) incorrectlyUsedAsDecorator("shallowMap");
-                    return new ObservableMap(initialValues, referenceEnhancer, name);
-                };
-                IObservableFactories.prototype.object = function (props, name) {
-                    if (arguments.length > 2) incorrectlyUsedAsDecorator("object");
-                    var res = {};
-                    asObservableObject(res, name);
-                    extendObservable(res, props);
-                    return res;
-                };
-                IObservableFactories.prototype.shallowObject = function (props, name) {
-                    if (arguments.length > 2) incorrectlyUsedAsDecorator("shallowObject");
-                    var res = {};
-                    asObservableObject(res, name);
-                    extendShallowObservable(res, props);
-                    return res;
-                };
-                IObservableFactories.prototype.ref = function () {
-                    if (arguments.length < 2) {
-                        return createModifierDescriptor(referenceEnhancer, arguments[0]);
-                    } else {
-                        return refDecorator.apply(null, arguments);
-                    }
-                };
-                IObservableFactories.prototype.shallow = function () {
-                    if (arguments.length < 2) {
-                        return createModifierDescriptor(shallowEnhancer, arguments[0]);
-                    } else {
-                        return shallowDecorator.apply(null, arguments);
-                    }
-                };
-                IObservableFactories.prototype.deep = function () {
-                    if (arguments.length < 2) {
-                        return createModifierDescriptor(deepEnhancer, arguments[0]);
-                    } else {
-                        return deepDecorator.apply(null, arguments);
-                    }
-                };
-                IObservableFactories.prototype.struct = function () {
-                    if (arguments.length < 2) {
-                        return createModifierDescriptor(deepStructEnhancer, arguments[0]);
-                    } else {
-                        return deepStructDecorator.apply(null, arguments);
-                    }
-                };
-                return IObservableFactories;
-            }();
-            exports.IObservableFactories = IObservableFactories;
-            var observable = createObservable;
-            exports.observable = observable;
-            Object.keys(IObservableFactories.prototype).forEach(function (key) {
-                return observable[key] = IObservableFactories.prototype[key];
-            });
-            observable.deep.struct = observable.struct;
-            observable.ref.struct = function () {
-                if (arguments.length < 2) {
-                    return createModifierDescriptor(refStructEnhancer, arguments[0]);
-                } else {
-                    return refStructDecorator.apply(null, arguments);
-                }
-            };
-            function incorrectlyUsedAsDecorator(methodName) {
-                fail("Expected one or two arguments to observable." + methodName + ". Did you accidentally try to use observable." + methodName + " as decorator?");
-            }
-            function createDecoratorForEnhancer(enhancer) {
-                invariant(!!enhancer, ":(");
-                return createClassPropertyDecorator(function (target, name, baseValue, _, baseDescriptor) {
-                    assertPropertyConfigurable(target, name);
-                    invariant(!baseDescriptor || !baseDescriptor.get, getMessage("m022"));
-                    var adm = asObservableObject(target, undefined);
-                    defineObservableProperty(adm, name, baseValue, enhancer);
-                }, function (name) {
-                    var observable = this.$mobx.values[name];
-                    if (observable === undefined) return undefined;
-                    return observable.get();
-                }, function (name, value) {
-                    setPropertyValue(this, name, value);
-                }, true, false);
-            }
-            function observe(thing, propOrCb, cbOrFire, fireImmediately) {
-                if (typeof cbOrFire === "function") return observeObservableProperty(thing, propOrCb, cbOrFire, fireImmediately);else return observeObservable(thing, propOrCb, cbOrFire);
-            }
-            exports.observe = observe;
-            function observeObservable(thing, listener, fireImmediately) {
-                return getAdministration(thing).observe(listener, fireImmediately);
-            }
-            function observeObservableProperty(thing, property, listener, fireImmediately) {
-                return getAdministration(thing, property).observe(listener, fireImmediately);
-            }
-            function toJS(source, detectCycles, __alreadySeen) {
-                if (detectCycles === void 0) {
-                    detectCycles = true;
-                }
-                if (__alreadySeen === void 0) {
-                    __alreadySeen = [];
-                }
-                function cache(value) {
-                    if (detectCycles) __alreadySeen.push([source, value]);
-                    return value;
-                }
-                if (isObservable(source)) {
-                    if (detectCycles && __alreadySeen === null) __alreadySeen = [];
-                    if (detectCycles && source !== null && (typeof source === "undefined" ? "undefined" : _typeof(source)) === "object") {
-                        for (var i = 0, l = __alreadySeen.length; i < l; i++) {
-                            if (__alreadySeen[i][0] === source) return __alreadySeen[i][1];
-                        }
-                    }
-                    if (isObservableArray(source)) {
-                        var res = cache([]);
-                        var toAdd = source.map(function (value) {
-                            return toJS(value, detectCycles, __alreadySeen);
-                        });
-                        res.length = toAdd.length;
-                        for (var i = 0, l = toAdd.length; i < l; i++) {
-                            res[i] = toAdd[i];
-                        }return res;
-                    }
-                    if (isObservableObject(source)) {
-                        var res = cache({});
-                        for (var key in source) {
-                            res[key] = toJS(source[key], detectCycles, __alreadySeen);
-                        }return res;
-                    }
-                    if (isObservableMap(source)) {
-                        var res_1 = cache({});
-                        source.forEach(function (value, key) {
-                            return res_1[key] = toJS(value, detectCycles, __alreadySeen);
-                        });
-                        return res_1;
-                    }
-                    if (isObservableValue(source)) return toJS(source.get(), detectCycles, __alreadySeen);
-                }
-                return source;
-            }
-            exports.toJS = toJS;
-            function transaction(action, thisArg) {
-                if (thisArg === void 0) {
-                    thisArg = undefined;
-                }
-                deprecated(getMessage("m023"));
-                return runInTransaction.apply(undefined, arguments);
-            }
-            exports.transaction = transaction;
-            function runInTransaction(action, thisArg) {
-                if (thisArg === void 0) {
-                    thisArg = undefined;
-                }
-                return executeAction("", action);
-            }
-            function log(msg) {
-                console.log(msg);
-                return msg;
-            }
-            function whyRun(thing, prop) {
-                switch (arguments.length) {
-                    case 0:
-                        thing = globalState.trackingDerivation;
-                        if (!thing) return log(getMessage("m024"));
-                        break;
-                    case 2:
-                        thing = getAtom(thing, prop);
-                        break;
-                }
-                thing = getAtom(thing);
-                if (isComputedValue(thing)) return log(thing.whyRun());else if (isReaction(thing)) return log(thing.whyRun());
-                return fail(getMessage("m025"));
-            }
-            exports.whyRun = whyRun;
-            function createAction(actionName, fn) {
-                invariant(typeof fn === "function", getMessage("m026"));
-                invariant(typeof actionName === "string" && actionName.length > 0, "actions should have valid names, got: '" + actionName + "'");
-                var res = function res() {
-                    return executeAction(actionName, fn, this, arguments);
-                };
-                res.originalFn = fn;
-                res.isMobxAction = true;
-                return res;
-            }
-            function executeAction(actionName, fn, scope, args) {
-                var runInfo = startAction(actionName, fn, scope, args);
-                try {
-                    return fn.apply(scope, args);
-                } finally {
-                    endAction(runInfo);
-                }
-            }
-            function startAction(actionName, fn, scope, args) {
-                var notifySpy = isSpyEnabled() && !!actionName;
-                var startTime = 0;
-                if (notifySpy) {
-                    startTime = Date.now();
-                    var l = args && args.length || 0;
-                    var flattendArgs = new Array(l);
-                    if (l > 0) for (var i = 0; i < l; i++) {
-                        flattendArgs[i] = args[i];
-                    }spyReportStart({
-                        type: "action",
-                        name: actionName,
-                        fn: fn,
-                        object: scope,
-                        arguments: flattendArgs
-                    });
-                }
-                var prevDerivation = untrackedStart();
-                startBatch();
-                var prevAllowStateChanges = allowStateChangesStart(true);
-                return {
-                    prevDerivation: prevDerivation,
-                    prevAllowStateChanges: prevAllowStateChanges,
-                    notifySpy: notifySpy,
-                    startTime: startTime
-                };
-            }
-            function endAction(runInfo) {
-                allowStateChangesEnd(runInfo.prevAllowStateChanges);
-                endBatch();
-                untrackedEnd(runInfo.prevDerivation);
-                if (runInfo.notifySpy) spyReportEnd({ time: Date.now() - runInfo.startTime });
-            }
-            function useStrict(strict) {
-                invariant(globalState.trackingDerivation === null, getMessage("m028"));
-                globalState.strictMode = strict;
-                globalState.allowStateChanges = !strict;
-            }
-            exports.useStrict = useStrict;
-            function isStrictModeEnabled() {
-                return globalState.strictMode;
-            }
-            exports.isStrictModeEnabled = isStrictModeEnabled;
-            function allowStateChanges(allowStateChanges, func) {
-                var prev = allowStateChangesStart(allowStateChanges);
-                var res;
-                try {
-                    res = func();
-                } finally {
-                    allowStateChangesEnd(prev);
-                }
-                return res;
-            }
-            function allowStateChangesStart(allowStateChanges) {
-                var prev = globalState.allowStateChanges;
-                globalState.allowStateChanges = allowStateChanges;
-                return prev;
-            }
-            function allowStateChangesEnd(prev) {
-                globalState.allowStateChanges = prev;
-            }
-            var BaseAtom = function () {
-                function BaseAtom(name) {
-                    if (name === void 0) {
-                        name = "Atom@" + getNextId();
-                    }
-                    this.name = name;
-                    this.isPendingUnobservation = true;
-                    this.observers = [];
-                    this.observersIndexes = {};
-                    this.diffValue = 0;
-                    this.lastAccessedBy = 0;
-                    this.lowestObserverState = IDerivationState.NOT_TRACKING;
-                }
-                BaseAtom.prototype.onBecomeUnobserved = function () {};
-                BaseAtom.prototype.reportObserved = function () {
-                    reportObserved(this);
-                };
-                BaseAtom.prototype.reportChanged = function () {
-                    startBatch();
-                    propagateChanged(this);
-                    endBatch();
-                };
-                BaseAtom.prototype.toString = function () {
-                    return this.name;
-                };
-                return BaseAtom;
-            }();
-            exports.BaseAtom = BaseAtom;
-            var Atom = function (_super) {
-                __extends(Atom, _super);
-                function Atom(name, onBecomeObservedHandler, onBecomeUnobservedHandler) {
-                    if (name === void 0) {
-                        name = "Atom@" + getNextId();
-                    }
-                    if (onBecomeObservedHandler === void 0) {
-                        onBecomeObservedHandler = noop;
-                    }
-                    if (onBecomeUnobservedHandler === void 0) {
-                        onBecomeUnobservedHandler = noop;
-                    }
-                    var _this = _super.call(this, name) || this;
-                    _this.name = name;
-                    _this.onBecomeObservedHandler = onBecomeObservedHandler;
-                    _this.onBecomeUnobservedHandler = onBecomeUnobservedHandler;
-                    _this.isPendingUnobservation = false;
-                    _this.isBeingTracked = false;
-                    return _this;
-                }
-                Atom.prototype.reportObserved = function () {
-                    startBatch();
-                    _super.prototype.reportObserved.call(this);
-                    if (!this.isBeingTracked) {
-                        this.isBeingTracked = true;
-                        this.onBecomeObservedHandler();
-                    }
-                    endBatch();
-                    return !!globalState.trackingDerivation;
-                };
-                Atom.prototype.onBecomeUnobserved = function () {
-                    this.isBeingTracked = false;
-                    this.onBecomeUnobservedHandler();
-                };
-                return Atom;
-            }(BaseAtom);
-            exports.Atom = Atom;
-            var isAtom = createInstanceofPredicate("Atom", BaseAtom);
-            var ComputedValue = function () {
-                function ComputedValue(derivation, scope, compareStructural, name, setter) {
-                    this.derivation = derivation;
-                    this.scope = scope;
-                    this.compareStructural = compareStructural;
-                    this.dependenciesState = IDerivationState.NOT_TRACKING;
-                    this.observing = [];
-                    this.newObserving = null;
-                    this.isPendingUnobservation = false;
-                    this.observers = [];
-                    this.observersIndexes = {};
-                    this.diffValue = 0;
-                    this.runId = 0;
-                    this.lastAccessedBy = 0;
-                    this.lowestObserverState = IDerivationState.UP_TO_DATE;
-                    this.unboundDepsCount = 0;
-                    this.__mapid = "#" + getNextId();
-                    this.value = undefined;
-                    this.isComputing = false;
-                    this.isRunningSetter = false;
-                    this.name = name || "ComputedValue@" + getNextId();
-                    if (setter) this.setter = createAction(name + "-setter", setter);
-                }
-                ComputedValue.prototype.onBecomeStale = function () {
-                    propagateMaybeChanged(this);
-                };
-                ComputedValue.prototype.onBecomeUnobserved = function () {
-                    invariant(this.dependenciesState !== IDerivationState.NOT_TRACKING, getMessage("m029"));
-                    clearObserving(this);
-                    this.value = undefined;
-                };
-                ComputedValue.prototype.get = function () {
-                    invariant(!this.isComputing, "Cycle detected in computation " + this.name, this.derivation);
-                    if (globalState.inBatch === 0) {
-                        startBatch();
-                        if (shouldCompute(this)) this.value = this.computeValue(false);
-                        endBatch();
-                    } else {
-                        reportObserved(this);
-                        if (shouldCompute(this)) if (this.trackAndCompute()) propagateChangeConfirmed(this);
-                    }
-                    var result = this.value;
-                    if (isCaughtException(result)) throw result.cause;
-                    return result;
-                };
-                ComputedValue.prototype.peek = function () {
-                    var res = this.computeValue(false);
-                    if (isCaughtException(res)) throw res.cause;
-                    return res;
-                };
-                ComputedValue.prototype.set = function (value) {
-                    if (this.setter) {
-                        invariant(!this.isRunningSetter, "The setter of computed value '" + this.name + "' is trying to update itself. Did you intend to update an _observable_ value, instead of the computed property?");
-                        this.isRunningSetter = true;
-                        try {
-                            this.setter.call(this.scope, value);
-                        } finally {
-                            this.isRunningSetter = false;
-                        }
-                    } else invariant(false, "[ComputedValue '" + this.name + "'] It is not possible to assign a new value to a computed value.");
-                };
-                ComputedValue.prototype.trackAndCompute = function () {
-                    if (isSpyEnabled()) {
-                        spyReport({
-                            object: this.scope,
-                            type: "compute",
-                            fn: this.derivation
-                        });
-                    }
-                    var oldValue = this.value;
-                    var newValue = this.value = this.computeValue(true);
-                    return isCaughtException(newValue) || valueDidChange(this.compareStructural, newValue, oldValue);
-                };
-                ComputedValue.prototype.computeValue = function (track) {
-                    this.isComputing = true;
-                    globalState.computationDepth++;
-                    var res;
-                    if (track) {
-                        res = trackDerivedFunction(this, this.derivation, this.scope);
-                    } else {
-                        try {
-                            res = this.derivation.call(this.scope);
-                        } catch (e) {
-                            res = new CaughtException(e);
-                        }
-                    }
-                    globalState.computationDepth--;
-                    this.isComputing = false;
-                    return res;
-                };
-                ;
-                ComputedValue.prototype.observe = function (listener, fireImmediately) {
-                    var _this = this;
-                    var firstTime = true;
-                    var prevValue = undefined;
-                    return autorun(function () {
-                        var newValue = _this.get();
-                        if (!firstTime || fireImmediately) {
-                            var prevU = untrackedStart();
-                            listener({
-                                type: "update",
-                                object: _this,
-                                newValue: newValue,
-                                oldValue: prevValue
-                            });
-                            untrackedEnd(prevU);
-                        }
-                        firstTime = false;
-                        prevValue = newValue;
-                    });
-                };
-                ComputedValue.prototype.toJSON = function () {
-                    return this.get();
-                };
-                ComputedValue.prototype.toString = function () {
-                    return this.name + "[" + this.derivation.toString() + "]";
-                };
-                ComputedValue.prototype.valueOf = function () {
-                    return toPrimitive(this.get());
-                };
-                ;
-                ComputedValue.prototype.whyRun = function () {
-                    var isTracking = Boolean(globalState.trackingDerivation);
-                    var observing = unique(this.isComputing ? this.newObserving : this.observing).map(function (dep) {
-                        return dep.name;
-                    });
-                    var observers = unique(getObservers(this).map(function (dep) {
-                        return dep.name;
-                    }));
-                    return "\nWhyRun? computation '" + this.name + "':\n * Running because: " + (isTracking ? "[active] the value of this computation is needed by a reaction" : this.isComputing ? "[get] The value of this computed was requested outside a reaction" : "[idle] not running at the moment") + "\n" + (this.dependenciesState === IDerivationState.NOT_TRACKING ? getMessage("m032") : " * This computation will re-run if any of the following observables changes:\n    " + joinStrings(observing) + "\n    " + (this.isComputing && isTracking ? " (... or any observable accessed during the remainder of the current run)" : "") + "\n\t" + getMessage("m038") + "\n\n  * If the outcome of this computation changes, the following observers will be re-run:\n    " + joinStrings(observers) + "\n");
-                };
-                return ComputedValue;
-            }();
-            ComputedValue.prototype[primitiveSymbol()] = ComputedValue.prototype.valueOf;
-            var isComputedValue = createInstanceofPredicate("ComputedValue", ComputedValue);
-            var IDerivationState;
-            (function (IDerivationState) {
-                IDerivationState[IDerivationState["NOT_TRACKING"] = -1] = "NOT_TRACKING";
-                IDerivationState[IDerivationState["UP_TO_DATE"] = 0] = "UP_TO_DATE";
-                IDerivationState[IDerivationState["POSSIBLY_STALE"] = 1] = "POSSIBLY_STALE";
-                IDerivationState[IDerivationState["STALE"] = 2] = "STALE";
-            })(IDerivationState || (IDerivationState = {}));
-            exports.IDerivationState = IDerivationState;
-            var CaughtException = function () {
-                function CaughtException(cause) {
-                    this.cause = cause;
-                }
-                return CaughtException;
-            }();
-            function isCaughtException(e) {
-                return e instanceof CaughtException;
-            }
-            function shouldCompute(derivation) {
-                switch (derivation.dependenciesState) {
-                    case IDerivationState.UP_TO_DATE:
-                        return false;
-                    case IDerivationState.NOT_TRACKING:
-                    case IDerivationState.STALE:
-                        return true;
-                    case IDerivationState.POSSIBLY_STALE:
-                    {
-                        var prevUntracked = untrackedStart();
-                        var obs = derivation.observing,
-                            l = obs.length;
-                        for (var i = 0; i < l; i++) {
-                            var obj = obs[i];
-                            if (isComputedValue(obj)) {
-                                try {
-                                    obj.get();
-                                } catch (e) {
-                                    untrackedEnd(prevUntracked);
-                                    return true;
-                                }
-                                if (derivation.dependenciesState === IDerivationState.STALE) {
-                                    untrackedEnd(prevUntracked);
-                                    return true;
-                                }
-                            }
-                        }
-                        changeDependenciesStateTo0(derivation);
-                        untrackedEnd(prevUntracked);
-                        return false;
-                    }
-                }
-            }
-            function isComputingDerivation() {
-                return globalState.trackingDerivation !== null;
-            }
-            function checkIfStateModificationsAreAllowed(atom) {
-                var hasObservers = atom.observers.length > 0;
-                if (globalState.computationDepth > 0 && hasObservers) fail(getMessage("m031") + atom.name);
-                if (!globalState.allowStateChanges && hasObservers) fail(getMessage(globalState.strictMode ? "m030a" : "m030b") + atom.name);
-            }
-            function trackDerivedFunction(derivation, f, context) {
-                changeDependenciesStateTo0(derivation);
-                derivation.newObserving = new Array(derivation.observing.length + 100);
-                derivation.unboundDepsCount = 0;
-                derivation.runId = ++globalState.runId;
-                var prevTracking = globalState.trackingDerivation;
-                globalState.trackingDerivation = derivation;
-                var result;
-                try {
-                    result = f.call(context);
-                } catch (e) {
-                    result = new CaughtException(e);
-                }
-                globalState.trackingDerivation = prevTracking;
-                bindDependencies(derivation);
-                return result;
-            }
-            function bindDependencies(derivation) {
-                var prevObserving = derivation.observing;
-                var observing = derivation.observing = derivation.newObserving;
-                derivation.newObserving = null;
-                var i0 = 0,
-                    l = derivation.unboundDepsCount;
-                for (var i = 0; i < l; i++) {
-                    var dep = observing[i];
-                    if (dep.diffValue === 0) {
-                        dep.diffValue = 1;
-                        if (i0 !== i) observing[i0] = dep;
-                        i0++;
-                    }
-                }
-                observing.length = i0;
-                l = prevObserving.length;
-                while (l--) {
-                    var dep = prevObserving[l];
-                    if (dep.diffValue === 0) {
-                        removeObserver(dep, derivation);
-                    }
-                    dep.diffValue = 0;
-                }
-                while (i0--) {
-                    var dep = observing[i0];
-                    if (dep.diffValue === 1) {
-                        dep.diffValue = 0;
-                        addObserver(dep, derivation);
-                    }
-                }
-            }
-            function clearObserving(derivation) {
-                var obs = derivation.observing;
-                var i = obs.length;
-                while (i--) {
-                    removeObserver(obs[i], derivation);
-                }derivation.dependenciesState = IDerivationState.NOT_TRACKING;
-                obs.length = 0;
-            }
-            function untracked(action) {
-                var prev = untrackedStart();
-                var res = action();
-                untrackedEnd(prev);
-                return res;
-            }
-            exports.untracked = untracked;
-            function untrackedStart() {
-                var prev = globalState.trackingDerivation;
-                globalState.trackingDerivation = null;
-                return prev;
-            }
-            function untrackedEnd(prev) {
-                globalState.trackingDerivation = prev;
-            }
-            function changeDependenciesStateTo0(derivation) {
-                if (derivation.dependenciesState === IDerivationState.UP_TO_DATE) return;
-                derivation.dependenciesState = IDerivationState.UP_TO_DATE;
-                var obs = derivation.observing;
-                var i = obs.length;
-                while (i--) {
-                    obs[i].lowestObserverState = IDerivationState.UP_TO_DATE;
-                }
-            }
-            var persistentKeys = ["mobxGuid", "resetId", "spyListeners", "strictMode", "runId"];
-            var MobXGlobals = function () {
-                function MobXGlobals() {
-                    this.version = 5;
-                    this.trackingDerivation = null;
-                    this.computationDepth = 0;
-                    this.runId = 0;
-                    this.mobxGuid = 0;
-                    this.inBatch = 0;
-                    this.pendingUnobservations = [];
-                    this.pendingReactions = [];
-                    this.isRunningReactions = false;
-                    this.allowStateChanges = true;
-                    this.strictMode = false;
-                    this.resetId = 0;
-                    this.spyListeners = [];
-                    this.globalReactionErrorHandlers = [];
-                }
-                return MobXGlobals;
-            }();
-            var globalState = new MobXGlobals();
-            function shareGlobalState() {
-                var global = getGlobal();
-                var ownState = globalState;
-                if (global.__mobservableTrackingStack || global.__mobservableViewStack) throw new Error("[mobx] An incompatible version of mobservable is already loaded.");
-                if (global.__mobxGlobal && global.__mobxGlobal.version !== ownState.version) throw new Error("[mobx] An incompatible version of mobx is already loaded.");
-                if (global.__mobxGlobal) globalState = global.__mobxGlobal;else global.__mobxGlobal = ownState;
-            }
-            function getGlobalState() {
-                return globalState;
-            }
-            function registerGlobals() {}
-            function resetGlobalState() {
-                globalState.resetId++;
-                var defaultGlobals = new MobXGlobals();
-                for (var key in defaultGlobals) {
-                    if (persistentKeys.indexOf(key) === -1) globalState[key] = defaultGlobals[key];
-                }globalState.allowStateChanges = !globalState.strictMode;
-            }
-            function hasObservers(observable) {
-                return observable.observers && observable.observers.length > 0;
-            }
-            function getObservers(observable) {
-                return observable.observers;
-            }
-            function invariantObservers(observable) {
-                var list = observable.observers;
-                var map = observable.observersIndexes;
-                var l = list.length;
-                for (var i = 0; i < l; i++) {
-                    var id = list[i].__mapid;
-                    if (i) {
-                        invariant(map[id] === i, "INTERNAL ERROR maps derivation.__mapid to index in list");
-                    } else {
-                        invariant(!(id in map), "INTERNAL ERROR observer on index 0 shouldnt be held in map.");
-                    }
-                }
-                invariant(list.length === 0 || Object.keys(map).length === list.length - 1, "INTERNAL ERROR there is no junk in map");
-            }
-            function addObserver(observable, node) {
-                var l = observable.observers.length;
-                if (l) {
-                    observable.observersIndexes[node.__mapid] = l;
-                }
-                observable.observers[l] = node;
-                if (observable.lowestObserverState > node.dependenciesState) observable.lowestObserverState = node.dependenciesState;
-            }
-            function removeObserver(observable, node) {
-                if (observable.observers.length === 1) {
-                    observable.observers.length = 0;
-                    queueForUnobservation(observable);
-                } else {
-                    var list = observable.observers;
-                    var map_1 = observable.observersIndexes;
-                    var filler = list.pop();
-                    if (filler !== node) {
-                        var index = map_1[node.__mapid] || 0;
-                        if (index) {
-                            map_1[filler.__mapid] = index;
-                        } else {
-                            delete map_1[filler.__mapid];
-                        }
-                        list[index] = filler;
-                    }
-                    delete map_1[node.__mapid];
-                }
-            }
-            function queueForUnobservation(observable) {
-                if (!observable.isPendingUnobservation) {
-                    observable.isPendingUnobservation = true;
-                    globalState.pendingUnobservations.push(observable);
-                }
-            }
-            function startBatch() {
-                globalState.inBatch++;
-            }
-            function endBatch() {
-                if (--globalState.inBatch === 0) {
-                    runReactions();
-                    var list = globalState.pendingUnobservations;
-                    for (var i = 0; i < list.length; i++) {
-                        var observable_1 = list[i];
-                        observable_1.isPendingUnobservation = false;
-                        if (observable_1.observers.length === 0) {
-                            observable_1.onBecomeUnobserved();
-                        }
-                    }
-                    globalState.pendingUnobservations = [];
-                }
-            }
-            function reportObserved(observable) {
-                var derivation = globalState.trackingDerivation;
-                if (derivation !== null) {
-                    if (derivation.runId !== observable.lastAccessedBy) {
-                        observable.lastAccessedBy = derivation.runId;
-                        derivation.newObserving[derivation.unboundDepsCount++] = observable;
-                    }
-                } else if (observable.observers.length === 0) {
-                    queueForUnobservation(observable);
-                }
-            }
-            function invariantLOS(observable, msg) {
-                var min = getObservers(observable).reduce(function (a, b) {
-                    return Math.min(a, b.dependenciesState);
-                }, 2);
-                if (min >= observable.lowestObserverState) return;
-                throw new Error("lowestObserverState is wrong for " + msg + " because " + min + " < " + observable.lowestObserverState);
-            }
-            function propagateChanged(observable) {
-                if (observable.lowestObserverState === IDerivationState.STALE) return;
-                observable.lowestObserverState = IDerivationState.STALE;
-                var observers = observable.observers;
-                var i = observers.length;
-                while (i--) {
-                    var d = observers[i];
-                    if (d.dependenciesState === IDerivationState.UP_TO_DATE) d.onBecomeStale();
-                    d.dependenciesState = IDerivationState.STALE;
-                }
-            }
-            function propagateChangeConfirmed(observable) {
-                if (observable.lowestObserverState === IDerivationState.STALE) return;
-                observable.lowestObserverState = IDerivationState.STALE;
-                var observers = observable.observers;
-                var i = observers.length;
-                while (i--) {
-                    var d = observers[i];
-                    if (d.dependenciesState === IDerivationState.POSSIBLY_STALE) d.dependenciesState = IDerivationState.STALE;else if (d.dependenciesState === IDerivationState.UP_TO_DATE) observable.lowestObserverState = IDerivationState.UP_TO_DATE;
-                }
-            }
-            function propagateMaybeChanged(observable) {
-                if (observable.lowestObserverState !== IDerivationState.UP_TO_DATE) return;
-                observable.lowestObserverState = IDerivationState.POSSIBLY_STALE;
-                var observers = observable.observers;
-                var i = observers.length;
-                while (i--) {
-                    var d = observers[i];
-                    if (d.dependenciesState === IDerivationState.UP_TO_DATE) {
-                        d.dependenciesState = IDerivationState.POSSIBLY_STALE;
-                        d.onBecomeStale();
-                    }
-                }
-            }
-            var Reaction = function () {
-                function Reaction(name, onInvalidate) {
-                    if (name === void 0) {
-                        name = "Reaction@" + getNextId();
-                    }
-                    this.name = name;
-                    this.onInvalidate = onInvalidate;
-                    this.observing = [];
-                    this.newObserving = [];
-                    this.dependenciesState = IDerivationState.NOT_TRACKING;
-                    this.diffValue = 0;
-                    this.runId = 0;
-                    this.unboundDepsCount = 0;
-                    this.__mapid = "#" + getNextId();
-                    this.isDisposed = false;
-                    this._isScheduled = false;
-                    this._isTrackPending = false;
-                    this._isRunning = false;
-                }
-                Reaction.prototype.onBecomeStale = function () {
-                    this.schedule();
-                };
-                Reaction.prototype.schedule = function () {
-                    if (!this._isScheduled) {
-                        this._isScheduled = true;
-                        globalState.pendingReactions.push(this);
-                        runReactions();
-                    }
-                };
-                Reaction.prototype.isScheduled = function () {
-                    return this._isScheduled;
-                };
-                Reaction.prototype.runReaction = function () {
-                    if (!this.isDisposed) {
-                        startBatch();
-                        this._isScheduled = false;
-                        if (shouldCompute(this)) {
-                            this._isTrackPending = true;
-                            this.onInvalidate();
-                            if (this._isTrackPending && isSpyEnabled()) {
-                                spyReport({
-                                    object: this,
-                                    type: "scheduled-reaction"
-                                });
-                            }
-                        }
-                        endBatch();
-                    }
-                };
-                Reaction.prototype.track = function (fn) {
-                    startBatch();
-                    var notify = isSpyEnabled();
-                    var startTime;
-                    if (notify) {
-                        startTime = Date.now();
-                        spyReportStart({
-                            object: this,
-                            type: "reaction",
-                            fn: fn
-                        });
-                    }
-                    this._isRunning = true;
-                    var result = trackDerivedFunction(this, fn, undefined);
-                    this._isRunning = false;
-                    this._isTrackPending = false;
-                    if (this.isDisposed) {
-                        clearObserving(this);
-                    }
-                    if (isCaughtException(result)) this.reportExceptionInDerivation(result.cause);
-                    if (notify) {
-                        spyReportEnd({
-                            time: Date.now() - startTime
-                        });
-                    }
-                    endBatch();
-                };
-                Reaction.prototype.reportExceptionInDerivation = function (error) {
-                    var _this = this;
-                    if (this.errorHandler) {
-                        this.errorHandler(error, this);
-                        return;
-                    }
-                    var message = "[mobx] Encountered an uncaught exception that was thrown by a reaction or observer component, in: '" + this;
-                    var messageToUser = getMessage("m037");
-                    console.error(message || messageToUser, error);
-                    if (isSpyEnabled()) {
-                        spyReport({
-                            type: "error",
-                            message: message,
-                            error: error,
-                            object: this
-                        });
-                    }
-                    globalState.globalReactionErrorHandlers.forEach(function (f) {
-                        return f(error, _this);
-                    });
-                };
-                Reaction.prototype.dispose = function () {
-                    if (!this.isDisposed) {
-                        this.isDisposed = true;
-                        if (!this._isRunning) {
-                            startBatch();
-                            clearObserving(this);
-                            endBatch();
-                        }
-                    }
-                };
-                Reaction.prototype.getDisposer = function () {
-                    var r = this.dispose.bind(this);
-                    r.$mobx = this;
-                    r.onError = registerErrorHandler;
-                    return r;
-                };
-                Reaction.prototype.toString = function () {
-                    return "Reaction[" + this.name + "]";
-                };
-                Reaction.prototype.whyRun = function () {
-                    var observing = unique(this._isRunning ? this.newObserving : this.observing).map(function (dep) {
-                        return dep.name;
-                    });
-                    return "\nWhyRun? reaction '" + this.name + "':\n * Status: [" + (this.isDisposed ? "stopped" : this._isRunning ? "running" : this.isScheduled() ? "scheduled" : "idle") + "]\n * This reaction will re-run if any of the following observables changes:\n    " + joinStrings(observing) + "\n    " + (this._isRunning ? " (... or any observable accessed during the remainder of the current run)" : "") + "\n\t" + getMessage("m038") + "\n";
-                };
-                return Reaction;
-            }();
-            exports.Reaction = Reaction;
-            function registerErrorHandler(handler) {
-                invariant(this && this.$mobx && isReaction(this.$mobx), "Invalid `this`");
-                invariant(!this.$mobx.errorHandler, "Only one onErrorHandler can be registered");
-                this.$mobx.errorHandler = handler;
-            }
-            function onReactionError(handler) {
-                globalState.globalReactionErrorHandlers.push(handler);
-                return function () {
-                    var idx = globalState.globalReactionErrorHandlers.indexOf(handler);
-                    if (idx >= 0) globalState.globalReactionErrorHandlers.splice(idx, 1);
-                };
-            }
-            var MAX_REACTION_ITERATIONS = 100;
-            var reactionScheduler = function reactionScheduler(f) {
-                return f();
-            };
-            function runReactions() {
-                if (globalState.inBatch > 0 || globalState.isRunningReactions) return;
-                reactionScheduler(runReactionsHelper);
-            }
-            function runReactionsHelper() {
-                globalState.isRunningReactions = true;
-                var allReactions = globalState.pendingReactions;
-                var iterations = 0;
-                while (allReactions.length > 0) {
-                    if (++iterations === MAX_REACTION_ITERATIONS) {
-                        console.error("Reaction doesn't converge to a stable state after " + MAX_REACTION_ITERATIONS + " iterations." + (" Probably there is a cycle in the reactive function: " + allReactions[0]));
-                        allReactions.splice(0);
-                    }
-                    var remainingReactions = allReactions.splice(0);
-                    for (var i = 0, l = remainingReactions.length; i < l; i++) {
-                        remainingReactions[i].runReaction();
-                    }
-                }
-                globalState.isRunningReactions = false;
-            }
-            var isReaction = createInstanceofPredicate("Reaction", Reaction);
-            function setReactionScheduler(fn) {
-                var baseScheduler = reactionScheduler;
-                reactionScheduler = function reactionScheduler(f) {
-                    return fn(function () {
-                        return baseScheduler(f);
-                    });
-                };
-            }
-            function isSpyEnabled() {
-                return !!globalState.spyListeners.length;
-            }
-            function spyReport(event) {
-                if (!globalState.spyListeners.length) return;
-                var listeners = globalState.spyListeners;
-                for (var i = 0, l = listeners.length; i < l; i++) {
-                    listeners[i](event);
-                }
-            }
-            function spyReportStart(event) {
-                var change = objectAssign({}, event, { spyReportStart: true });
-                spyReport(change);
-            }
-            var END_EVENT = { spyReportEnd: true };
-            function spyReportEnd(change) {
-                if (change) spyReport(objectAssign({}, change, END_EVENT));else spyReport(END_EVENT);
-            }
-            function spy(listener) {
-                globalState.spyListeners.push(listener);
-                return once(function () {
-                    var idx = globalState.spyListeners.indexOf(listener);
-                    if (idx !== -1) globalState.spyListeners.splice(idx, 1);
-                });
-            }
-            exports.spy = spy;
-            function hasInterceptors(interceptable) {
-                return interceptable.interceptors && interceptable.interceptors.length > 0;
-            }
-            function registerInterceptor(interceptable, handler) {
-                var interceptors = interceptable.interceptors || (interceptable.interceptors = []);
-                interceptors.push(handler);
-                return once(function () {
-                    var idx = interceptors.indexOf(handler);
-                    if (idx !== -1) interceptors.splice(idx, 1);
-                });
-            }
-            function interceptChange(interceptable, change) {
-                var prevU = untrackedStart();
-                try {
-                    var interceptors = interceptable.interceptors;
-                    if (interceptors) for (var i = 0, l = interceptors.length; i < l; i++) {
-                        change = interceptors[i](change);
-                        invariant(!change || change.type, "Intercept handlers should return nothing or a change object");
-                        if (!change) break;
-                    }
-                    return change;
-                } finally {
-                    untrackedEnd(prevU);
-                }
-            }
-            function hasListeners(listenable) {
-                return listenable.changeListeners && listenable.changeListeners.length > 0;
-            }
-            function registerListener(listenable, handler) {
-                var listeners = listenable.changeListeners || (listenable.changeListeners = []);
-                listeners.push(handler);
-                return once(function () {
-                    var idx = listeners.indexOf(handler);
-                    if (idx !== -1) listeners.splice(idx, 1);
-                });
-            }
-            function notifyListeners(listenable, change) {
-                var prevU = untrackedStart();
-                var listeners = listenable.changeListeners;
-                if (!listeners) return;
-                listeners = listeners.slice();
-                for (var i = 0, l = listeners.length; i < l; i++) {
-                    listeners[i](change);
-                }
-                untrackedEnd(prevU);
-            }
-            function asReference(value) {
-                deprecated("asReference is deprecated, use observable.ref instead");
-                return observable.ref(value);
-            }
-            exports.asReference = asReference;
-            function asStructure(value) {
-                deprecated("asStructure is deprecated. Use observable.struct, computed.struct or reaction options instead.");
-                return observable.struct(value);
-            }
-            exports.asStructure = asStructure;
-            function asFlat(value) {
-                deprecated("asFlat is deprecated, use observable.shallow instead");
-                return observable.shallow(value);
-            }
-            exports.asFlat = asFlat;
-            function asMap(data) {
-                deprecated("asMap is deprecated, use observable.map or observable.shallowMap instead");
-                return observable.map(data || {});
-            }
-            exports.asMap = asMap;
-            function isModifierDescriptor(thing) {
-                return (typeof thing === "undefined" ? "undefined" : _typeof(thing)) === "object" && thing !== null && thing.isMobxModifierDescriptor === true;
-            }
-            exports.isModifierDescriptor = isModifierDescriptor;
-            function createModifierDescriptor(enhancer, initialValue) {
-                invariant(!isModifierDescriptor(initialValue), "Modifiers cannot be nested");
-                return {
-                    isMobxModifierDescriptor: true,
-                    initialValue: initialValue,
-                    enhancer: enhancer
-                };
-            }
-            function deepEnhancer(v, _, name) {
-                if (isModifierDescriptor(v)) fail("You tried to assign a modifier wrapped value to a collection, please define modifiers when creating the collection, not when modifying it");
-                if (isObservable(v)) return v;
-                if (Array.isArray(v)) return observable.array(v, name);
-                if (isPlainObject(v)) return observable.object(v, name);
-                if (isES6Map(v)) return observable.map(v, name);
-                return v;
-            }
-            function shallowEnhancer(v, _, name) {
-                if (isModifierDescriptor(v)) fail("You tried to assign a modifier wrapped value to a collection, please define modifiers when creating the collection, not when modifying it");
-                if (v === undefined || v === null) return v;
-                if (isObservableObject(v) || isObservableArray(v) || isObservableMap(v)) return v;
-                if (Array.isArray(v)) return observable.shallowArray(v, name);
-                if (isPlainObject(v)) return observable.shallowObject(v, name);
-                if (isES6Map(v)) return observable.shallowMap(v, name);
-                return fail("The shallow modifier / decorator can only used in combination with arrays, objects and maps");
-            }
-            function referenceEnhancer(newValue) {
-                return newValue;
-            }
-            function deepStructEnhancer(v, oldValue, name) {
-                if (deepEqual(v, oldValue)) return oldValue;
-                if (isObservable(v)) return v;
-                if (Array.isArray(v)) return new ObservableArray(v, deepStructEnhancer, name);
-                if (isES6Map(v)) return new ObservableMap(v, deepStructEnhancer, name);
-                if (isPlainObject(v)) {
-                    var res = {};
-                    asObservableObject(res, name);
-                    extendObservableHelper(res, deepStructEnhancer, [v]);
-                    return res;
-                }
-                return v;
-            }
-            function refStructEnhancer(v, oldValue, name) {
-                if (deepEqual(v, oldValue)) return oldValue;
-                return v;
-            }
-            var MAX_SPLICE_SIZE = 10000;
-            var safariPrototypeSetterInheritanceBug = function () {
-                var v = false;
-                var p = {};
-                Object.defineProperty(p, "0", { set: function set() {
-                        v = true;
-                    } });
-                Object.create(p)["0"] = 1;
-                return v === false;
-            }();
-            var OBSERVABLE_ARRAY_BUFFER_SIZE = 0;
-            var StubArray = function () {
-                function StubArray() {}
-                return StubArray;
-            }();
-            StubArray.prototype = [];
-            var ObservableArrayAdministration = function () {
-                function ObservableArrayAdministration(name, enhancer, array, owned) {
-                    this.array = array;
-                    this.owned = owned;
-                    this.lastKnownLength = 0;
-                    this.interceptors = null;
-                    this.changeListeners = null;
-                    this.atom = new BaseAtom(name || "ObservableArray@" + getNextId());
-                    this.enhancer = function (newV, oldV) {
-                        return enhancer(newV, oldV, name + "[..]");
-                    };
-                }
-                ObservableArrayAdministration.prototype.intercept = function (handler) {
-                    return registerInterceptor(this, handler);
-                };
-                ObservableArrayAdministration.prototype.observe = function (listener, fireImmediately) {
-                    if (fireImmediately === void 0) {
-                        fireImmediately = false;
-                    }
-                    if (fireImmediately) {
-                        listener({
-                            object: this.array,
-                            type: "splice",
-                            index: 0,
-                            added: this.values.slice(),
-                            addedCount: this.values.length,
-                            removed: [],
-                            removedCount: 0
-                        });
-                    }
-                    return registerListener(this, listener);
-                };
-                ObservableArrayAdministration.prototype.getArrayLength = function () {
-                    this.atom.reportObserved();
-                    return this.values.length;
-                };
-                ObservableArrayAdministration.prototype.setArrayLength = function (newLength) {
-                    if (typeof newLength !== "number" || newLength < 0) throw new Error("[mobx.array] Out of range: " + newLength);
-                    var currentLength = this.values.length;
-                    if (newLength === currentLength) return;else if (newLength > currentLength) {
-                        var newItems = new Array(newLength - currentLength);
-                        for (var i = 0; i < newLength - currentLength; i++) {
-                            newItems[i] = undefined;
-                        }this.spliceWithArray(currentLength, 0, newItems);
-                    } else this.spliceWithArray(newLength, currentLength - newLength);
-                };
-                ObservableArrayAdministration.prototype.updateArrayLength = function (oldLength, delta) {
-                    if (oldLength !== this.lastKnownLength) throw new Error("[mobx] Modification exception: the internal structure of an observable array was changed. Did you use peek() to change it?");
-                    this.lastKnownLength += delta;
-                    if (delta > 0 && oldLength + delta + 1 > OBSERVABLE_ARRAY_BUFFER_SIZE) reserveArrayBuffer(oldLength + delta + 1);
-                };
-                ObservableArrayAdministration.prototype.spliceWithArray = function (index, deleteCount, newItems) {
-                    var _this = this;
-                    checkIfStateModificationsAreAllowed(this.atom);
-                    var length = this.values.length;
-                    if (index === undefined) index = 0;else if (index > length) index = length;else if (index < 0) index = Math.max(0, length + index);
-                    if (arguments.length === 1) deleteCount = length - index;else if (deleteCount === undefined || deleteCount === null) deleteCount = 0;else deleteCount = Math.max(0, Math.min(deleteCount, length - index));
-                    if (newItems === undefined) newItems = [];
-                    if (hasInterceptors(this)) {
-                        var change = interceptChange(this, {
-                            object: this.array,
-                            type: "splice",
-                            index: index,
-                            removedCount: deleteCount,
-                            added: newItems
-                        });
-                        if (!change) return EMPTY_ARRAY;
-                        deleteCount = change.removedCount;
-                        newItems = change.added;
-                    }
-                    newItems = newItems.map(function (v) {
-                        return _this.enhancer(v, undefined);
-                    });
-                    var lengthDelta = newItems.length - deleteCount;
-                    this.updateArrayLength(length, lengthDelta);
-                    var res = this.spliceItemsIntoValues(index, deleteCount, newItems);
-                    if (deleteCount !== 0 || newItems.length !== 0) this.notifyArraySplice(index, newItems, res);
-                    return res;
-                };
-                ObservableArrayAdministration.prototype.spliceItemsIntoValues = function (index, deleteCount, newItems) {
-                    if (newItems.length < MAX_SPLICE_SIZE) {
-                        return (_a = this.values).splice.apply(_a, [index, deleteCount].concat(newItems));
-                    } else {
-                        var res = this.values.slice(index, index + deleteCount);
-                        this.values = this.values.slice(0, index).concat(newItems, this.values.slice(index + deleteCount));
-                        return res;
-                    }
-                    var _a;
-                };
-                ObservableArrayAdministration.prototype.notifyArrayChildUpdate = function (index, newValue, oldValue) {
-                    var notifySpy = !this.owned && isSpyEnabled();
-                    var notify = hasListeners(this);
-                    var change = notify || notifySpy ? {
-                        object: this.array,
-                        type: "update",
-                        index: index, newValue: newValue, oldValue: oldValue
-                    } : null;
-                    if (notifySpy) spyReportStart(change);
-                    this.atom.reportChanged();
-                    if (notify) notifyListeners(this, change);
-                    if (notifySpy) spyReportEnd();
-                };
-                ObservableArrayAdministration.prototype.notifyArraySplice = function (index, added, removed) {
-                    var notifySpy = !this.owned && isSpyEnabled();
-                    var notify = hasListeners(this);
-                    var change = notify || notifySpy ? {
-                        object: this.array,
-                        type: "splice",
-                        index: index, removed: removed, added: added,
-                        removedCount: removed.length,
-                        addedCount: added.length
-                    } : null;
-                    if (notifySpy) spyReportStart(change);
-                    this.atom.reportChanged();
-                    if (notify) notifyListeners(this, change);
-                    if (notifySpy) spyReportEnd();
-                };
-                return ObservableArrayAdministration;
-            }();
-            var ObservableArray = function (_super) {
-                __extends(ObservableArray, _super);
-                function ObservableArray(initialValues, enhancer, name, owned) {
-                    if (name === void 0) {
-                        name = "ObservableArray@" + getNextId();
-                    }
-                    if (owned === void 0) {
-                        owned = false;
-                    }
-                    var _this = _super.call(this) || this;
-                    var adm = new ObservableArrayAdministration(name, enhancer, _this, owned);
-                    addHiddenFinalProp(_this, "$mobx", adm);
-                    if (initialValues && initialValues.length) {
-                        adm.updateArrayLength(0, initialValues.length);
-                        adm.values = initialValues.map(function (v) {
-                            return enhancer(v, undefined, name + "[..]");
-                        });
-                        adm.notifyArraySplice(0, adm.values.slice(), EMPTY_ARRAY);
-                    } else {
-                        adm.values = [];
-                    }
-                    if (safariPrototypeSetterInheritanceBug) {
-                        Object.defineProperty(adm.array, "0", ENTRY_0);
-                    }
-                    return _this;
-                }
-                ObservableArray.prototype.intercept = function (handler) {
-                    return this.$mobx.intercept(handler);
-                };
-                ObservableArray.prototype.observe = function (listener, fireImmediately) {
-                    if (fireImmediately === void 0) {
-                        fireImmediately = false;
-                    }
-                    return this.$mobx.observe(listener, fireImmediately);
-                };
-                ObservableArray.prototype.clear = function () {
-                    return this.splice(0);
-                };
-                ObservableArray.prototype.concat = function () {
-                    var arrays = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        arrays[_i] = arguments[_i];
-                    }
-                    this.$mobx.atom.reportObserved();
-                    return Array.prototype.concat.apply(this.peek(), arrays.map(function (a) {
-                        return isObservableArray(a) ? a.peek() : a;
-                    }));
-                };
-                ObservableArray.prototype.replace = function (newItems) {
-                    return this.$mobx.spliceWithArray(0, this.$mobx.values.length, newItems);
-                };
-                ObservableArray.prototype.toJS = function () {
-                    return this.slice();
-                };
-                ObservableArray.prototype.toJSON = function () {
-                    return this.toJS();
-                };
-                ObservableArray.prototype.peek = function () {
-                    return this.$mobx.values;
-                };
-                ObservableArray.prototype.find = function (predicate, thisArg, fromIndex) {
-                    if (fromIndex === void 0) {
-                        fromIndex = 0;
-                    }
-                    this.$mobx.atom.reportObserved();
-                    var items = this.$mobx.values,
-                        l = items.length;
-                    for (var i = fromIndex; i < l; i++) {
-                        if (predicate.call(thisArg, items[i], i, this)) return items[i];
-                    }return undefined;
-                };
-                ObservableArray.prototype.splice = function (index, deleteCount) {
-                    var newItems = [];
-                    for (var _i = 2; _i < arguments.length; _i++) {
-                        newItems[_i - 2] = arguments[_i];
-                    }
-                    switch (arguments.length) {
-                        case 0:
-                            return [];
-                        case 1:
-                            return this.$mobx.spliceWithArray(index);
-                        case 2:
-                            return this.$mobx.spliceWithArray(index, deleteCount);
-                    }
-                    return this.$mobx.spliceWithArray(index, deleteCount, newItems);
-                };
-                ObservableArray.prototype.spliceWithArray = function (index, deleteCount, newItems) {
-                    return this.$mobx.spliceWithArray(index, deleteCount, newItems);
-                };
-                ObservableArray.prototype.push = function () {
-                    var items = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        items[_i] = arguments[_i];
-                    }
-                    var adm = this.$mobx;
-                    adm.spliceWithArray(adm.values.length, 0, items);
-                    return adm.values.length;
-                };
-                ObservableArray.prototype.pop = function () {
-                    return this.splice(Math.max(this.$mobx.values.length - 1, 0), 1)[0];
-                };
-                ObservableArray.prototype.shift = function () {
-                    return this.splice(0, 1)[0];
-                };
-                ObservableArray.prototype.unshift = function () {
-                    var items = [];
-                    for (var _i = 0; _i < arguments.length; _i++) {
-                        items[_i] = arguments[_i];
-                    }
-                    var adm = this.$mobx;
-                    adm.spliceWithArray(0, 0, items);
-                    return adm.values.length;
-                };
-                ObservableArray.prototype.reverse = function () {
-                    this.$mobx.atom.reportObserved();
-                    var clone = this.slice();
-                    return clone.reverse.apply(clone, arguments);
-                };
-                ObservableArray.prototype.sort = function (compareFn) {
-                    this.$mobx.atom.reportObserved();
-                    var clone = this.slice();
-                    return clone.sort.apply(clone, arguments);
-                };
-                ObservableArray.prototype.remove = function (value) {
-                    var idx = this.$mobx.values.indexOf(value);
-                    if (idx > -1) {
-                        this.splice(idx, 1);
-                        return true;
-                    }
-                    return false;
-                };
-                ObservableArray.prototype.move = function (fromIndex, toIndex) {
-                    function checkIndex(index) {
-                        if (index < 0) {
-                            throw new Error("[mobx.array] Index out of bounds: " + index + " is negative");
-                        }
-                        var length = this.$mobx.values.length;
-                        if (index >= length) {
-                            throw new Error("[mobx.array] Index out of bounds: " + index + " is not smaller than " + length);
-                        }
-                    }
-                    checkIndex.call(this, fromIndex);
-                    checkIndex.call(this, toIndex);
-                    if (fromIndex === toIndex) {
-                        return;
-                    }
-                    var oldItems = this.$mobx.values;
-                    var newItems;
-                    if (fromIndex < toIndex) {
-                        newItems = oldItems.slice(0, fromIndex).concat(oldItems.slice(fromIndex + 1, toIndex + 1), [oldItems[fromIndex]], oldItems.slice(toIndex + 1));
-                    } else {
-                        newItems = oldItems.slice(0, toIndex).concat([oldItems[fromIndex]], oldItems.slice(toIndex, fromIndex), oldItems.slice(fromIndex + 1));
-                    }
-                    this.replace(newItems);
-                };
-                ObservableArray.prototype.toString = function () {
-                    this.$mobx.atom.reportObserved();
-                    return Array.prototype.toString.apply(this.$mobx.values, arguments);
-                };
-                ObservableArray.prototype.toLocaleString = function () {
-                    this.$mobx.atom.reportObserved();
-                    return Array.prototype.toLocaleString.apply(this.$mobx.values, arguments);
-                };
-                return ObservableArray;
-            }(StubArray);
-            declareIterator(ObservableArray.prototype, function () {
-                return arrayAsIterator(this.slice());
-            });
-            makeNonEnumerable(ObservableArray.prototype, ["constructor", "intercept", "observe", "clear", "concat", "replace", "toJS", "toJSON", "peek", "find", "splice", "spliceWithArray", "push", "pop", "shift", "unshift", "reverse", "sort", "remove", "move", "toString", "toLocaleString"]);
-            Object.defineProperty(ObservableArray.prototype, "length", {
-                enumerable: false,
-                configurable: true,
-                get: function get() {
-                    return this.$mobx.getArrayLength();
-                },
-                set: function set(newLength) {
-                    this.$mobx.setArrayLength(newLength);
-                }
-            });
-            ["every", "filter", "forEach", "indexOf", "join", "lastIndexOf", "map", "reduce", "reduceRight", "slice", "some"].forEach(function (funcName) {
-                var baseFunc = Array.prototype[funcName];
-                invariant(typeof baseFunc === "function", "Base function not defined on Array prototype: '" + funcName + "'");
-                addHiddenProp(ObservableArray.prototype, funcName, function () {
-                    this.$mobx.atom.reportObserved();
-                    return baseFunc.apply(this.$mobx.values, arguments);
-                });
-            });
-            var ENTRY_0 = {
-                configurable: true,
-                enumerable: false,
-                set: createArraySetter(0),
-                get: createArrayGetter(0)
-            };
-            function createArrayBufferItem(index) {
-                var set = createArraySetter(index);
-                var get = createArrayGetter(index);
-                Object.defineProperty(ObservableArray.prototype, "" + index, {
-                    enumerable: false,
-                    configurable: true,
-                    set: set, get: get
-                });
-            }
-            function createArraySetter(index) {
-                return function (newValue) {
-                    var adm = this.$mobx;
-                    var values = adm.values;
-                    if (index < values.length) {
-                        checkIfStateModificationsAreAllowed(adm.atom);
-                        var oldValue = values[index];
-                        if (hasInterceptors(adm)) {
-                            var change = interceptChange(adm, {
-                                type: "update",
-                                object: adm.array,
-                                index: index, newValue: newValue
-                            });
-                            if (!change) return;
-                            newValue = change.newValue;
-                        }
-                        newValue = adm.enhancer(newValue, oldValue);
-                        var changed = newValue !== oldValue;
-                        if (changed) {
-                            values[index] = newValue;
-                            adm.notifyArrayChildUpdate(index, newValue, oldValue);
-                        }
-                    } else if (index === values.length) {
-                        adm.spliceWithArray(index, 0, [newValue]);
-                    } else throw new Error("[mobx.array] Index out of bounds, " + index + " is larger than " + values.length);
-                };
-            }
-            function createArrayGetter(index) {
-                return function () {
-                    var impl = this.$mobx;
-                    if (impl) {
-                        if (index < impl.values.length) {
-                            impl.atom.reportObserved();
-                            return impl.values[index];
-                        }
-                        console.warn("[mobx.array] Attempt to read an array index (" + index + ") that is out of bounds (" + impl.values.length + "). Please check length first. Out of bound indices will not be tracked by MobX");
-                    }
-                    return undefined;
-                };
-            }
-            function reserveArrayBuffer(max) {
-                for (var index = OBSERVABLE_ARRAY_BUFFER_SIZE; index < max; index++) {
-                    createArrayBufferItem(index);
-                }OBSERVABLE_ARRAY_BUFFER_SIZE = max;
-            }
-            reserveArrayBuffer(1000);
-            var isObservableArrayAdministration = createInstanceofPredicate("ObservableArrayAdministration", ObservableArrayAdministration);
-            function isObservableArray(thing) {
-                return isObject(thing) && isObservableArrayAdministration(thing.$mobx);
-            }
-            exports.isObservableArray = isObservableArray;
-            var ObservableMapMarker = {};
-            var ObservableMap = function () {
-                function ObservableMap(initialData, enhancer, name) {
-                    if (enhancer === void 0) {
-                        enhancer = deepEnhancer;
-                    }
-                    if (name === void 0) {
-                        name = "ObservableMap@" + getNextId();
-                    }
-                    this.enhancer = enhancer;
-                    this.name = name;
-                    this.$mobx = ObservableMapMarker;
-                    this._data = {};
-                    this._hasMap = {};
-                    this._keys = new ObservableArray(undefined, referenceEnhancer, this.name + ".keys()", true);
-                    this.interceptors = null;
-                    this.changeListeners = null;
-                    this.merge(initialData);
-                }
-                ObservableMap.prototype._has = function (key) {
-                    return typeof this._data[key] !== "undefined";
-                };
-                ObservableMap.prototype.has = function (key) {
-                    if (!this.isValidKey(key)) return false;
-                    key = "" + key;
-                    if (this._hasMap[key]) return this._hasMap[key].get();
-                    return this._updateHasMapEntry(key, false).get();
-                };
-                ObservableMap.prototype.set = function (key, value) {
-                    this.assertValidKey(key);
-                    key = "" + key;
-                    var hasKey = this._has(key);
-                    if (hasInterceptors(this)) {
-                        var change = interceptChange(this, {
-                            type: hasKey ? "update" : "add",
-                            object: this,
-                            newValue: value,
-                            name: key
-                        });
-                        if (!change) return this;
-                        value = change.newValue;
-                    }
-                    if (hasKey) {
-                        this._updateValue(key, value);
-                    } else {
-                        this._addValue(key, value);
-                    }
-                    return this;
-                };
-                ObservableMap.prototype.delete = function (key) {
-                    var _this = this;
-                    this.assertValidKey(key);
-                    key = "" + key;
-                    if (hasInterceptors(this)) {
-                        var change = interceptChange(this, {
-                            type: "delete",
-                            object: this,
-                            name: key
-                        });
-                        if (!change) return false;
-                    }
-                    if (this._has(key)) {
-                        var notifySpy = isSpyEnabled();
-                        var notify = hasListeners(this);
-                        var change = notify || notifySpy ? {
-                            type: "delete",
-                            object: this,
-                            oldValue: this._data[key].value,
-                            name: key
-                        } : null;
-                        if (notifySpy) spyReportStart(change);
-                        runInTransaction(function () {
-                            _this._keys.remove(key);
-                            _this._updateHasMapEntry(key, false);
-                            var observable = _this._data[key];
-                            observable.setNewValue(undefined);
-                            _this._data[key] = undefined;
-                        });
-                        if (notify) notifyListeners(this, change);
-                        if (notifySpy) spyReportEnd();
-                        return true;
-                    }
-                    return false;
-                };
-                ObservableMap.prototype._updateHasMapEntry = function (key, value) {
-                    var entry = this._hasMap[key];
-                    if (entry) {
-                        entry.setNewValue(value);
-                    } else {
-                        entry = this._hasMap[key] = new ObservableValue(value, referenceEnhancer, this.name + "." + key + "?", false);
-                    }
-                    return entry;
-                };
-                ObservableMap.prototype._updateValue = function (name, newValue) {
-                    var observable = this._data[name];
-                    newValue = observable.prepareNewValue(newValue);
-                    if (newValue !== UNCHANGED) {
-                        var notifySpy = isSpyEnabled();
-                        var notify = hasListeners(this);
-                        var change = notify || notifySpy ? {
-                            type: "update",
-                            object: this,
-                            oldValue: observable.value,
-                            name: name, newValue: newValue
-                        } : null;
-                        if (notifySpy) spyReportStart(change);
-                        observable.setNewValue(newValue);
-                        if (notify) notifyListeners(this, change);
-                        if (notifySpy) spyReportEnd();
-                    }
-                };
-                ObservableMap.prototype._addValue = function (name, newValue) {
-                    var _this = this;
-                    runInTransaction(function () {
-                        var observable = _this._data[name] = new ObservableValue(newValue, _this.enhancer, _this.name + "." + name, false);
-                        newValue = observable.value;
-                        _this._updateHasMapEntry(name, true);
-                        _this._keys.push(name);
-                    });
-                    var notifySpy = isSpyEnabled();
-                    var notify = hasListeners(this);
-                    var change = notify || notifySpy ? {
-                        type: "add",
-                        object: this,
-                        name: name, newValue: newValue
-                    } : null;
-                    if (notifySpy) spyReportStart(change);
-                    if (notify) notifyListeners(this, change);
-                    if (notifySpy) spyReportEnd();
-                };
-                ObservableMap.prototype.get = function (key) {
-                    key = "" + key;
-                    if (this.has(key)) return this._data[key].get();
-                    return undefined;
-                };
-                ObservableMap.prototype.keys = function () {
-                    return arrayAsIterator(this._keys.slice());
-                };
-                ObservableMap.prototype.values = function () {
-                    return arrayAsIterator(this._keys.map(this.get, this));
-                };
-                ObservableMap.prototype.entries = function () {
-                    var _this = this;
-                    return arrayAsIterator(this._keys.map(function (key) {
-                        return [key, _this.get(key)];
-                    }));
-                };
-                ObservableMap.prototype.forEach = function (callback, thisArg) {
-                    var _this = this;
-                    this.keys().forEach(function (key) {
-                        return callback.call(thisArg, _this.get(key), key, _this);
-                    });
-                };
-                ObservableMap.prototype.merge = function (other) {
-                    var _this = this;
-                    if (isObservableMap(other)) {
-                        other = other.toJS();
-                    }
-                    runInTransaction(function () {
-                        if (isPlainObject(other)) Object.keys(other).forEach(function (key) {
-                            return _this.set(key, other[key]);
-                        });else if (Array.isArray(other)) other.forEach(function (_a) {
-                            var key = _a[0],
-                                value = _a[1];
-                            return _this.set(key, value);
-                        });else if (isES6Map(other)) other.forEach(function (value, key) {
-                            return _this.set(key, value);
-                        });else if (other !== null && other !== undefined) fail("Cannot initialize map from " + other);
-                    });
-                    return this;
-                };
-                ObservableMap.prototype.clear = function () {
-                    var _this = this;
-                    runInTransaction(function () {
-                        untracked(function () {
-                            _this.keys().forEach(_this.delete, _this);
-                        });
-                    });
-                };
-                ObservableMap.prototype.replace = function (values) {
-                    var _this = this;
-                    runInTransaction(function () {
-                        _this.clear();
-                        _this.merge(values);
-                    });
-                    return this;
-                };
-                Object.defineProperty(ObservableMap.prototype, "size", {
-                    get: function get() {
-                        return this._keys.length;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                ObservableMap.prototype.toJS = function () {
-                    var _this = this;
-                    var res = {};
-                    this.keys().forEach(function (key) {
-                        return res[key] = _this.get(key);
-                    });
-                    return res;
-                };
-                ObservableMap.prototype.toJSON = function () {
-                    return this.toJS();
-                };
-                ObservableMap.prototype.isValidKey = function (key) {
-                    if (key === null || key === undefined) return false;
-                    if (typeof key === "string" || typeof key === "number" || typeof key === "boolean") return true;
-                    return false;
-                };
-                ObservableMap.prototype.assertValidKey = function (key) {
-                    if (!this.isValidKey(key)) throw new Error("[mobx.map] Invalid key: '" + key + "', only strings, numbers and booleans are accepted as key in observable maps.");
-                };
-                ObservableMap.prototype.toString = function () {
-                    var _this = this;
-                    return this.name + "[{ " + this.keys().map(function (key) {
-                        return key + ": " + ("" + _this.get(key));
-                    }).join(", ") + " }]";
-                };
-                ObservableMap.prototype.observe = function (listener, fireImmediately) {
-                    invariant(fireImmediately !== true, getMessage("m033"));
-                    return registerListener(this, listener);
-                };
-                ObservableMap.prototype.intercept = function (handler) {
-                    return registerInterceptor(this, handler);
-                };
-                return ObservableMap;
-            }();
-            exports.ObservableMap = ObservableMap;
-            declareIterator(ObservableMap.prototype, function () {
-                return this.entries();
-            });
-            function map(initialValues) {
-                deprecated("`mobx.map` is deprecated, use `new ObservableMap` or `mobx.observable.map` instead");
-                return observable.map(initialValues);
-            }
-            exports.map = map;
-            var isObservableMap = createInstanceofPredicate("ObservableMap", ObservableMap);
-            exports.isObservableMap = isObservableMap;
-            var ObservableObjectAdministration = function () {
-                function ObservableObjectAdministration(target, name) {
-                    this.target = target;
-                    this.name = name;
-                    this.values = {};
-                    this.changeListeners = null;
-                    this.interceptors = null;
-                }
-                ObservableObjectAdministration.prototype.observe = function (callback, fireImmediately) {
-                    invariant(fireImmediately !== true, "`observe` doesn't support the fire immediately property for observable objects.");
-                    return registerListener(this, callback);
-                };
-                ObservableObjectAdministration.prototype.intercept = function (handler) {
-                    return registerInterceptor(this, handler);
-                };
-                return ObservableObjectAdministration;
-            }();
-            function asObservableObject(target, name) {
-                if (isObservableObject(target)) return target.$mobx;
-                invariant(Object.isExtensible(target), getMessage("m035"));
-                if (!isPlainObject(target)) name = (target.constructor.name || "ObservableObject") + "@" + getNextId();
-                if (!name) name = "ObservableObject@" + getNextId();
-                var adm = new ObservableObjectAdministration(target, name);
-                addHiddenFinalProp(target, "$mobx", adm);
-                return adm;
-            }
-            function defineObservablePropertyFromDescriptor(adm, propName, descriptor, defaultEnhancer) {
-                if (adm.values[propName]) {
-                    invariant("value" in descriptor, "The property " + propName + " in " + adm.name + " is already observable, cannot redefine it as computed property");
-                    adm.target[propName] = descriptor.value;
-                    return;
-                }
-                if ("value" in descriptor) {
-                    if (isModifierDescriptor(descriptor.value)) {
-                        var modifierDescriptor = descriptor.value;
-                        defineObservableProperty(adm, propName, modifierDescriptor.initialValue, modifierDescriptor.enhancer);
-                    } else if (isAction(descriptor.value) && descriptor.value.autoBind === true) {
-                        defineBoundAction(adm.target, propName, descriptor.value.originalFn);
-                    } else if (isComputedValue(descriptor.value)) {
-                        defineComputedPropertyFromComputedValue(adm, propName, descriptor.value);
-                    } else {
-                        defineObservableProperty(adm, propName, descriptor.value, defaultEnhancer);
-                    }
-                } else {
-                    defineComputedProperty(adm, propName, descriptor.get, descriptor.set, false, true);
-                }
-            }
-            function defineObservableProperty(adm, propName, newValue, enhancer) {
-                assertPropertyConfigurable(adm.target, propName);
-                if (hasInterceptors(adm)) {
-                    var change = interceptChange(adm, {
-                        object: adm.target,
-                        name: propName,
-                        type: "add",
-                        newValue: newValue
-                    });
-                    if (!change) return;
-                    newValue = change.newValue;
-                }
-                var observable = adm.values[propName] = new ObservableValue(newValue, enhancer, adm.name + "." + propName, false);
-                newValue = observable.value;
-                Object.defineProperty(adm.target, propName, generateObservablePropConfig(propName));
-                notifyPropertyAddition(adm, adm.target, propName, newValue);
-            }
-            function defineComputedProperty(adm, propName, getter, setter, compareStructural, asInstanceProperty) {
-                if (asInstanceProperty) assertPropertyConfigurable(adm.target, propName);
-                adm.values[propName] = new ComputedValue(getter, adm.target, compareStructural, adm.name + "." + propName, setter);
-                if (asInstanceProperty) {
-                    Object.defineProperty(adm.target, propName, generateComputedPropConfig(propName));
-                }
-            }
-            function defineComputedPropertyFromComputedValue(adm, propName, computedValue) {
-                var name = adm.name + "." + propName;
-                computedValue.name = name;
-                if (!computedValue.scope) computedValue.scope = adm.target;
-                adm.values[propName] = computedValue;
-                Object.defineProperty(adm.target, propName, generateComputedPropConfig(propName));
-            }
-            var observablePropertyConfigs = {};
-            var computedPropertyConfigs = {};
-            function generateObservablePropConfig(propName) {
-                return observablePropertyConfigs[propName] || (observablePropertyConfigs[propName] = {
-                    configurable: true,
-                    enumerable: true,
-                    get: function get() {
-                        return this.$mobx.values[propName].get();
-                    },
-                    set: function set(v) {
-                        setPropertyValue(this, propName, v);
-                    }
-                });
-            }
-            function generateComputedPropConfig(propName) {
-                return computedPropertyConfigs[propName] || (computedPropertyConfigs[propName] = {
-                    configurable: true,
-                    enumerable: false,
-                    get: function get() {
-                        return this.$mobx.values[propName].get();
-                    },
-                    set: function set(v) {
-                        return this.$mobx.values[propName].set(v);
-                    }
-                });
-            }
-            function setPropertyValue(instance, name, newValue) {
-                var adm = instance.$mobx;
-                var observable = adm.values[name];
-                if (hasInterceptors(adm)) {
-                    var change = interceptChange(adm, {
-                        type: "update",
-                        object: instance,
-                        name: name, newValue: newValue
-                    });
-                    if (!change) return;
-                    newValue = change.newValue;
-                }
-                newValue = observable.prepareNewValue(newValue);
-                if (newValue !== UNCHANGED) {
-                    var notify = hasListeners(adm);
-                    var notifySpy = isSpyEnabled();
-                    var change = notify || notifySpy ? {
-                        type: "update",
-                        object: instance,
-                        oldValue: observable.value,
-                        name: name, newValue: newValue
-                    } : null;
-                    if (notifySpy) spyReportStart(change);
-                    observable.setNewValue(newValue);
-                    if (notify) notifyListeners(adm, change);
-                    if (notifySpy) spyReportEnd();
-                }
-            }
-            function notifyPropertyAddition(adm, object, name, newValue) {
-                var notify = hasListeners(adm);
-                var notifySpy = isSpyEnabled();
-                var change = notify || notifySpy ? {
-                    type: "add",
-                    object: object, name: name, newValue: newValue
-                } : null;
-                if (notifySpy) spyReportStart(change);
-                if (notify) notifyListeners(adm, change);
-                if (notifySpy) spyReportEnd();
-            }
-            var isObservableObjectAdministration = createInstanceofPredicate("ObservableObjectAdministration", ObservableObjectAdministration);
-            function isObservableObject(thing) {
-                if (isObject(thing)) {
-                    runLazyInitializers(thing);
-                    return isObservableObjectAdministration(thing.$mobx);
-                }
-                return false;
-            }
-            exports.isObservableObject = isObservableObject;
-            var UNCHANGED = {};
-            var ObservableValue = function (_super) {
-                __extends(ObservableValue, _super);
-                function ObservableValue(value, enhancer, name, notifySpy) {
-                    if (name === void 0) {
-                        name = "ObservableValue@" + getNextId();
-                    }
-                    if (notifySpy === void 0) {
-                        notifySpy = true;
-                    }
-                    var _this = _super.call(this, name) || this;
-                    _this.enhancer = enhancer;
-                    _this.hasUnreportedChange = false;
-                    _this.value = enhancer(value, undefined, name);
-                    if (notifySpy && isSpyEnabled()) {
-                        spyReport({ type: "create", object: _this, newValue: _this.value });
-                    }
-                    return _this;
-                }
-                ObservableValue.prototype.set = function (newValue) {
-                    var oldValue = this.value;
-                    newValue = this.prepareNewValue(newValue);
-                    if (newValue !== UNCHANGED) {
-                        var notifySpy = isSpyEnabled();
-                        if (notifySpy) {
-                            spyReportStart({
-                                type: "update",
-                                object: this,
-                                newValue: newValue, oldValue: oldValue
-                            });
-                        }
-                        this.setNewValue(newValue);
-                        if (notifySpy) spyReportEnd();
-                    }
-                };
-                ObservableValue.prototype.prepareNewValue = function (newValue) {
-                    checkIfStateModificationsAreAllowed(this);
-                    if (hasInterceptors(this)) {
-                        var change = interceptChange(this, { object: this, type: "update", newValue: newValue });
-                        if (!change) return UNCHANGED;
-                        newValue = change.newValue;
-                    }
-                    newValue = this.enhancer(newValue, this.value, this.name);
-                    return this.value !== newValue ? newValue : UNCHANGED;
-                };
-                ObservableValue.prototype.setNewValue = function (newValue) {
-                    var oldValue = this.value;
-                    this.value = newValue;
-                    this.reportChanged();
-                    if (hasListeners(this)) {
-                        notifyListeners(this, {
-                            type: "update",
-                            object: this,
-                            newValue: newValue,
-                            oldValue: oldValue
-                        });
-                    }
-                };
-                ObservableValue.prototype.get = function () {
-                    this.reportObserved();
-                    return this.value;
-                };
-                ObservableValue.prototype.intercept = function (handler) {
-                    return registerInterceptor(this, handler);
-                };
-                ObservableValue.prototype.observe = function (listener, fireImmediately) {
-                    if (fireImmediately) listener({
-                        object: this,
-                        type: "update",
-                        newValue: this.value,
-                        oldValue: undefined
-                    });
-                    return registerListener(this, listener);
-                };
-                ObservableValue.prototype.toJSON = function () {
-                    return this.get();
-                };
-                ObservableValue.prototype.toString = function () {
-                    return this.name + "[" + this.value + "]";
-                };
-                ObservableValue.prototype.valueOf = function () {
-                    return toPrimitive(this.get());
-                };
-                return ObservableValue;
-            }(BaseAtom);
-            ObservableValue.prototype[primitiveSymbol()] = ObservableValue.prototype.valueOf;
-            var isObservableValue = createInstanceofPredicate("ObservableValue", ObservableValue);
-            exports.isBoxedObservable = isObservableValue;
-            function getAtom(thing, property) {
-                if ((typeof thing === "undefined" ? "undefined" : _typeof(thing)) === "object" && thing !== null) {
-                    if (isObservableArray(thing)) {
-                        invariant(property === undefined, getMessage("m036"));
-                        return thing.$mobx.atom;
-                    }
-                    if (isObservableMap(thing)) {
-                        var anyThing = thing;
-                        if (property === undefined) return getAtom(anyThing._keys);
-                        var observable_2 = anyThing._data[property] || anyThing._hasMap[property];
-                        invariant(!!observable_2, "the entry '" + property + "' does not exist in the observable map '" + getDebugName(thing) + "'");
-                        return observable_2;
-                    }
-                    runLazyInitializers(thing);
-                    if (isObservableObject(thing)) {
-                        if (!property) return fail("please specify a property");
-                        var observable_3 = thing.$mobx.values[property];
-                        invariant(!!observable_3, "no observable property '" + property + "' found on the observable object '" + getDebugName(thing) + "'");
-                        return observable_3;
-                    }
-                    if (isAtom(thing) || isComputedValue(thing) || isReaction(thing)) {
-                        return thing;
-                    }
-                } else if (typeof thing === "function") {
-                    if (isReaction(thing.$mobx)) {
-                        return thing.$mobx;
-                    }
-                }
-                return fail("Cannot obtain atom from " + thing);
-            }
-            function getAdministration(thing, property) {
-                invariant(thing, "Expecting some object");
-                if (property !== undefined) return getAdministration(getAtom(thing, property));
-                if (isAtom(thing) || isComputedValue(thing) || isReaction(thing)) return thing;
-                if (isObservableMap(thing)) return thing;
-                runLazyInitializers(thing);
-                if (thing.$mobx) return thing.$mobx;
-                invariant(false, "Cannot obtain administration from " + thing);
-            }
-            function getDebugName(thing, property) {
-                var named;
-                if (property !== undefined) named = getAtom(thing, property);else if (isObservableObject(thing) || isObservableMap(thing)) named = getAdministration(thing);else named = getAtom(thing);
-                return named.name;
-            }
-            function createClassPropertyDecorator(onInitialize, _get, _set, enumerable, allowCustomArguments) {
-                function classPropertyDecorator(target, key, descriptor, customArgs, argLen) {
-                    if (argLen === void 0) {
-                        argLen = 0;
-                    }
-                    invariant(allowCustomArguments || quacksLikeADecorator(arguments), "This function is a decorator, but it wasn't invoked like a decorator");
-                    if (!descriptor) {
-                        var newDescriptor = {
-                            enumerable: enumerable,
-                            configurable: true,
-                            get: function get() {
-                                if (!this.__mobxInitializedProps || this.__mobxInitializedProps[key] !== true) typescriptInitializeProperty(this, key, undefined, onInitialize, customArgs, descriptor);
-                                return _get.call(this, key);
-                            },
-                            set: function set(v) {
-                                if (!this.__mobxInitializedProps || this.__mobxInitializedProps[key] !== true) {
-                                    typescriptInitializeProperty(this, key, v, onInitialize, customArgs, descriptor);
-                                } else {
-                                    _set.call(this, key, v);
-                                }
-                            }
-                        };
-                        if (arguments.length < 3 || arguments.length === 5 && argLen < 3) {
-                            Object.defineProperty(target, key, newDescriptor);
-                        }
-                        return newDescriptor;
-                    } else {
-                        if (!hasOwnProperty(target, "__mobxLazyInitializers")) {
-                            addHiddenProp(target, "__mobxLazyInitializers", target.__mobxLazyInitializers && target.__mobxLazyInitializers.slice() || []);
-                        }
-                        var value_1 = descriptor.value,
-                            initializer_1 = descriptor.initializer;
-                        target.__mobxLazyInitializers.push(function (instance) {
-                            onInitialize(instance, key, initializer_1 ? initializer_1.call(instance) : value_1, customArgs, descriptor);
-                        });
-                        return {
-                            enumerable: enumerable, configurable: true,
-                            get: function get() {
-                                if (this.__mobxDidRunLazyInitializers !== true) runLazyInitializers(this);
-                                return _get.call(this, key);
-                            },
-                            set: function set(v) {
-                                if (this.__mobxDidRunLazyInitializers !== true) runLazyInitializers(this);
-                                _set.call(this, key, v);
-                            }
-                        };
-                    }
-                }
-                if (allowCustomArguments) {
-                    return function () {
-                        if (quacksLikeADecorator(arguments)) return classPropertyDecorator.apply(null, arguments);
-                        var outerArgs = arguments;
-                        var argLen = arguments.length;
-                        return function (target, key, descriptor) {
-                            return classPropertyDecorator(target, key, descriptor, outerArgs, argLen);
-                        };
-                    };
-                }
-                return classPropertyDecorator;
-            }
-            function typescriptInitializeProperty(instance, key, v, onInitialize, customArgs, baseDescriptor) {
-                if (!hasOwnProperty(instance, "__mobxInitializedProps")) addHiddenProp(instance, "__mobxInitializedProps", {});
-                instance.__mobxInitializedProps[key] = true;
-                onInitialize(instance, key, v, customArgs, baseDescriptor);
-            }
-            function runLazyInitializers(instance) {
-                if (instance.__mobxDidRunLazyInitializers === true) return;
-                if (instance.__mobxLazyInitializers) {
-                    addHiddenProp(instance, "__mobxDidRunLazyInitializers", true);
-                    instance.__mobxDidRunLazyInitializers && instance.__mobxLazyInitializers.forEach(function (initializer) {
-                        return initializer(instance);
-                    });
-                }
-            }
-            function quacksLikeADecorator(args) {
-                return (args.length === 2 || args.length === 3) && typeof args[1] === "string";
-            }
-            function iteratorSymbol() {
-                return typeof Symbol === "function" && Symbol.iterator || "@@iterator";
-            }
-            var IS_ITERATING_MARKER = "__$$iterating";
-            function arrayAsIterator(array) {
-                invariant(array[IS_ITERATING_MARKER] !== true, "Illegal state: cannot recycle array as iterator");
-                addHiddenFinalProp(array, IS_ITERATING_MARKER, true);
-                var idx = -1;
-                addHiddenFinalProp(array, "next", function next() {
-                    idx++;
-                    return {
-                        done: idx >= this.length,
-                        value: idx < this.length ? this[idx] : undefined
-                    };
-                });
-                return array;
-            }
-            function declareIterator(prototType, iteratorFactory) {
-                addHiddenFinalProp(prototType, iteratorSymbol(), iteratorFactory);
-            }
-            var messages = {
-                "m001": "It is not allowed to assign new values to @action fields",
-                "m002": "`runInAction` expects a function",
-                "m003": "`runInAction` expects a function without arguments",
-                "m004": "autorun expects a function",
-                "m005": "Warning: attempted to pass an action to autorun. Actions are untracked and will not trigger on state changes. Use `reaction` or wrap only your state modification code in an action.",
-                "m006": "Warning: attempted to pass an action to autorunAsync. Actions are untracked and will not trigger on state changes. Use `reaction` or wrap only your state modification code in an action.",
-                "m007": "reaction only accepts 2 or 3 arguments. If migrating from MobX 2, please provide an options object",
-                "m008": "wrapping reaction expression in `asReference` is no longer supported, use options object instead",
-                "m009": "@computed can only be used on getter functions, like: '@computed get myProps() { return ...; }'. It looks like it was used on a property.",
-                "m010": "@computed can only be used on getter functions, like: '@computed get myProps() { return ...; }'",
-                "m011": "First argument to `computed` should be an expression. If using computed as decorator, don't pass it arguments",
-                "m012": "computed takes one or two arguments if used as function",
-                "m013": "[mobx.expr] 'expr' should only be used inside other reactive functions.",
-                "m014": "extendObservable expected 2 or more arguments",
-                "m015": "extendObservable expects an object as first argument",
-                "m016": "extendObservable should not be used on maps, use map.merge instead",
-                "m017": "all arguments of extendObservable should be objects",
-                "m018": "extending an object with another observable (object) is not supported. Please construct an explicit propertymap, using `toJS` if need. See issue #540",
-                "m019": "[mobx.isObservable] isObservable(object, propertyName) is not supported for arrays and maps. Use map.has or array.length instead.",
-                "m020": "modifiers can only be used for individual object properties",
-                "m021": "observable expects zero or one arguments",
-                "m022": "@observable can not be used on getters, use @computed instead",
-                "m023": "Using `transaction` is deprecated, use `runInAction` or `(@)action` instead.",
-                "m024": "whyRun() can only be used if a derivation is active, or by passing an computed value / reaction explicitly. If you invoked whyRun from inside a computation; the computation is currently suspended but re-evaluating because somebody requested its value.",
-                "m025": "whyRun can only be used on reactions and computed values",
-                "m026": "`action` can only be invoked on functions",
-                "m028": "It is not allowed to set `useStrict` when a derivation is running",
-                "m029": "INTERNAL ERROR only onBecomeUnobserved shouldn't be called twice in a row",
-                "m030a": "Since strict-mode is enabled, changing observed observable values outside actions is not allowed. Please wrap the code in an `action` if this change is intended. Tried to modify: ",
-                "m030b": "Side effects like changing state are not allowed at this point. Are you trying to modify state from, for example, the render function of a React component? Tried to modify: ",
-                "m031": "Computed values are not allowed to not cause side effects by changing observables that are already being observed. Tried to modify: ",
-                "m032": "* This computation is suspended (not in use by any reaction) and won't run automatically.\n	Didn't expect this computation to be suspended at this point?\n	  1. Make sure this computation is used by a reaction (reaction, autorun, observer).\n	  2. Check whether you are using this computation synchronously (in the same stack as they reaction that needs it).",
-                "m033": "`observe` doesn't support the fire immediately property for observable maps.",
-                "m034": "`mobx.map` is deprecated, use `new ObservableMap` or `mobx.observable.map` instead",
-                "m035": "Cannot make the designated object observable; it is not extensible",
-                "m036": "It is not possible to get index atoms from arrays",
-                "m037": "Hi there! I'm sorry you have just run into an exception.\nIf your debugger ends up here, know that some reaction (like the render() of an observer component, autorun or reaction)\nthrew an exception and that mobx caught it, to avoid that it brings the rest of your application down.\nThe original cause of the exception (the code that caused this reaction to run (again)), is still in the stack.\n\nHowever, more interesting is the actual stack trace of the error itself.\nHopefully the error is an instanceof Error, because in that case you can inspect the original stack of the error from where it was thrown.\nSee `error.stack` property, or press the very subtle \"(...)\" link you see near the console.error message that probably brought you here.\nThat stack is more interesting than the stack of this console.error itself.\n\nIf the exception you see is an exception you created yourself, make sure to use `throw new Error(\"Oops\")` instead of `throw \"Oops\"`,\nbecause the javascript environment will only preserve the original stack trace in the first form.\n\nYou can also make sure the debugger pauses the next time this very same exception is thrown by enabling \"Pause on caught exception\".\n(Note that it might pause on many other, unrelated exception as well).\n\nIf that all doesn't help you out, feel free to open an issue https://github.com/mobxjs/mobx/issues!\n",
-                "m038": "Missing items in this list?\n    1. Check whether all used values are properly marked as observable (use isObservable to verify)\n    2. Make sure you didn't dereference values too early. MobX observes props, not primitives. E.g: use 'person.name' instead of 'name' in your computation.\n"
-            };
-            function getMessage(id) {
-                return messages[id];
-            }
-            var EMPTY_ARRAY = [];
-            Object.freeze(EMPTY_ARRAY);
-            function getGlobal() {
-                return global;
-            }
-            function getNextId() {
-                return ++globalState.mobxGuid;
-            }
-            function fail(message, thing) {
-                invariant(false, message, thing);
-                throw "X";
-            }
-            function invariant(check, message, thing) {
-                if (!check) throw new Error("[mobx] Invariant failed: " + message + (thing ? " in '" + thing + "'" : ""));
-            }
-            var deprecatedMessages = [];
-            function deprecated(msg) {
-                if (deprecatedMessages.indexOf(msg) !== -1) return false;
-                deprecatedMessages.push(msg);
-                console.error("[mobx] Deprecated: " + msg);
-                return true;
-            }
-            function once(func) {
-                var invoked = false;
-                return function () {
-                    if (invoked) return;
-                    invoked = true;
-                    return func.apply(this, arguments);
-                };
-            }
-            var noop = function noop() {};
-            function unique(list) {
-                var res = [];
-                list.forEach(function (item) {
-                    if (res.indexOf(item) === -1) res.push(item);
-                });
-                return res;
-            }
-            function joinStrings(things, limit, separator) {
-                if (limit === void 0) {
-                    limit = 100;
-                }
-                if (separator === void 0) {
-                    separator = " - ";
-                }
-                if (!things) return "";
-                var sliced = things.slice(0, limit);
-                return "" + sliced.join(separator) + (things.length > limit ? " (... and " + (things.length - limit) + "more)" : "");
-            }
-            function isObject(value) {
-                return value !== null && (typeof value === "undefined" ? "undefined" : _typeof(value)) === "object";
-            }
-            function isPlainObject(value) {
-                if (value === null || (typeof value === "undefined" ? "undefined" : _typeof(value)) !== "object") return false;
-                var proto = Object.getPrototypeOf(value);
-                return proto === Object.prototype || proto === null;
-            }
-            function objectAssign() {
-                var res = arguments[0];
-                for (var i = 1, l = arguments.length; i < l; i++) {
-                    var source = arguments[i];
-                    for (var key in source) {
-                        if (hasOwnProperty(source, key)) {
-                            res[key] = source[key];
-                        }
-                    }
-                }
-                return res;
-            }
-            function valueDidChange(compareStructural, oldValue, newValue) {
-                if (typeof oldValue === 'number' && isNaN(oldValue)) {
-                    return typeof newValue !== 'number' || !isNaN(newValue);
-                }
-                return compareStructural ? !deepEqual(oldValue, newValue) : oldValue !== newValue;
-            }
-            var prototypeHasOwnProperty = Object.prototype.hasOwnProperty;
-            function hasOwnProperty(object, propName) {
-                return prototypeHasOwnProperty.call(object, propName);
-            }
-            function makeNonEnumerable(object, propNames) {
-                for (var i = 0; i < propNames.length; i++) {
-                    addHiddenProp(object, propNames[i], object[propNames[i]]);
-                }
-            }
-            function addHiddenProp(object, propName, value) {
-                Object.defineProperty(object, propName, {
-                    enumerable: false,
-                    writable: true,
-                    configurable: true,
-                    value: value
-                });
-            }
-            function addHiddenFinalProp(object, propName, value) {
-                Object.defineProperty(object, propName, {
-                    enumerable: false,
-                    writable: false,
-                    configurable: true,
-                    value: value
-                });
-            }
-            function isPropertyConfigurable(object, prop) {
-                var descriptor = Object.getOwnPropertyDescriptor(object, prop);
-                return !descriptor || descriptor.configurable !== false && descriptor.writable !== false;
-            }
-            function assertPropertyConfigurable(object, prop) {
-                invariant(isPropertyConfigurable(object, prop), "Cannot make property '" + prop + "' observable, it is not configurable and writable in the target object");
-            }
-            function getEnumerableKeys(obj) {
-                var res = [];
-                for (var key in obj) {
-                    res.push(key);
-                }return res;
-            }
-            function deepEqual(a, b) {
-                if (a === null && b === null) return true;
-                if (a === undefined && b === undefined) return true;
-                if ((typeof a === "undefined" ? "undefined" : _typeof(a)) !== "object") return a === b;
-                var aIsArray = isArrayLike(a);
-                var aIsMap = isMapLike(a);
-                if (aIsArray !== isArrayLike(b)) {
-                    return false;
-                } else if (aIsMap !== isMapLike(b)) {
-                    return false;
-                } else if (aIsArray) {
-                    if (a.length !== b.length) return false;
-                    for (var i = a.length - 1; i >= 0; i--) {
-                        if (!deepEqual(a[i], b[i])) return false;
-                    }return true;
-                } else if (aIsMap) {
-                    if (a.size !== b.size) return false;
-                    var equals_1 = true;
-                    a.forEach(function (value, key) {
-                        equals_1 = equals_1 && deepEqual(b.get(key), value);
-                    });
-                    return equals_1;
-                } else if ((typeof a === "undefined" ? "undefined" : _typeof(a)) === "object" && (typeof b === "undefined" ? "undefined" : _typeof(b)) === "object") {
-                    if (a === null || b === null) return false;
-                    if (isMapLike(a) && isMapLike(b)) {
-                        if (a.size !== b.size) return false;
-                        return deepEqual(observable.shallowMap(a).entries(), observable.shallowMap(b).entries());
-                    }
-                    if (getEnumerableKeys(a).length !== getEnumerableKeys(b).length) return false;
-                    for (var prop in a) {
-                        if (!(prop in b)) return false;
-                        if (!deepEqual(a[prop], b[prop])) return false;
-                    }
-                    return true;
-                }
-                return false;
-            }
-            function createInstanceofPredicate(name, clazz) {
-                var propName = "isMobX" + name;
-                clazz.prototype[propName] = true;
-                return function (x) {
-                    return isObject(x) && x[propName] === true;
-                };
-            }
-            function isArrayLike(x) {
-                return Array.isArray(x) || isObservableArray(x);
-            }
-            exports.isArrayLike = isArrayLike;
-            function isMapLike(x) {
-                return isES6Map(x) || isObservableMap(x);
-            }
-            function isES6Map(thing) {
-                if (getGlobal().Map !== undefined && thing instanceof getGlobal().Map) return true;
-                return false;
-            }
-            function primitiveSymbol() {
-                return typeof Symbol === "function" && Symbol.toPrimitive || "@@toPrimitive";
-            }
-            function toPrimitive(value) {
-                return value === null ? null : (typeof value === "undefined" ? "undefined" : _typeof(value)) === "object" ? "" + value : value;
-            }
-            /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
-
-        /***/ }),
-    /* 2 */
-    /***/ (function(module, exports, __webpack_require__) {
-
-        "use strict";
-
-
-        Object.defineProperty(exports, "__esModule", {
-            value: true
-        });
-
-        var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-        var _icons = __webpack_require__(6);
-
-        var _constants = __webpack_require__(0);
-
-        function renderHeader(_ref, instance) {
-            var meta = _ref.meta,
-                user = _ref.user,
-                reactions = _ref.reactions;
-
-            var container = document.createElement('div');
-            container.lang = "en-US";
-            container.className = 'gitment-container gitment-header-container';
-
-            var likeButton = document.createElement('span');
-            var likedReaction = reactions.find(function (reaction) {
-                return reaction.content === 'heart' && reaction.user.login === user.login;
-            });
-            likeButton.className = 'gitment-header-like-btn';
-            likeButton.innerHTML = '\n    ' + _icons.heart + '\n    ' + (likedReaction ? 'Unlike' : 'Like') + '\n    ' + (meta.reactions && meta.reactions.heart ? ' \u2022 <strong>' + meta.reactions.heart + '</strong> Liked' : '') + '\n  ';
-
-            if (likedReaction) {
-                likeButton.classList.add('liked');
-                likeButton.onclick = function () {
-                    return instance.unlike();
-                };
-            } else {
-                likeButton.classList.remove('liked');
-                likeButton.onclick = function () {
-                    return instance.like();
-                };
-            }
-            container.appendChild(likeButton);
-
-            var commentsCount = document.createElement('span');
-            commentsCount.innerHTML = '\n    ' + (meta.comments ? ' \u2022 <strong>' + meta.comments + '</strong> Comments' : '') + '\n  ';
-            container.appendChild(commentsCount);
-
-            var issueLink = document.createElement('a');
-            issueLink.className = 'gitment-header-issue-link';
-            issueLink.href = meta.html_url;
-            issueLink.target = '_blank';
-            issueLink.innerText = 'Issue Page';
-            container.appendChild(issueLink);
-
-            return container;
-        }
-
-        function renderComments(_ref2, instance) {
-            var meta = _ref2.meta,
-                comments = _ref2.comments,
-                commentReactions = _ref2.commentReactions,
-                currentPage = _ref2.currentPage,
-                user = _ref2.user,
-                error = _ref2.error;
-
-            var container = document.createElement('div');
-            container.lang = "en-US";
-            container.className = 'gitment-container gitment-comments-container';
-
-            if (error) {
-                var errorBlock = document.createElement('div');
-                errorBlock.className = 'gitment-comments-error';
-
-                if (error === _constants.NOT_INITIALIZED_ERROR && user.login && user.login.toLowerCase() === instance.owner.toLowerCase()) {
-                    var initHint = document.createElement('div');
-                    var initButton = document.createElement('button');
-                    initButton.className = 'gitment-comments-init-btn';
-                    initButton.onclick = function () {
-                        initButton.setAttribute('disabled', true);
-                        instance.init().catch(function (e) {
-                            initButton.removeAttribute('disabled');
-                            alert(e);
-                        });
-                    };
-                    initButton.innerText = 'Initialize Comments';
-                    initHint.appendChild(initButton);
-                    errorBlock.appendChild(initHint);
-                } else {
-                    errorBlock.innerText = error;
-                }
-                container.appendChild(errorBlock);
-                return container;
-            } else if (comments === undefined) {
-                var loading = document.createElement('div');
-                loading.innerText = 'Loading comments...';
-                loading.className = 'gitment-comments-loading';
-                container.appendChild(loading);
-                return container;
-            } else if (!comments.length) {
-                var emptyBlock = document.createElement('div');
-                emptyBlock.className = 'gitment-comments-empty';
-                emptyBlock.innerText = 'No Comment Yet';
-                container.appendChild(emptyBlock);
-                return container;
-            }
-
-            var commentsList = document.createElement('ul');
-            commentsList.className = 'gitment-comments-list';
-
-            comments.forEach(function (comment) {
-                var createDate = new Date(comment.created_at);
-                var updateDate = new Date(comment.updated_at);
-                var commentItem = document.createElement('li');
-                commentItem.className = 'gitment-comment';
-                commentItem.innerHTML = '\n      <a class="gitment-comment-avatar" href="' + comment.user.html_url + '" target="_blank">\n        <img class="gitment-comment-avatar-img" src="' + comment.user.avatar_url + '"/>\n      </a>\n      <div class="gitment-comment-main">\n        <div class="gitment-comment-header">\n          <a class="gitment-comment-name" href="' + comment.user.html_url + '" target="_blank">\n            ' + comment.user.login + '\n          </a>\n          commented on\n          <span title="' + createDate + '">' + createDate.toDateString() + '</span>\n          ' + (createDate.toString() !== updateDate.toString() ? ' \u2022 <span title="comment was edited at ' + updateDate + '">edited</span>' : '') + '\n          <div class="gitment-comment-like-btn">' + _icons.heart + ' ' + (comment.reactions.heart || '') + '</div>\n        </div>\n        <div class="gitment-comment-body gitment-markdown">' + comment.body_html + '</div>\n      </div>\n    ';
-                var likeButton = commentItem.querySelector('.gitment-comment-like-btn');
-                var likedReaction = commentReactions[comment.id] && commentReactions[comment.id].find(function (reaction) {
-                    return reaction.content === 'heart' && reaction.user.login === user.login;
-                });
-                if (likedReaction) {
-                    likeButton.classList.add('liked');
-                    likeButton.onclick = function () {
-                        return instance.unlikeAComment(comment.id);
-                    };
-                } else {
-                    likeButton.classList.remove('liked');
-                    likeButton.onclick = function () {
-                        return instance.likeAComment(comment.id);
-                    };
-                }
-
-                // dirty
-                // use a blank image to trigger height calculating when element rendered
-                var imgTrigger = document.createElement('img');
-                var markdownBody = commentItem.querySelector('.gitment-comment-body');
-                imgTrigger.className = 'gitment-hidden';
-                imgTrigger.src = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
-                imgTrigger.onload = function () {
-                    if (markdownBody.clientHeight > instance.maxCommentHeight) {
-                        markdownBody.classList.add('gitment-comment-body-folded');
-                        markdownBody.style.maxHeight = instance.maxCommentHeight + 'px';
-                        markdownBody.title = 'Click to Expand';
-                        markdownBody.onclick = function () {
-                            markdownBody.classList.remove('gitment-comment-body-folded');
-                            markdownBody.style.maxHeight = '';
-                            markdownBody.title = '';
-                            markdownBody.onclick = null;
-                        };
-                    }
-                };
-                commentItem.appendChild(imgTrigger);
-
-                commentsList.appendChild(commentItem);
-            });
-
-            container.appendChild(commentsList);
-
-            if (meta) {
-                var pageCount = Math.ceil(meta.comments / instance.perPage);
-                if (pageCount > 1) {
-                    var pagination = document.createElement('ul');
-                    pagination.className = 'gitment-comments-pagination';
-
-                    if (currentPage > 1) {
-                        var previousButton = document.createElement('li');
-                        previousButton.className = 'gitment-comments-page-item';
-                        previousButton.innerText = 'Previous';
-                        previousButton.onclick = function () {
-                            return instance.goto(currentPage - 1);
-                        };
-                        pagination.appendChild(previousButton);
-                    }
-
-                    var _loop = function _loop(i) {
-                        var pageItem = document.createElement('li');
-                        pageItem.className = 'gitment-comments-page-item';
-                        pageItem.innerText = i;
-                        pageItem.onclick = function () {
-                            return instance.goto(i);
-                        };
-                        if (currentPage === i) pageItem.classList.add('gitment-selected');
-                        pagination.appendChild(pageItem);
-                    };
-
-                    for (var i = 1; i <= pageCount; i++) {
-                        _loop(i);
-                    }
-
-                    if (currentPage < pageCount) {
-                        var nextButton = document.createElement('li');
-                        nextButton.className = 'gitment-comments-page-item';
-                        nextButton.innerText = 'Next';
-                        nextButton.onclick = function () {
-                            return instance.goto(currentPage + 1);
-                        };
-                        pagination.appendChild(nextButton);
-                    }
-
-                    container.appendChild(pagination);
-                }
-            }
-
-            return container;
-        }
-
-        function renderEditor(_ref3, instance) {
-            var user = _ref3.user,
-                error = _ref3.error;
-
-            var container = document.createElement('div');
-            container.lang = "en-US";
-            container.className = 'gitment-container gitment-editor-container';
-
-            var shouldDisable = user.login && !error ? '' : 'disabled';
-            var disabledTip = user.login ? '' : 'Login to Comment';
-            container.innerHTML = '\n      ' + (user.login ? '<a class="gitment-editor-avatar" href="' + user.html_url + '" target="_blank">\n            <img class="gitment-editor-avatar-img" src="' + user.avatar_url + '"/>\n          </a>' : user.isLoggingIn ? '<div class="gitment-editor-avatar">' + _icons.spinner + '</div>' : '<a class="gitment-editor-avatar" href="' + instance.loginLink + '" title="login with GitHub">\n              ' + _icons.github + '\n            </a>') + '\n    </a>\n    <div class="gitment-editor-main">\n      <div class="gitment-editor-header">\n        <nav class="gitment-editor-tabs">\n          <button class="gitment-editor-tab gitment-selected">Write</button>\n          <button class="gitment-editor-tab">Preview</button>\n        </nav>\n        <div class="gitment-editor-login">\n          ' + (user.login ? '<a class="gitment-editor-logout-link">Logout</a>' : user.isLoggingIn ? 'Logging in...' : '<a class="gitment-editor-login-link" href="' + instance.loginLink + '">Login</a> with GitHub') + '\n        </div>\n      </div>\n      <div class="gitment-editor-body">\n        <div class="gitment-editor-write-field">\n          <textarea placeholder="Leave a comment" title="' + disabledTip + '" ' + shouldDisable + '></textarea>\n        </div>\n        <div class="gitment-editor-preview-field gitment-hidden">\n          <div class="gitment-editor-preview gitment-markdown"></div>\n        </div>\n      </div>\n    </div>\n    <div class="gitment-editor-footer">\n      <a class="gitment-editor-footer-tip" href="https://guides.github.com/features/mastering-markdown/" target="_blank">\n        Styling with Markdown is supported\n      </a>\n      <button class="gitment-editor-submit" title="' + disabledTip + '" ' + shouldDisable + '>Comment</button>\n    </div>\n  ';
-            if (user.login) {
-                container.querySelector('.gitment-editor-logout-link').onclick = function () {
-                    return instance.logout();
-                };
-            }
-
-            var writeField = container.querySelector('.gitment-editor-write-field');
-            var previewField = container.querySelector('.gitment-editor-preview-field');
-
-            var textarea = writeField.querySelector('textarea');
-            textarea.oninput = function () {
-                textarea.style.height = 'auto';
-                var style = window.getComputedStyle(textarea, null);
-                var height = parseInt(style.height, 10);
-                var clientHeight = textarea.clientHeight;
-                var scrollHeight = textarea.scrollHeight;
-                if (clientHeight < scrollHeight) {
-                    textarea.style.height = height + scrollHeight - clientHeight + 'px';
-                }
-            };
-
-            var _container$querySelec = container.querySelectorAll('.gitment-editor-tab'),
-                _container$querySelec2 = _slicedToArray(_container$querySelec, 2),
-                writeTab = _container$querySelec2[0],
-                previewTab = _container$querySelec2[1];
-
-            writeTab.onclick = function () {
-                writeTab.classList.add('gitment-selected');
-                previewTab.classList.remove('gitment-selected');
-                writeField.classList.remove('gitment-hidden');
-                previewField.classList.add('gitment-hidden');
-
-                textarea.focus();
-            };
-            previewTab.onclick = function () {
-                previewTab.classList.add('gitment-selected');
-                writeTab.classList.remove('gitment-selected');
-                previewField.classList.remove('gitment-hidden');
-                writeField.classList.add('gitment-hidden');
-
-                var preview = previewField.querySelector('.gitment-editor-preview');
-                var content = textarea.value.trim();
-                if (!content) {
-                    preview.innerText = 'Nothing to preview';
-                    return;
-                }
-
-                preview.innerText = 'Loading preview...';
-                instance.markdown(content).then(function (html) {
-                    return preview.innerHTML = html;
-                });
-            };
-
-            var submitButton = container.querySelector('.gitment-editor-submit');
-            submitButton.onclick = function () {
-                submitButton.innerText = 'Submitting...';
-                submitButton.setAttribute('disabled', true);
-                instance.post(textarea.value.trim()).then(function (data) {
-                    textarea.value = '';
-                    textarea.style.height = 'auto';
-                    submitButton.removeAttribute('disabled');
-                    submitButton.innerText = 'Comment';
-                }).catch(function (e) {
-                    alert(e);
-                    submitButton.removeAttribute('disabled');
-                    submitButton.innerText = 'Comment';
-                });
-            };
-
-            return container;
-        }
-
-        function renderFooter() {
-            var container = document.createElement('div');
-            container.lang = "en-US";
-            container.className = 'gitment-container gitment-footer-container';
-            container.innerHTML = '\n    Powered by\n    <a class="gitment-footer-project-link" href="https://github.com/imsun/gitment" target="_blank">\n      Gitment\n    </a>\n  ';
-            return container;
-        }
-
-        function render(state, instance) {
-            var container = document.createElement('div');
-            container.lang = "en-US";
-            container.className = 'gitment-container gitment-root-container';
-            container.appendChild(instance.renderHeader(state, instance));
-            container.appendChild(instance.renderComments(state, instance));
-            container.appendChild(instance.renderEditor(state, instance));
-            container.appendChild(instance.renderFooter(state, instance));
-            return container;
-        }
-
-        exports.default = { render: render, renderHeader: renderHeader, renderComments: renderComments, renderEditor: renderEditor, renderFooter: renderFooter };
-
-        /***/ }),
-    /* 3 */
-    /***/ (function(module, exports, __webpack_require__) {
-
-        "use strict";
-
-
-        Object.defineProperty(exports, "__esModule", {
-            value: true
-        });
-        exports.http = exports.Query = exports.isString = undefined;
-
-        var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-        exports.getTargetContainer = getTargetContainer;
-
-        var _constants = __webpack_require__(0);
-
-        var isString = exports.isString = function isString(s) {
-            return toString.call(s) === '[object String]';
-        };
-
-        function getTargetContainer(container) {
-            var targetContainer = void 0;
-            if (container instanceof Element) {
-                targetContainer = container;
-            } else if (isString(container)) {
-                targetContainer = document.getElementById(container);
-            } else {
-                targetContainer = document.createElement('div');
-            }
-
-            return targetContainer;
-        }
-
-        var Query = exports.Query = {
-            parse: function parse() {
-                var search = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window.location.search;
-
-                if (!search) return {};
-                var queryString = search[0] === '?' ? search.substring(1) : search;
-                var query = {};
-                queryString.split('&').forEach(function (queryStr) {
-                    var _queryStr$split = queryStr.split('='),
-                        _queryStr$split2 = _slicedToArray(_queryStr$split, 2),
-                        key = _queryStr$split2[0],
-                        value = _queryStr$split2[1];
-
-                    if (key) query[key] = value;
-                });
-
-                return query;
-            },
-            stringify: function stringify(query) {
-                var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '?';
-
-                var queryString = Object.keys(query).map(function (key) {
-                    return key + '=' + encodeURIComponent(query[key] || '');
-                }).join('&');
-                return queryString ? prefix + queryString : '';
-            }
-        };
-
-        function ajaxFactory(method) {
-            return function (apiPath) {
-                var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-                var base = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'https://api.github.com';
-
-                var req = new XMLHttpRequest();
-                var token = localStorage.getItem(_constants.LS_ACCESS_TOKEN_KEY);
-
-                var url = '' + base + apiPath;
-                var body = null;
-                if (method === 'GET' || method === 'DELETE') {
-                    url += Query.stringify(data);
-                }
-
-                var p = new Promise(function (resolve, reject) {
-                    req.addEventListener('load', function () {
-                        var contentType = req.getResponseHeader('content-type');
-                        var res = req.responseText;
-                        if (!/json/.test(contentType)) {
-                            resolve(res);
-                            return;
-                        }
-                        var data = req.responseText ? JSON.parse(res) : {};
-                        if (data.message) {
-                            reject(new Error(data.message));
-                        } else {
-                            resolve(data);
-                        }
-                    });
-                    req.addEventListener('error', function (error) {
-                        return reject(error);
-                    });
-                });
-                req.open(method, url, true);
-
-                req.setRequestHeader('Accept', 'application/vnd.github.squirrel-girl-preview, application/vnd.github.html+json');
-                if (token) {
-                    req.setRequestHeader('Authorization', 'token ' + token);
-                }
-                if (method !== 'GET' && method !== 'DELETE') {
-                    body = JSON.stringify(data);
-                    req.setRequestHeader('Content-Type', 'application/json');
-                }
-
-                req.send(body);
-                return p;
-            };
-        }
-
-        var http = exports.http = {
-            get: ajaxFactory('GET'),
-            post: ajaxFactory('POST'),
-            delete: ajaxFactory('DELETE'),
-            put: ajaxFactory('PUT')
-        };
-
-        /***/ }),
-    /* 4 */
-    /***/ (function(module, exports, __webpack_require__) {
-
-        "use strict";
-
-
-        var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-        var g;
-
-// This works in non-strict mode
-        g = function () {
-            return this;
-        }();
-
-        try {
-            // This works if eval is allowed (see CSP)
-            g = g || Function("return this")() || (1, eval)("this");
-        } catch (e) {
-            // This works if the window reference is available
-            if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") g = window;
-        }
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-        module.exports = g;
-
-        /***/ }),
-    /* 5 */
-    /***/ (function(module, exports, __webpack_require__) {
-
-        "use strict";
-
-
-        var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-        var _mobx = __webpack_require__(1);
-
-        var _constants = __webpack_require__(0);
-
-        var _utils = __webpack_require__(3);
-
-        var _default = __webpack_require__(2);
-
-        var _default2 = _interopRequireDefault(_default);
-
-        function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-        function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-        var scope = 'public_repo';
-
-        function extendRenderer(instance, renderer) {
-            instance[renderer] = function (container) {
-                var targetContainer = (0, _utils.getTargetContainer)(container);
-                var render = instance.theme[renderer] || instance.defaultTheme[renderer];
-
-                (0, _mobx.autorun)(function () {
-                    var e = render(instance.state, instance);
-                    if (targetContainer.firstChild) {
-                        targetContainer.replaceChild(e, targetContainer.firstChild);
-                    } else {
-                        targetContainer.appendChild(e);
-                    }
-                });
-
-                return targetContainer;
-            };
-        }
-
-        var Gitment = function () {
-            _createClass(Gitment, [{
-                key: 'accessToken',
-                get: function get() {
-                    return localStorage.getItem(_constants.LS_ACCESS_TOKEN_KEY);
-                },
-                set: function set(token) {
-                    localStorage.setItem(_constants.LS_ACCESS_TOKEN_KEY, token);
-                }
-            }, {
-                key: 'loginLink',
-                get: function get() {
-                    var oauthUri = 'https://github.com/login/oauth/authorize';
-                    var redirect_uri = this.oauth.redirect_uri || window.location.href;
-
-                    var oauthParams = Object.assign({
-                        scope: scope,
-                        redirect_uri: redirect_uri
-                    }, this.oauth);
-
-                    return '' + oauthUri + _utils.Query.stringify(oauthParams);
-                }
-            }]);
-
-            function Gitment() {
-                var _this = this;
-
-                var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-                _classCallCheck(this, Gitment);
-
-                this.defaultTheme = _default2.default;
-                this.useTheme(_default2.default);
-
-                Object.assign(this, {
-                    id: window.location.href,
-                    title: window.document.title,
-                    link: window.location.href,
-                    desc: '',
-                    labels: [],
-                    theme: _default2.default,
-                    oauth: {},
-                    perPage: 20,
-                    maxCommentHeight: 250
-                }, options);
-
-                this.useTheme(this.theme);
-
-                var user = {};
-                try {
-                    var userInfo = localStorage.getItem(_constants.LS_USER_KEY);
-                    if (this.accessToken && userInfo) {
-                        Object.assign(user, JSON.parse(userInfo), {
-                            fromCache: true
-                        });
-                    }
-                } catch (e) {
-                    localStorage.removeItem(_constants.LS_USER_KEY);
-                }
-
-                this.state = (0, _mobx.observable)({
-                    user: user,
-                    error: null,
-                    meta: {},
-                    comments: undefined,
-                    reactions: [],
-                    commentReactions: {},
-                    currentPage: 1
-                });
-
-                var query = _utils.Query.parse();
-                if (query.code) {
-                    var _oauth = this.oauth,
-                        client_id = _oauth.client_id,
-                        client_secret = _oauth.client_secret;
-
-                    var code = query.code;
-                    delete query.code;
-                    var search = _utils.Query.stringify(query);
-                    var replacedUrl = '' + window.location.origin + window.location.pathname + search + window.location.hash;
-                    history.replaceState({}, '', replacedUrl);
-
-                    Object.assign(this, {
-                        id: replacedUrl,
-                        link: replacedUrl
-                    }, options);
-
-                    this.state.user.isLoggingIn = true;
-                    _utils.http.post('https://auth.baixiaotu.cc', {
-                        code: code,
-                        client_id: client_id,
-                        client_secret: client_secret
-                    }, '').then(function (data) {
-                        _this.accessToken = data.access_token;
-                        _this.update();
-                    }).catch(function (e) {
-                        _this.state.user.isLoggingIn = false;
-                        alert(e);
-                    });
-                } else {
-                    this.update();
-                }
-            }
-
-            _createClass(Gitment, [{
-                key: 'init',
-                value: function init() {
-                    var _this2 = this;
-
-                    return this.createIssue().then(function () {
-                        return _this2.loadComments();
-                    }).then(function (comments) {
-                        _this2.state.error = null;
-                        return comments;
-                    });
-                }
-            }, {
-                key: 'useTheme',
-                value: function useTheme() {
-                    var _this3 = this;
-
-                    var theme = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-                    this.theme = theme;
-
-                    var renderers = Object.keys(this.theme);
-                    renderers.forEach(function (renderer) {
-                        return extendRenderer(_this3, renderer);
-                    });
-                }
-            }, {
-                key: 'update',
-                value: function update() {
-                    var _this4 = this;
-
-                    return Promise.all([this.loadMeta(), this.loadUserInfo()]).then(function () {
-                        return Promise.all([_this4.loadComments().then(function () {
-                            return _this4.loadCommentReactions();
-                        }), _this4.loadReactions()]);
-                    }).catch(function (e) {
-                        return _this4.state.error = e;
-                    });
-                }
-            }, {
-                key: 'markdown',
-                value: function markdown(text) {
-                    return _utils.http.post('/markdown', {
-                        text: text,
-                        mode: 'gfm'
-                    });
-                }
-            }, {
-                key: 'createIssue',
-                value: function createIssue() {
-                    var _this5 = this;
-
-                    var id = this.id,
-                        owner = this.owner,
-                        repo = this.repo,
-                        title = this.title,
-                        link = this.link,
-                        desc = this.desc,
-                        labels = this.labels;
-
-
-                    return _utils.http.post('/repos/' + owner + '/' + repo + '/issues', {
-                        title: title,
-                        labels: labels.concat(['gitment', id]),
-                        body: link + '\n\n' + desc
-                    }).then(function (meta) {
-                        _this5.state.meta = meta;
-                        return meta;
-                    });
-                }
-            }, {
-                key: 'getIssue',
-                value: function getIssue() {
-                    if (this.state.meta.id) return Promise.resolve(this.state.meta);
-
-                    return this.loadMeta();
-                }
-            }, {
-                key: 'post',
-                value: function post(body) {
-                    var _this6 = this;
-
-                    return this.getIssue().then(function (issue) {
-                        return _utils.http.post(issue.comments_url, { body: body }, '');
-                    }).then(function (data) {
-                        _this6.state.meta.comments++;
-                        var pageCount = Math.ceil(_this6.state.meta.comments / _this6.perPage);
-                        if (_this6.state.currentPage === pageCount) {
-                            _this6.state.comments.push(data);
-                        }
-                        return data;
-                    });
-                }
-            }, {
-                key: 'loadMeta',
-                value: function loadMeta() {
-                    var _this7 = this;
-
-                    var id = this.id,
-                        owner = this.owner,
-                        repo = this.repo;
-
-                    return _utils.http.get('/repos/' + owner + '/' + repo + '/issues', {
-                        creator: owner,
-                        labels: id
-                    }).then(function (issues) {
-                        if (!issues.length) return Promise.reject(_constants.NOT_INITIALIZED_ERROR);
-                        _this7.state.meta = issues[0];
-                        return issues[0];
-                    });
-                }
-            }, {
-                key: 'loadComments',
-                value: function loadComments() {
-                    var _this8 = this;
-
-                    var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.state.currentPage;
-
-                    return this.getIssue().then(function (issue) {
-                        return _utils.http.get(issue.comments_url, { page: page, per_page: _this8.perPage }, '');
-                    }).then(function (comments) {
-                        _this8.state.comments = comments;
-                        return comments;
-                    });
-                }
-            }, {
-                key: 'loadUserInfo',
-                value: function loadUserInfo() {
-                    var _this9 = this;
-
-                    if (!this.accessToken) {
-                        this.logout();
-                        return Promise.resolve({});
-                    }
-
-                    return _utils.http.get('/user').then(function (user) {
-                        _this9.state.user = user;
-                        localStorage.setItem(_constants.LS_USER_KEY, JSON.stringify(user));
-                        return user;
-                    });
-                }
-            }, {
-                key: 'loadReactions',
-                value: function loadReactions() {
-                    var _this10 = this;
-
-                    if (!this.accessToken) {
-                        this.state.reactions = [];
-                        return Promise.resolve([]);
-                    }
-
-                    return this.getIssue().then(function (issue) {
-                        if (!issue.reactions.total_count) return [];
-                        return _utils.http.get(issue.reactions.url, {}, '');
-                    }).then(function (reactions) {
-                        _this10.state.reactions = reactions;
-                        return reactions;
-                    });
-                }
-            }, {
-                key: 'loadCommentReactions',
-                value: function loadCommentReactions() {
-                    var _this11 = this;
-
-                    if (!this.accessToken) {
-                        this.state.commentReactions = {};
-                        return Promise.resolve([]);
-                    }
-
-                    var comments = this.state.comments;
-                    var comentReactions = {};
-
-                    return Promise.all(comments.map(function (comment) {
-                        if (!comment.reactions.total_count) return [];
-
-                        var owner = _this11.owner,
-                            repo = _this11.repo;
-
-                        return _utils.http.get('/repos/' + owner + '/' + repo + '/issues/comments/' + comment.id + '/reactions', {});
-                    })).then(function (reactionsArray) {
-                        comments.forEach(function (comment, index) {
-                            comentReactions[comment.id] = reactionsArray[index];
-                        });
-                        _this11.state.commentReactions = comentReactions;
-
-                        return comentReactions;
-                    });
-                }
-            }, {
-                key: 'login',
-                value: function login() {
-                    window.location.href = this.loginLink;
-                }
-            }, {
-                key: 'logout',
-                value: function logout() {
-                    localStorage.removeItem(_constants.LS_ACCESS_TOKEN_KEY);
-                    localStorage.removeItem(_constants.LS_USER_KEY);
-                    this.state.user = {};
-                }
-            }, {
-                key: 'goto',
-                value: function goto(page) {
-                    this.state.currentPage = page;
-                    this.state.comments = undefined;
-                    return this.loadComments(page);
-                }
-            }, {
-                key: 'like',
-                value: function like() {
-                    var _this12 = this;
-
-                    if (!this.accessToken) {
-                        alert('Login to Like');
-                        return Promise.reject();
-                    }
-
-                    var owner = this.owner,
-                        repo = this.repo;
-
-
-                    return _utils.http.post('/repos/' + owner + '/' + repo + '/issues/' + this.state.meta.number + '/reactions', {
-                        content: 'heart'
-                    }).then(function (reaction) {
-                        _this12.state.reactions.push(reaction);
-                        _this12.state.meta.reactions.heart++;
-                    });
-                }
-            }, {
-                key: 'unlike',
-                value: function unlike() {
-                    var _this13 = this;
-
-                    if (!this.accessToken) return Promise.reject();
-
-                    var _state = this.state,
-                        user = _state.user,
-                        reactions = _state.reactions;
-
-                    var index = reactions.findIndex(function (reaction) {
-                        return reaction.user.login === user.login;
-                    });
-                    return _utils.http.delete('/reactions/' + reactions[index].id).then(function () {
-                        reactions.splice(index, 1);
-                        _this13.state.meta.reactions.heart--;
-                    });
-                }
-            }, {
-                key: 'likeAComment',
-                value: function likeAComment(commentId) {
-                    var _this14 = this;
-
-                    if (!this.accessToken) {
-                        alert('Login to Like');
-                        return Promise.reject();
-                    }
-
-                    var owner = this.owner,
-                        repo = this.repo;
-
-                    var comment = this.state.comments.find(function (comment) {
-                        return comment.id === commentId;
-                    });
-
-                    return _utils.http.post('/repos/' + owner + '/' + repo + '/issues/comments/' + commentId + '/reactions', {
-                        content: 'heart'
-                    }).then(function (reaction) {
-                        _this14.state.commentReactions[commentId].push(reaction);
-                        comment.reactions.heart++;
-                    });
-                }
-            }, {
-                key: 'unlikeAComment',
-                value: function unlikeAComment(commentId) {
-                    if (!this.accessToken) return Promise.reject();
-
-                    var reactions = this.state.commentReactions[commentId];
-                    var comment = this.state.comments.find(function (comment) {
-                        return comment.id === commentId;
-                    });
-                    var user = this.state.user;
-
-                    var index = reactions.findIndex(function (reaction) {
-                        return reaction.user.login === user.login;
-                    });
-
-                    return _utils.http.delete('/reactions/' + reactions[index].id).then(function () {
-                        reactions.splice(index, 1);
-                        comment.reactions.heart--;
-                    });
-                }
-            }]);
-
-            return Gitment;
-        }();
-
-        module.exports = Gitment;
-
-        /***/ }),
-    /* 6 */
-    /***/ (function(module, exports, __webpack_require__) {
-
-        "use strict";
-
-
-        Object.defineProperty(exports, "__esModule", {
-            value: true
-        });
-        /**
-         * Modified from https://github.com/evil-icons/evil-icons
-         */
-
-        var close = exports.close = '<svg class="gitment-close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M37.304 11.282l1.414 1.414-26.022 26.02-1.414-1.413z"/><path d="M12.696 11.282l26.022 26.02-1.414 1.415-26.022-26.02z"/></svg>';
-        var github = exports.github = '<svg class="gitment-github-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M25 10c-8.3 0-15 6.7-15 15 0 6.6 4.3 12.2 10.3 14.2.8.1 1-.3 1-.7v-2.6c-4.2.9-5.1-2-5.1-2-.7-1.7-1.7-2.2-1.7-2.2-1.4-.9.1-.9.1-.9 1.5.1 2.3 1.5 2.3 1.5 1.3 2.3 3.5 1.6 4.4 1.2.1-1 .5-1.6 1-2-3.3-.4-6.8-1.7-6.8-7.4 0-1.6.6-3 1.5-4-.2-.4-.7-1.9.1-4 0 0 1.3-.4 4.1 1.5 1.2-.3 2.5-.5 3.8-.5 1.3 0 2.6.2 3.8.5 2.9-1.9 4.1-1.5 4.1-1.5.8 2.1.3 3.6.1 4 1 1 1.5 2.4 1.5 4 0 5.8-3.5 7-6.8 7.4.5.5 1 1.4 1 2.8v4.1c0 .4.3.9 1 .7 6-2 10.2-7.6 10.2-14.2C40 16.7 33.3 10 25 10z"/></svg>';
-        var heart = exports.heart = '<svg class="gitment-heart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M25 39.7l-.6-.5C11.5 28.7 8 25 8 19c0-5 4-9 9-9 4.1 0 6.4 2.3 8 4.1 1.6-1.8 3.9-4.1 8-4.1 5 0 9 4 9 9 0 6-3.5 9.7-16.4 20.2l-.6.5zM17 12c-3.9 0-7 3.1-7 7 0 5.1 3.2 8.5 15 18.1 11.8-9.6 15-13 15-18.1 0-3.9-3.1-7-7-7-3.5 0-5.4 2.1-6.9 3.8L25 17.1l-1.1-1.3C22.4 14.1 20.5 12 17 12z"/></svg>';
-        var spinner = exports.spinner = '<svg class="gitment-spinner-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M25 18c-.6 0-1-.4-1-1V9c0-.6.4-1 1-1s1 .4 1 1v8c0 .6-.4 1-1 1z"/><path opacity=".3" d="M25 42c-.6 0-1-.4-1-1v-8c0-.6.4-1 1-1s1 .4 1 1v8c0 .6-.4 1-1 1z"/><path opacity=".3" d="M29 19c-.2 0-.3 0-.5-.1-.4-.3-.6-.8-.3-1.3l4-6.9c.3-.4.8-.6 1.3-.3.4.3.6.8.3 1.3l-4 6.9c-.2.2-.5.4-.8.4z"/><path opacity=".3" d="M17 39.8c-.2 0-.3 0-.5-.1-.4-.3-.6-.8-.3-1.3l4-6.9c.3-.4.8-.6 1.3-.3.4.3.6.8.3 1.3l-4 6.9c-.2.2-.5.4-.8.4z"/><path opacity=".93" d="M21 19c-.3 0-.6-.2-.8-.5l-4-6.9c-.3-.4-.1-1 .3-1.3.4-.3 1-.1 1.3.3l4 6.9c.3.4.1 1-.3 1.3-.2.2-.3.2-.5.2z"/><path opacity=".3" d="M33 39.8c-.3 0-.6-.2-.8-.5l-4-6.9c-.3-.4-.1-1 .3-1.3.4-.3 1-.1 1.3.3l4 6.9c.3.4.1 1-.3 1.3-.2.1-.3.2-.5.2z"/><path opacity=".65" d="M17 26H9c-.6 0-1-.4-1-1s.4-1 1-1h8c.6 0 1 .4 1 1s-.4 1-1 1z"/><path opacity=".3" d="M41 26h-8c-.6 0-1-.4-1-1s.4-1 1-1h8c.6 0 1 .4 1 1s-.4 1-1 1z"/><path opacity=".86" d="M18.1 21.9c-.2 0-.3 0-.5-.1l-6.9-4c-.4-.3-.6-.8-.3-1.3.3-.4.8-.6 1.3-.3l6.9 4c.4.3.6.8.3 1.3-.2.3-.5.4-.8.4z"/><path opacity=".3" d="M38.9 33.9c-.2 0-.3 0-.5-.1l-6.9-4c-.4-.3-.6-.8-.3-1.3.3-.4.8-.6 1.3-.3l6.9 4c.4.3.6.8.3 1.3-.2.3-.5.4-.8.4z"/><path opacity=".44" d="M11.1 33.9c-.3 0-.6-.2-.8-.5-.3-.4-.1-1 .3-1.3l6.9-4c.4-.3 1-.1 1.3.3.3.4.1 1-.3 1.3l-6.9 4c-.1.2-.3.2-.5.2z"/><path opacity=".3" d="M31.9 21.9c-.3 0-.6-.2-.8-.5-.3-.4-.1-1 .3-1.3l6.9-4c.4-.3 1-.1 1.3.3.3.4.1 1-.3 1.3l-6.9 4c-.2.2-.3.2-.5.2z"/></svg>';
-
-        /***/ })
-    /******/ ]);
-//# sourceMappingURL=gitment.browser.js.map
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="utf-8">
+  <link rel="dns-prefetch" href="https://github.githubassets.com">
+  <link rel="dns-prefetch" href="https://avatars.githubusercontent.com">
+  <link rel="dns-prefetch" href="https://github-cloud.s3.amazonaws.com">
+  <link rel="dns-prefetch" href="https://user-images.githubusercontent.com/">
+
+
+
+  <link crossorigin="anonymous" media="all" integrity="sha512-3hG7OZSCjIZYzfGBPDrQFRU3boNYT/qXlzU2U68nTaz5vloAGScHv8NJQlMw9/qnIOL6q1RHYJaPpI3eqXWpxA==" rel="stylesheet" href="https://github.githubassets.com/assets/frameworks-de11bb3994828c8658cdf1813c3ad015.css" />
+  <link crossorigin="anonymous" media="all" integrity="sha512-fIho76eytQjW+JwOlPlIZJYZO7QnipKaV0o5UFj2cUaPq07GSf8MgyJmaQjoGLUop04332TulZMWS3SiNDf7qg==" rel="stylesheet" href="https://github.githubassets.com/assets/site-7c8868efa7b2b508d6f89c0e94f94864.css" />
+    <link crossorigin="anonymous" media="all" integrity="sha512-s6ii15rljkQEiq0Go7/vEvvPRcWhDLsPrrtCyQ0MiMwn3giw4XyiMxv2YLRTQSfIXtRd6gGJ0sdxPXBiyIy8ZA==" rel="stylesheet" href="https://github.githubassets.com/assets/behaviors-b3a8a2d79ae58e44048aad06a3bfef12.css" />
+    
+    
+    
+    <link crossorigin="anonymous" media="all" integrity="sha512-fVNfkbxYbaAcNPb6JK6umhGZlkoDEZZvGmExXi47jX8kgWLxWuAYeQtH0qwYNRn4QVJIZ8J2zjV5UU8j5qJV7Q==" rel="stylesheet" href="https://github.githubassets.com/assets/github-7d535f91bc586da01c34f6fa24aeae9a.css" />
+
+  <script crossorigin="anonymous" defer="defer" integrity="sha512-CzeY4A6TiG4fGZSWZU8FxmzFFmcQFoPpArF0hkH0/J/S7UL4eed/LKEXMQXfTwiG5yEJBI+9BdKG8KQJNbhcIQ==" type="application/javascript" src="https://github.githubassets.com/assets/environment-0b3798e0.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-l29UBnv83sL+wIyhPbuVSEBlXzpZe7TojnGTTa2vhRzP75MHBJQMMEdSSgRmak1/iiBlZ+kU+xEyU+tLzLdryA==" type="application/javascript" src="https://github.githubassets.com/assets/chunk-frameworks-976f5406.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-7oLcNCYFywREWBSILDdZWGX9RRuUDpuBtxF2wtD3fbxTZ55cclQ4mowPqpyiHO0obgxiOYsfvtinpGrosoDaLA==" type="application/javascript" src="https://github.githubassets.com/assets/chunk-vendor-ee82dc34.js"></script>
+  
+  <script crossorigin="anonymous" defer="defer" integrity="sha512-/tlE7gWFxuvQsUmoc/Is14ybqhAvPmXOuEhJm+OXe5MTdidkVLbSTFQA7rpTkYJWrvKcEaL/ySS5va+EMEKRRg==" type="application/javascript" src="https://github.githubassets.com/assets/behaviors-fed944ee.js"></script>
+  
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-aEeAsfpL9cBt2DYP2NfaqKLyYLkN4BS+/ikvLHM+abhqZsoNmd3Wxqwu6TGp7Pf/vqvvGeL26/NswwMkS1WwQg==" type="application/javascript" data-module-id="./chunk-color-modes.js" data-src="https://github.githubassets.com/assets/chunk-color-modes-684780b1.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-+eb86n+61kMdQZXDjdY6nkbY+/wXbmOZMn5NzVuHw6rV+7WSb2RPXpjmDJqmIRhTyhUHspjKH6Umt/KaGWBEhw==" type="application/javascript" data-module-id="./chunk-contributions-spider-graph.js" data-src="https://github.githubassets.com/assets/chunk-contributions-spider-graph-f9e6fcea.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-mby8bB5XGqfOqL5ON7EzITNvEwRLadJ7n63Dq1r6NRqvm8ZKzaZJ8fDb3Mn+dabzhf1X/G4VmrKTyBrJAAxloQ==" type="application/javascript" data-module-id="./chunk-drag-drop.js" data-src="https://github.githubassets.com/assets/chunk-drag-drop-99bcbc6c.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-0mTtr23nvarjrRJD+D+fW5dbhJMdf+cOiBFbjgjl+py22PW4IgYpVGeJn48Kmcl9pgBH/xVktVKiNns7JMK4+A==" type="application/javascript" data-module-id="./chunk-edit.js" data-src="https://github.githubassets.com/assets/chunk-edit-d264edaf.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-aiqMIGGZGo8AQMjcoImKPMTsZVVRl6htCSY7BpRmpGPG/AF+Wq+P/Oj/dthWQOIk9cCNMPEas7O2zAR6oqn0tA==" type="application/javascript" data-module-id="./chunk-emoji-picker-element.js" data-src="https://github.githubassets.com/assets/chunk-emoji-picker-element-6a2a8c20.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-j5Eltv6XYkPt7XVCMWLH6qhNBoFOzxXLIsaoffjjTl2fw/sXVfluH+EGE5dYJPEBwsmqK0LenheRi9hmNcWnCA==" type="application/javascript" data-module-id="./chunk-insights-graph.js" data-src="https://github.githubassets.com/assets/chunk-insights-graph-8f9125b6.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-i9jAxszUL7SAm2CfefxFGfL+SlT850SJpT25efMGDRCMZrIO/mtMxHsbOLm7FgWAK+clhtO8L+Mj1IUowepsOw==" type="application/javascript" data-module-id="./chunk-jump-to.js" data-src="https://github.githubassets.com/assets/chunk-jump-to-8bd8c0c6.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-ma0OOy3nj0c1cqBx0BkcmIFsLqcSZ+MIukQxyEFM/OWTzZpG+QMgOoWPAHZz43M6fyjAUG1jH6c/6LPiiKPCyw==" type="application/javascript" data-module-id="./chunk-profile-pins-element.js" data-src="https://github.githubassets.com/assets/chunk-profile-pins-element-99ad0e3b.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-Ix91PUM8IpO6CWMqrsdvX2vj6JbxES12l824wQKHOuXI8DEWOsIE+IeTGnAAVF1LGjFs7xoAXpbPy/plfloYEw==" type="application/javascript" data-module-id="./chunk-runner-groups.js" data-src="https://github.githubassets.com/assets/chunk-runner-groups-231f753d.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-JoWpXsdKsRKFyspZP0lsV/mUnqLhErMvFLeq7PwLuptuR0JgHOv5NMWIeBqqWHuWmhIltMifR+/rEjO553Raug==" type="application/javascript" data-module-id="./chunk-sortable-behavior.js" data-src="https://github.githubassets.com/assets/chunk-sortable-behavior-2685a95e.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-WK8VXw3lfUQ/VRW0zlgKPhcMUqH0uTnB/KzePUPdZhCm/HpxfXXHKTGvj5C0Oex7+zbIM2ECzULbtTCT4ug3yg==" type="application/javascript" data-module-id="./chunk-toast.js" data-src="https://github.githubassets.com/assets/chunk-toast-58af155f.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-ZyozqjwhoIovRiwFwpwYmlQUgmIyGt5y8DgJhtiLHr9EM6f51vmXxaIIZap+ly64QSLa0zeA7DPCD6Yio2/AGA==" type="application/javascript" data-module-id="./chunk-tweetsodium.js" data-src="https://github.githubassets.com/assets/chunk-tweetsodium-672a33aa.js"></script>
+    <script crossorigin="anonymous" defer="defer" integrity="sha512-gYl7KOSELsEcMQaJU0EJvn55ZJA9YVougi4V9vEXYYymYJ+AFzK0+Pj3a+ZgW4AosOcFCf1ODKytug6qpK0DKw==" type="application/javascript" data-module-id="./chunk-user-status-submit.js" data-src="https://github.githubassets.com/assets/chunk-user-status-submit-81897b28.js"></script>
+  
+  <script crossorigin="anonymous" defer="defer" integrity="sha512-XUDt4p/HvdNTA7/2cAIaBS+E0H+DzSR+BXlFNSzrOn6EBn7BS5sRy/jliFZ6Jy3lM3hgZ2CMgRaS6xR89NxXxg==" type="application/javascript" src="https://github.githubassets.com/assets/repositories-5d40ede2.js"></script>
+<script crossorigin="anonymous" defer="defer" integrity="sha512-gt9J9mEtyJVTU9Kp+jjG2LSqnnpiZu3/WcIa5etaO34ew4bLpbw8WOd32fiNAvNxypLZUkBbXE0AUKqi7buxOQ==" type="application/javascript" src="https://github.githubassets.com/assets/diffs-82df49f6.js"></script>
+
+  <meta name="viewport" content="width=device-width">
+  
+  <title>gitment/gitment.js at master · imsun/gitment · GitHub</title>
+    <meta name="description" content="A comment system based on GitHub Issues. Contribute to imsun/gitment development by creating an account on GitHub.">
+    <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="GitHub">
+  <link rel="fluid-icon" href="https://github.com/fluidicon.png" title="GitHub">
+  <meta property="fb:app_id" content="1401488693436528">
+  <meta name="apple-itunes-app" content="app-id=1477376905" />
+    <meta name="twitter:image:src" content="https://avatars.githubusercontent.com/u/5890751?s=400&amp;v=4" /><meta name="twitter:site" content="@github" /><meta name="twitter:card" content="summary" /><meta name="twitter:title" content="imsun/gitment" /><meta name="twitter:description" content="A comment system based on GitHub Issues. Contribute to imsun/gitment development by creating an account on GitHub." />
+    <meta property="og:image" content="https://avatars.githubusercontent.com/u/5890751?s=400&amp;v=4" /><meta property="og:site_name" content="GitHub" /><meta property="og:type" content="object" /><meta property="og:title" content="imsun/gitment" /><meta property="og:url" content="https://github.com/imsun/gitment" /><meta property="og:description" content="A comment system based on GitHub Issues. Contribute to imsun/gitment development by creating an account on GitHub." />
+
+
+
+    
+
+  <link rel="assets" href="https://github.githubassets.com/">
+  
+
+  <meta name="request-id" content="065C:41CE:2B477E:378CED:60647901" data-pjax-transient="true"/><meta name="html-safe-nonce" content="3b32e3037362b484d6c63638f709b497a0b7a5c584541aa9d53ca442a67a7502" data-pjax-transient="true"/><meta name="visitor-payload" content="eyJyZWZlcnJlciI6IiIsInJlcXVlc3RfaWQiOiIwNjVDOjQxQ0U6MkI0NzdFOjM3OENFRDo2MDY0NzkwMSIsInZpc2l0b3JfaWQiOiI4MzE3OTk0MjUxMDMwMTMyOTkzIiwicmVnaW9uX2VkZ2UiOiJhcC1ub3J0aGVhc3QtMiIsInJlZ2lvbl9yZW5kZXIiOiJhcC1ub3J0aGVhc3QtMiJ9" data-pjax-transient="true"/><meta name="visitor-hmac" content="9a2757430a9b76e390be9936ab04d879ea1802615a61a09379497e47690b3c89" data-pjax-transient="true"/>
+
+    <meta name="hovercard-subject-tag" content="repository:86265277" data-pjax-transient>
+
+
+  <meta name="github-keyboard-shortcuts" content="repository,source-code" data-pjax-transient="true" />
+
+  
+
+  <meta name="selected-link" value="repo_source" data-pjax-transient>
+
+    <meta name="google-site-verification" content="c1kuD-K2HIVF635lypcsWPoD4kilo5-jA_wBFyT4uMY">
+  <meta name="google-site-verification" content="KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU">
+  <meta name="google-site-verification" content="ZzhVyEFwb7w3e0-uOTltm8Jsck2F5StVihD0exw2fsA">
+  <meta name="google-site-verification" content="GXs5KoUUkNCoaAZn7wPN-t01Pywp9M3sEjnt_3_ZWPc">
+
+  <meta name="octolytics-host" content="collector.githubapp.com" /><meta name="octolytics-app-id" content="github" /><meta name="octolytics-event-url" content="https://collector.githubapp.com/github-external/browser_event" />
+
+  <meta name="analytics-location" content="/&lt;user-name&gt;/&lt;repo-name&gt;/blob/show" data-pjax-transient="true" />
+
+  
+
+
+
+  <meta name="optimizely-datafile" content="{&quot;version&quot;: &quot;4&quot;, &quot;rollouts&quot;: [], &quot;typedAudiences&quot;: [], &quot;anonymizeIP&quot;: true, &quot;projectId&quot;: &quot;16737760170&quot;, &quot;variables&quot;: [], &quot;featureFlags&quot;: [], &quot;experiments&quot;: [], &quot;audiences&quot;: [{&quot;conditions&quot;: &quot;[\&quot;or\&quot;, {\&quot;match\&quot;: \&quot;exact\&quot;, \&quot;name\&quot;: \&quot;$opt_dummy_attribute\&quot;, \&quot;type\&quot;: \&quot;custom_attribute\&quot;, \&quot;value\&quot;: \&quot;$opt_dummy_value\&quot;}]&quot;, &quot;id&quot;: &quot;$opt_dummy_audience&quot;, &quot;name&quot;: &quot;Optimizely-Generated Audience for Backwards Compatibility&quot;}], &quot;groups&quot;: [{&quot;policy&quot;: &quot;random&quot;, &quot;trafficAllocation&quot;: [{&quot;entityId&quot;: &quot;20065350824&quot;, &quot;endOfRange&quot;: 10000}], &quot;experiments&quot;: [{&quot;status&quot;: &quot;Running&quot;, &quot;audienceIds&quot;: [], &quot;variations&quot;: [{&quot;variables&quot;: [], &quot;id&quot;: &quot;20061181493&quot;, &quot;key&quot;: &quot;control&quot;}, {&quot;variables&quot;: [], &quot;id&quot;: &quot;20046091568&quot;, &quot;key&quot;: &quot;most_popular&quot;}], &quot;id&quot;: &quot;20065350824&quot;, &quot;key&quot;: &quot;pricing_page&quot;, &quot;layerId&quot;: &quot;20047761391&quot;, &quot;trafficAllocation&quot;: [{&quot;entityId&quot;: &quot;20061181493&quot;, &quot;endOfRange&quot;: 5000}, {&quot;entityId&quot;: &quot;20046091568&quot;, &quot;endOfRange&quot;: 10000}], &quot;forcedVariations&quot;: {&quot;890b7acea08c1711c74beff6bd78b5e7&quot;: &quot;control&quot;, &quot;235830406.1616679911&quot;: &quot;control&quot;, &quot;f7d5ee986ba8bcc155e2393401c920f7&quot;: &quot;most_popular&quot;, &quot;2022915492.1615428687&quot;: &quot;most_popular&quot;, &quot;1006574531.1617036769&quot;: &quot;control&quot;, &quot;1693726779.1607624005&quot;: &quot;most_popular&quot;, &quot;b3d9f4f9910bc46c43a8d65ab83d8570&quot;: &quot;most_popular&quot;, &quot;1800070736.1616613011&quot;: &quot;control&quot;}}], &quot;id&quot;: &quot;19972601768&quot;}], &quot;attributes&quot;: [{&quot;id&quot;: &quot;16822470375&quot;, &quot;key&quot;: &quot;user_id&quot;}, {&quot;id&quot;: &quot;17143601254&quot;, &quot;key&quot;: &quot;spammy&quot;}, {&quot;id&quot;: &quot;18175660309&quot;, &quot;key&quot;: &quot;organization_plan&quot;}, {&quot;id&quot;: &quot;18813001570&quot;, &quot;key&quot;: &quot;is_logged_in&quot;}, {&quot;id&quot;: &quot;19073851829&quot;, &quot;key&quot;: &quot;geo&quot;}], &quot;botFiltering&quot;: false, &quot;accountId&quot;: &quot;16737760170&quot;, &quot;events&quot;: [{&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;17911811441&quot;, &quot;key&quot;: &quot;hydro_click.dashboard.teacher_toolbox_cta&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18124116703&quot;, &quot;key&quot;: &quot;submit.organizations.complete_sign_up&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18145892387&quot;, &quot;key&quot;: &quot;no_metric.tracked_outside_of_optimizely&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18178755568&quot;, &quot;key&quot;: &quot;click.org_onboarding_checklist.add_repo&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18180553241&quot;, &quot;key&quot;: &quot;submit.repository_imports.create&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18186103728&quot;, &quot;key&quot;: &quot;click.help.learn_more_about_repository_creation&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18188530140&quot;, &quot;key&quot;: &quot;test_event.do_not_use_in_production&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18191963644&quot;, &quot;key&quot;: &quot;click.empty_org_repo_cta.transfer_repository&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18195612788&quot;, &quot;key&quot;: &quot;click.empty_org_repo_cta.import_repository&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18210945499&quot;, &quot;key&quot;: &quot;click.org_onboarding_checklist.invite_members&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18211063248&quot;, &quot;key&quot;: &quot;click.empty_org_repo_cta.create_repository&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18215721889&quot;, &quot;key&quot;: &quot;click.org_onboarding_checklist.update_profile&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18224360785&quot;, &quot;key&quot;: &quot;click.org_onboarding_checklist.dismiss&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18234832286&quot;, &quot;key&quot;: &quot;submit.organization_activation.complete&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18252392383&quot;, &quot;key&quot;: &quot;submit.org_repository.create&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18257551537&quot;, &quot;key&quot;: &quot;submit.org_member_invitation.create&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18259522260&quot;, &quot;key&quot;: &quot;submit.organization_profile.update&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18564603625&quot;, &quot;key&quot;: &quot;view.classroom_select_organization&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18568612016&quot;, &quot;key&quot;: &quot;click.classroom_sign_in_click&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18572592540&quot;, &quot;key&quot;: &quot;view.classroom_name&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18574203855&quot;, &quot;key&quot;: &quot;click.classroom_create_organization&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18582053415&quot;, &quot;key&quot;: &quot;click.classroom_select_organization&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18589463420&quot;, &quot;key&quot;: &quot;click.classroom_create_classroom&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18591323364&quot;, &quot;key&quot;: &quot;click.classroom_create_first_classroom&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18591652321&quot;, &quot;key&quot;: &quot;click.classroom_grant_access&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18607131425&quot;, &quot;key&quot;: &quot;view.classroom_creation&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;18831680583&quot;, &quot;key&quot;: &quot;upgrade_account_plan&quot;}, {&quot;experimentIds&quot;: [&quot;20065350824&quot;], &quot;id&quot;: &quot;19064064515&quot;, &quot;key&quot;: &quot;click.signup&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;19075373687&quot;, &quot;key&quot;: &quot;click.view_account_billing_page&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;19077355841&quot;, &quot;key&quot;: &quot;click.dismiss_signup_prompt&quot;}, {&quot;experimentIds&quot;: [&quot;20065350824&quot;], &quot;id&quot;: &quot;19079713938&quot;, &quot;key&quot;: &quot;click.contact_sales&quot;}, {&quot;experimentIds&quot;: [&quot;20065350824&quot;], &quot;id&quot;: &quot;19120963070&quot;, &quot;key&quot;: &quot;click.compare_account_plans&quot;}, {&quot;experimentIds&quot;: [&quot;20065350824&quot;], &quot;id&quot;: &quot;19151690317&quot;, &quot;key&quot;: &quot;click.upgrade_account_cta&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;19424193129&quot;, &quot;key&quot;: &quot;click.open_account_switcher&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;19520330825&quot;, &quot;key&quot;: &quot;click.visit_account_profile&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;19540970635&quot;, &quot;key&quot;: &quot;click.switch_account_context&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;19730198868&quot;, &quot;key&quot;: &quot;submit.homepage_signup&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;19820830627&quot;, &quot;key&quot;: &quot;click.homepage_signup&quot;}, {&quot;experimentIds&quot;: [&quot;20065350824&quot;], &quot;id&quot;: &quot;19988571001&quot;, &quot;key&quot;: &quot;click.create_enterprise_trial&quot;}, {&quot;experimentIds&quot;: [&quot;20065350824&quot;], &quot;id&quot;: &quot;20036538294&quot;, &quot;key&quot;: &quot;click.create_organization_team&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;20040653299&quot;, &quot;key&quot;: &quot;click.input_enterprise_trial_form&quot;}, {&quot;experimentIds&quot;: [&quot;20065350824&quot;], &quot;id&quot;: &quot;20062030003&quot;, &quot;key&quot;: &quot;click.continue_with_team&quot;}, {&quot;experimentIds&quot;: [&quot;20065350824&quot;], &quot;id&quot;: &quot;20068947153&quot;, &quot;key&quot;: &quot;click.create_organization_free&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;20086636658&quot;, &quot;key&quot;: &quot;click.signup_continue.username&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;20091648988&quot;, &quot;key&quot;: &quot;click.signup_continue.create_account&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;20103637615&quot;, &quot;key&quot;: &quot;click.signup_continue.email&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;20111574253&quot;, &quot;key&quot;: &quot;click.signup_continue.password&quot;}, {&quot;experimentIds&quot;: [], &quot;id&quot;: &quot;20120044111&quot;, &quot;key&quot;: &quot;view.pricing_page&quot;}], &quot;revision&quot;: &quot;568&quot;}" />
+  <!-- To prevent page flashing, the optimizely JS needs to be loaded in the
+    <head> tag before the DOM renders -->
+  <script crossorigin="anonymous" defer="defer" integrity="sha512-ppkqG9oigwdagz43RuiRbdbEC9cwbbVhLSi7w17ZJh/gtf0c+gwoFszhoF2ebg4wESlxTZexIyAtl73BC8gfLg==" type="application/javascript" src="https://github.githubassets.com/assets/optimizely-a6992a1b.js"></script>
+
+
+
+  
+
+      <meta name="hostname" content="github.com">
+    <meta name="user-login" content="">
+
+
+      <meta name="expected-hostname" content="github.com">
+
+
+    <meta name="enabled-features" content="MARKETPLACE_PENDING_INSTALLATIONS,AUTOCOMPLETE_EMOJIS_IN_MARKDOWN_EDITOR">
+
+  <meta http-equiv="x-pjax-version" content="a848e87de392d310ce138fa86c6d4453818578156472a6256509da6150a5889a">
+  
+
+    
+  <meta name="go-import" content="github.com/imsun/gitment git https://github.com/imsun/gitment.git">
+
+  <meta name="octolytics-dimension-user_id" content="5890751" /><meta name="octolytics-dimension-user_login" content="imsun" /><meta name="octolytics-dimension-repository_id" content="86265277" /><meta name="octolytics-dimension-repository_nwo" content="imsun/gitment" /><meta name="octolytics-dimension-repository_public" content="true" /><meta name="octolytics-dimension-repository_is_fork" content="false" /><meta name="octolytics-dimension-repository_network_root_id" content="86265277" /><meta name="octolytics-dimension-repository_network_root_nwo" content="imsun/gitment" />
+
+
+
+    <link rel="canonical" href="https://github.com/imsun/gitment/blob/master/src/gitment.js" data-pjax-transient>
+
+
+  <meta name="browser-stats-url" content="https://api.github.com/_private/browser/stats">
+
+  <meta name="browser-errors-url" content="https://api.github.com/_private/browser/errors">
+
+  <meta name="browser-optimizely-client-errors-url" content="https://api.github.com/_private/browser/optimizely_client/errors">
+
+  <link rel="mask-icon" href="https://github.githubassets.com/pinned-octocat.svg" color="#000000">
+  <link rel="alternate icon" class="js-site-favicon" type="image/png" href="https://github.githubassets.com/favicons/favicon.png">
+  <link rel="icon" class="js-site-favicon" type="image/svg+xml" href="https://github.githubassets.com/favicons/favicon.svg">
+
+<meta name="theme-color" content="#1e2327">
+
+
+
+  <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials">
+
+  </head>
+
+  <body class="logged-out env-production page-responsive page-blob" style="word-wrap: break-word;">
+    
+
+    <div class="position-relative js-header-wrapper ">
+      <a href="#start-of-content" class="px-2 py-4 color-bg-info-inverse color-text-white show-on-focus js-skip-to-content">Skip to content</a>
+      <span class="progress-pjax-loader width-full js-pjax-loader-bar Progress position-fixed">
+    <span style="background-color: #79b8ff;width: 0%;" class="Progress-item progress-pjax-loader-bar "></span>
+</span>      
+      
+
+
+            <header class="Header-old header-logged-out js-details-container Details position-relative f4 py-2" role="banner">
+  <div class="container-xl d-lg-flex flex-items-center p-responsive">
+    <div class="d-flex flex-justify-between flex-items-center">
+        <a class="mr-4" href="https://github.com/" aria-label="Homepage" data-ga-click="(Logged out) Header, go to homepage, icon:logo-wordmark">
+          <svg height="32" class="octicon octicon-mark-github color-text-white" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </a>
+
+          <div class="d-lg-none css-truncate css-truncate-target width-fit p-2">
+            
+
+          </div>
+
+        <div class="d-flex flex-items-center">
+              <a href="/join?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Fblob%2Fshow&amp;source=header-repo"
+                class="d-inline-block d-lg-none f5 color-text-white no-underline border color-border-tertiary rounded-2 px-2 py-1 mr-3 mr-sm-5 js-signup-redesign-control js-signup-redesign-target"
+                data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="1438dec25f3268132f6a5859e9db18b688b450f521a5ab50ae72b0fdf805ee89"
+              >
+                Sign&nbsp;up
+              </a>
+              <a href="/join_next?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Fblob%2Fshow&amp;source=header-repo"
+                class="d-inline-block d-lg-none f5 color-text-white no-underline border color-border-tertiary rounded-2 px-2 py-1 mr-3 mr-sm-5 js-signup-redesign-variation js-signup-redesign-target"
+                hidden
+                data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="1438dec25f3268132f6a5859e9db18b688b450f521a5ab50ae72b0fdf805ee89"
+              >
+                Sign&nbsp;up
+              </a>
+
+          <button class="btn-link d-lg-none mt-1 js-details-target" type="button" aria-label="Toggle navigation" aria-expanded="false">
+            <svg height="24" class="octicon octicon-three-bars color-text-white" viewBox="0 0 16 16" version="1.1" width="24" aria-hidden="true"><path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z"></path></svg>
+          </button>
+        </div>
+    </div>
+
+    <div class="HeaderMenu HeaderMenu--logged-out position-fixed top-0 right-0 bottom-0 height-fit position-lg-relative d-lg-flex flex-justify-between flex-items-center flex-auto">
+      <div class="d-flex d-lg-none flex-justify-end border-bottom color-bg-secondary p-3">
+        <button class="btn-link js-details-target" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          <svg height="24" class="octicon octicon-x color-text-secondary" viewBox="0 0 24 24" version="1.1" width="24" aria-hidden="true"><path fill-rule="evenodd" d="M5.72 5.72a.75.75 0 011.06 0L12 10.94l5.22-5.22a.75.75 0 111.06 1.06L13.06 12l5.22 5.22a.75.75 0 11-1.06 1.06L12 13.06l-5.22 5.22a.75.75 0 01-1.06-1.06L10.94 12 5.72 6.78a.75.75 0 010-1.06z"></path></svg>
+        </button>
+      </div>
+
+        <nav class="mt-0 px-3 px-lg-0 mb-5 mb-lg-0" aria-label="Global">
+          <ul class="d-lg-flex list-style-none">
+              <li class="d-block d-lg-flex flex-lg-nowrap flex-lg-items-center border-bottom border-lg-bottom-0 mr-0 mr-lg-3 edge-item-fix position-relative flex-wrap flex-justify-between d-flex flex-items-center ">
+                <details class="HeaderMenu-details details-overlay details-reset width-full">
+                  <summary class="HeaderMenu-summary HeaderMenu-link px-0 py-3 border-0 no-wrap d-block d-lg-inline-block">
+                    Why GitHub?
+                    <svg x="0px" y="0px" viewBox="0 0 14 8" xml:space="preserve" fill="none" class="icon-chevon-down-mktg position-absolute position-lg-relative">
+                      <path d="M1,1l6.2,6L13,1"></path>
+                    </svg>
+                  </summary>
+                  <div class="dropdown-menu flex-auto rounded px-0 mt-0 pb-4 p-lg-4 position-relative position-lg-absolute left-0 left-lg-n4">
+                    <a href="/features" class="py-2 lh-condensed-ultra d-block Link--primary no-underline h5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Features">Features <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a>
+                    <ul class="list-style-none f5 pb-3">
+                        <li class="edge-item-fix"><a href="/mobile" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">Mobile <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                        <li class="edge-item-fix"><a href="/features/actions" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">Actions <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                        <li class="edge-item-fix"><a href="/features/codespaces" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">Codespaces <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                        <li class="edge-item-fix"><a href="/features/packages" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">Packages <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                        <li class="edge-item-fix"><a href="/features/security" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">Security <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                        <li class="edge-item-fix"><a href="/features/code-review/" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">Code review <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                        <li class="edge-item-fix"><a href="/features/project-management/" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">Project management <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                        <li class="edge-item-fix"><a href="/features/integrations" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">Integrations <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                    </ul>
+
+                    <ul class="list-style-none mb-0 border-lg-top pt-lg-3">
+                      <li class="edge-item-fix"><a href="/sponsors" class="py-2 lh-condensed-ultra d-block no-underline Link--primary no-underline h5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Sponsors">GitHub Sponsors <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="/customer-stories" class="py-2 lh-condensed-ultra d-block no-underline Link--primary no-underline h5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Customer stories">Customer stories<span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                    </ul>
+                  </div>
+                </details>
+              </li>
+              <li class="border-bottom border-lg-bottom-0 mr-0 mr-lg-3">
+                <a href="/team" class="HeaderMenu-link no-underline py-3 d-block d-lg-inline-block" data-ga-click="(Logged out) Header, go to Team">Team</a>
+              </li>
+              <li class="border-bottom border-lg-bottom-0 mr-0 mr-lg-3">
+                <a href="/enterprise" class="HeaderMenu-link no-underline py-3 d-block d-lg-inline-block" data-ga-click="(Logged out) Header, go to Enterprise">Enterprise</a>
+              </li>
+
+              <li class="d-block d-lg-flex flex-lg-nowrap flex-lg-items-center border-bottom border-lg-bottom-0 mr-0 mr-lg-3 edge-item-fix position-relative flex-wrap flex-justify-between d-flex flex-items-center ">
+                <details class="HeaderMenu-details details-overlay details-reset width-full">
+                  <summary class="HeaderMenu-summary HeaderMenu-link px-0 py-3 border-0 no-wrap d-block d-lg-inline-block">
+                    Explore
+                    <svg x="0px" y="0px" viewBox="0 0 14 8" xml:space="preserve" fill="none" class="icon-chevon-down-mktg position-absolute position-lg-relative">
+                      <path d="M1,1l6.2,6L13,1"></path>
+                    </svg>
+                  </summary>
+
+                  <div class="dropdown-menu flex-auto rounded px-0 pt-2 pb-0 mt-0 pb-4 p-lg-4 position-relative position-lg-absolute left-0 left-lg-n4">
+                    <ul class="list-style-none mb-3">
+                      <li class="edge-item-fix"><a href="/explore" class="py-2 lh-condensed-ultra d-block Link--primary no-underline h5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Explore">Explore GitHub <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                    </ul>
+
+                    <h4 class="color-text-tertiary text-normal text-mono f5 mb-2 border-lg-top pt-lg-3">Learn and contribute</h4>
+                    <ul class="list-style-none mb-3">
+                      <li class="edge-item-fix"><a href="/topics" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Topics">Topics <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                        <li class="edge-item-fix"><a href="/collections" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Collections">Collections <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="/trending" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Trending">Trending <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="https://lab.github.com/" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Learning lab">Learning Lab <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="https://opensource.guide" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Open source guides">Open source guides <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                    </ul>
+
+                    <h4 class="color-text-tertiary text-normal text-mono f5 mb-2 border-lg-top pt-lg-3">Connect with others</h4>
+                    <ul class="list-style-none mb-0">
+                      <li class="edge-item-fix"><a href="https://github.com/readme" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover">The ReadME Project <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="https://github.com/events" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Events">Events <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="https://github.community" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Community forum">Community forum <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="https://education.github.com" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to GitHub Education">GitHub Education <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="https://stars.github.com" class="py-2 pb-0 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to GitHub Stars Program">GitHub Stars program <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                    </ul>
+                  </div>
+                </details>
+              </li>
+
+              <li class="border-bottom border-lg-bottom-0 mr-0 mr-lg-3">
+                <a href="/marketplace" class="HeaderMenu-link no-underline py-3 d-block d-lg-inline-block" data-ga-click="(Logged out) Header, go to Marketplace">Marketplace</a>
+              </li>
+
+              <li class="d-block d-lg-flex flex-lg-nowrap flex-lg-items-center border-bottom border-lg-bottom-0 mr-0 mr-lg-3 edge-item-fix position-relative flex-wrap flex-justify-between d-flex flex-items-center ">
+                <details class="HeaderMenu-details details-overlay details-reset width-full">
+                  <summary class="HeaderMenu-summary HeaderMenu-link px-0 py-3 border-0 no-wrap d-block d-lg-inline-block">
+                    Pricing
+                    <svg x="0px" y="0px" viewBox="0 0 14 8" xml:space="preserve" fill="none" class="icon-chevon-down-mktg position-absolute position-lg-relative">
+                       <path d="M1,1l6.2,6L13,1"></path>
+                    </svg>
+                  </summary>
+
+                  <div class="dropdown-menu flex-auto rounded px-0 pt-2 pb-4 mt-0 p-lg-4 position-relative position-lg-absolute left-0 left-lg-n4">
+                    <a href="/pricing" class="pb-2 lh-condensed-ultra d-block Link--primary no-underline h5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Pricing">Plans <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a>
+
+                    <ul class="list-style-none mb-3">
+                      <li class="edge-item-fix"><a href="/pricing#feature-comparison" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Compare plans">Compare plans <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                      <li class="edge-item-fix"><a href="https://enterprise.github.com/contact" class="py-2 lh-condensed-ultra d-block Link--secondary no-underline f5 Bump-link--hover" data-ga-click="(Logged out) Header, go to Contact Sales">Contact Sales <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                    </ul>
+
+                    <ul class="list-style-none mb-0 border-lg-top pt-lg-3">
+                      <li class="edge-item-fix"><a href="https://education.github.com" class="py-2 pb-0 lh-condensed-ultra d-block no-underline Link--primary no-underline h5 Bump-link--hover"  data-ga-click="(Logged out) Header, go to Education">Education <span class="Bump-link-symbol float-right text-normal color-text-tertiary pr-3">&rarr;</span></a></li>
+                    </ul>
+                  </div>
+                </details>
+              </li>
+          </ul>
+        </nav>
+
+      <div class="d-lg-flex flex-items-center px-3 px-lg-0 text-center text-lg-left">
+          <div class="d-lg-flex min-width-0 mb-3 mb-lg-0">
+            <div class="header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to"
+  role="combobox"
+  aria-owns="jump-to-results"
+  aria-label="Search or jump to"
+  aria-haspopup="listbox"
+  aria-expanded="false"
+>
+  <div class="position-relative">
+    <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="js-site-search-form" role="search" aria-label="Site" data-scope-type="Repository" data-scope-id="86265277" data-scoped-search-url="/imsun/gitment/search" data-owner-scoped-search-url="/users/imsun/search" data-unscoped-search-url="/search" action="/imsun/gitment/search" accept-charset="UTF-8" method="get">
+      <label class="form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+        <input type="text"
+          class="form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+          data-hotkey="s,/"
+          name="q"
+          value=""
+          placeholder="Search"
+          data-unscoped-placeholder="Search GitHub"
+          data-scoped-placeholder="Search"
+          autocapitalize="off"
+          aria-autocomplete="list"
+          aria-controls="jump-to-results"
+          aria-label="Search"
+          data-jump-to-suggestions-path="/_graphql/GetSuggestedNavigationDestinations"
+          spellcheck="false"
+          autocomplete="off"
+          >
+          <input type="hidden" data-csrf="true" class="js-data-jump-to-suggestions-path-csrf" value="UiiPASFIouqCJbjyACvr5N/MiWJw37cRMAhuXcvuy7+YuIlcRGFeEm9mkxcMtjpwuY4XHehXfS/6nvqprh3uXA==" />
+          <input type="hidden" class="js-site-search-type-field" name="type" >
+            <img src="https://github.githubassets.com/images/search-key-slash.svg" alt="" class="mr-2 header-search-key-slash">
+
+            <div class="Box position-absolute overflow-hidden d-none jump-to-suggestions js-jump-to-suggestions-container">
+              
+<ul class="d-none js-jump-to-suggestions-template-container">
+  
+
+<li class="d-flex flex-justify-start flex-items-center p-0 f5 navigation-item js-navigation-item js-jump-to-suggestion" role="option">
+  <a tabindex="-1" class="no-underline d-flex flex-auto flex-items-center jump-to-suggestions-path js-jump-to-suggestion-path js-navigation-open p-2" href="" data-item-type="suggestion">
+    <div class="jump-to-octicon js-jump-to-octicon flex-shrink-0 mr-2 text-center d-none">
+      <svg height="16" width="16" class="octicon octicon-repo flex-shrink-0 js-jump-to-octicon-repo d-none" title="Repository" aria-label="Repository" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
+      <svg height="16" width="16" class="octicon octicon-project flex-shrink-0 js-jump-to-octicon-project d-none" title="Project" aria-label="Project" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M1.75 0A1.75 1.75 0 000 1.75v12.5C0 15.216.784 16 1.75 16h12.5A1.75 1.75 0 0016 14.25V1.75A1.75 1.75 0 0014.25 0H1.75zM1.5 1.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v12.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25V1.75zM11.75 3a.75.75 0 00-.75.75v7.5a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75zm-8.25.75a.75.75 0 011.5 0v5.5a.75.75 0 01-1.5 0v-5.5zM8 3a.75.75 0 00-.75.75v3.5a.75.75 0 001.5 0v-3.5A.75.75 0 008 3z"></path></svg>
+      <svg height="16" width="16" class="octicon octicon-search flex-shrink-0 js-jump-to-octicon-search d-none" title="Search" aria-label="Search" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M11.5 7a4.499 4.499 0 11-8.998 0A4.499 4.499 0 0111.5 7zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"></path></svg>
+    </div>
+
+    <img class="avatar mr-2 flex-shrink-0 js-jump-to-suggestion-avatar d-none" alt="" aria-label="Team" src="" width="28" height="28">
+
+    <div class="jump-to-suggestion-name js-jump-to-suggestion-name flex-auto overflow-hidden text-left no-wrap css-truncate css-truncate-target">
+    </div>
+
+    <div class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 color-text-tertiary ml-1 f6 d-none js-jump-to-badge-search">
+      <span class="js-jump-to-badge-search-text-default d-none" aria-label="in this repository">
+        In this repository
+      </span>
+      <span class="js-jump-to-badge-search-text-global d-none" aria-label="in all of GitHub">
+        All GitHub
+      </span>
+      <span aria-hidden="true" class="d-inline-block ml-1 v-align-middle">↵</span>
+    </div>
+
+    <div aria-hidden="true" class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 color-text-tertiary ml-1 f6 d-none d-on-nav-focus js-jump-to-badge-jump">
+      Jump to
+      <span class="d-inline-block ml-1 v-align-middle">↵</span>
+    </div>
+  </a>
+</li>
+
+</ul>
+
+<ul class="d-none js-jump-to-no-results-template-container">
+  <li class="d-flex flex-justify-center flex-items-center f5 d-none js-jump-to-suggestion p-2">
+    <span class="color-text-secondary">No suggested jump to results</span>
+  </li>
+</ul>
+
+<ul id="jump-to-results" role="listbox" class="p-0 m-0 js-navigation-container jump-to-suggestions-results-container js-jump-to-suggestions-results-container">
+  
+
+<li class="d-flex flex-justify-start flex-items-center p-0 f5 navigation-item js-navigation-item js-jump-to-scoped-search d-none" role="option">
+  <a tabindex="-1" class="no-underline d-flex flex-auto flex-items-center jump-to-suggestions-path js-jump-to-suggestion-path js-navigation-open p-2" href="" data-item-type="scoped_search">
+    <div class="jump-to-octicon js-jump-to-octicon flex-shrink-0 mr-2 text-center d-none">
+      <svg height="16" width="16" class="octicon octicon-repo flex-shrink-0 js-jump-to-octicon-repo d-none" title="Repository" aria-label="Repository" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
+      <svg height="16" width="16" class="octicon octicon-project flex-shrink-0 js-jump-to-octicon-project d-none" title="Project" aria-label="Project" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M1.75 0A1.75 1.75 0 000 1.75v12.5C0 15.216.784 16 1.75 16h12.5A1.75 1.75 0 0016 14.25V1.75A1.75 1.75 0 0014.25 0H1.75zM1.5 1.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v12.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25V1.75zM11.75 3a.75.75 0 00-.75.75v7.5a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75zm-8.25.75a.75.75 0 011.5 0v5.5a.75.75 0 01-1.5 0v-5.5zM8 3a.75.75 0 00-.75.75v3.5a.75.75 0 001.5 0v-3.5A.75.75 0 008 3z"></path></svg>
+      <svg height="16" width="16" class="octicon octicon-search flex-shrink-0 js-jump-to-octicon-search d-none" title="Search" aria-label="Search" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M11.5 7a4.499 4.499 0 11-8.998 0A4.499 4.499 0 0111.5 7zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"></path></svg>
+    </div>
+
+    <img class="avatar mr-2 flex-shrink-0 js-jump-to-suggestion-avatar d-none" alt="" aria-label="Team" src="" width="28" height="28">
+
+    <div class="jump-to-suggestion-name js-jump-to-suggestion-name flex-auto overflow-hidden text-left no-wrap css-truncate css-truncate-target">
+    </div>
+
+    <div class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 color-text-tertiary ml-1 f6 d-none js-jump-to-badge-search">
+      <span class="js-jump-to-badge-search-text-default d-none" aria-label="in this repository">
+        In this repository
+      </span>
+      <span class="js-jump-to-badge-search-text-global d-none" aria-label="in all of GitHub">
+        All GitHub
+      </span>
+      <span aria-hidden="true" class="d-inline-block ml-1 v-align-middle">↵</span>
+    </div>
+
+    <div aria-hidden="true" class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 color-text-tertiary ml-1 f6 d-none d-on-nav-focus js-jump-to-badge-jump">
+      Jump to
+      <span class="d-inline-block ml-1 v-align-middle">↵</span>
+    </div>
+  </a>
+</li>
+
+  
+
+<li class="d-flex flex-justify-start flex-items-center p-0 f5 navigation-item js-navigation-item js-jump-to-owner-scoped-search d-none" role="option">
+  <a tabindex="-1" class="no-underline d-flex flex-auto flex-items-center jump-to-suggestions-path js-jump-to-suggestion-path js-navigation-open p-2" href="" data-item-type="owner_scoped_search">
+    <div class="jump-to-octicon js-jump-to-octicon flex-shrink-0 mr-2 text-center d-none">
+      <svg height="16" width="16" class="octicon octicon-repo flex-shrink-0 js-jump-to-octicon-repo d-none" title="Repository" aria-label="Repository" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
+      <svg height="16" width="16" class="octicon octicon-project flex-shrink-0 js-jump-to-octicon-project d-none" title="Project" aria-label="Project" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M1.75 0A1.75 1.75 0 000 1.75v12.5C0 15.216.784 16 1.75 16h12.5A1.75 1.75 0 0016 14.25V1.75A1.75 1.75 0 0014.25 0H1.75zM1.5 1.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v12.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25V1.75zM11.75 3a.75.75 0 00-.75.75v7.5a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75zm-8.25.75a.75.75 0 011.5 0v5.5a.75.75 0 01-1.5 0v-5.5zM8 3a.75.75 0 00-.75.75v3.5a.75.75 0 001.5 0v-3.5A.75.75 0 008 3z"></path></svg>
+      <svg height="16" width="16" class="octicon octicon-search flex-shrink-0 js-jump-to-octicon-search d-none" title="Search" aria-label="Search" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M11.5 7a4.499 4.499 0 11-8.998 0A4.499 4.499 0 0111.5 7zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"></path></svg>
+    </div>
+
+    <img class="avatar mr-2 flex-shrink-0 js-jump-to-suggestion-avatar d-none" alt="" aria-label="Team" src="" width="28" height="28">
+
+    <div class="jump-to-suggestion-name js-jump-to-suggestion-name flex-auto overflow-hidden text-left no-wrap css-truncate css-truncate-target">
+    </div>
+
+    <div class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 color-text-tertiary ml-1 f6 d-none js-jump-to-badge-search">
+      <span class="js-jump-to-badge-search-text-default d-none" aria-label="in this user">
+        In this user
+      </span>
+      <span class="js-jump-to-badge-search-text-global d-none" aria-label="in all of GitHub">
+        All GitHub
+      </span>
+      <span aria-hidden="true" class="d-inline-block ml-1 v-align-middle">↵</span>
+    </div>
+
+    <div aria-hidden="true" class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 color-text-tertiary ml-1 f6 d-none d-on-nav-focus js-jump-to-badge-jump">
+      Jump to
+      <span class="d-inline-block ml-1 v-align-middle">↵</span>
+    </div>
+  </a>
+</li>
+
+  
+
+<li class="d-flex flex-justify-start flex-items-center p-0 f5 navigation-item js-navigation-item js-jump-to-global-search d-none" role="option">
+  <a tabindex="-1" class="no-underline d-flex flex-auto flex-items-center jump-to-suggestions-path js-jump-to-suggestion-path js-navigation-open p-2" href="" data-item-type="global_search">
+    <div class="jump-to-octicon js-jump-to-octicon flex-shrink-0 mr-2 text-center d-none">
+      <svg height="16" width="16" class="octicon octicon-repo flex-shrink-0 js-jump-to-octicon-repo d-none" title="Repository" aria-label="Repository" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
+      <svg height="16" width="16" class="octicon octicon-project flex-shrink-0 js-jump-to-octicon-project d-none" title="Project" aria-label="Project" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M1.75 0A1.75 1.75 0 000 1.75v12.5C0 15.216.784 16 1.75 16h12.5A1.75 1.75 0 0016 14.25V1.75A1.75 1.75 0 0014.25 0H1.75zM1.5 1.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v12.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25V1.75zM11.75 3a.75.75 0 00-.75.75v7.5a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75zm-8.25.75a.75.75 0 011.5 0v5.5a.75.75 0 01-1.5 0v-5.5zM8 3a.75.75 0 00-.75.75v3.5a.75.75 0 001.5 0v-3.5A.75.75 0 008 3z"></path></svg>
+      <svg height="16" width="16" class="octicon octicon-search flex-shrink-0 js-jump-to-octicon-search d-none" title="Search" aria-label="Search" viewBox="0 0 16 16" version="1.1" role="img"><path fill-rule="evenodd" d="M11.5 7a4.499 4.499 0 11-8.998 0A4.499 4.499 0 0111.5 7zm-.82 4.74a6 6 0 111.06-1.06l3.04 3.04a.75.75 0 11-1.06 1.06l-3.04-3.04z"></path></svg>
+    </div>
+
+    <img class="avatar mr-2 flex-shrink-0 js-jump-to-suggestion-avatar d-none" alt="" aria-label="Team" src="" width="28" height="28">
+
+    <div class="jump-to-suggestion-name js-jump-to-suggestion-name flex-auto overflow-hidden text-left no-wrap css-truncate css-truncate-target">
+    </div>
+
+    <div class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 color-text-tertiary ml-1 f6 d-none js-jump-to-badge-search">
+      <span class="js-jump-to-badge-search-text-default d-none" aria-label="in this repository">
+        In this repository
+      </span>
+      <span class="js-jump-to-badge-search-text-global d-none" aria-label="in all of GitHub">
+        All GitHub
+      </span>
+      <span aria-hidden="true" class="d-inline-block ml-1 v-align-middle">↵</span>
+    </div>
+
+    <div aria-hidden="true" class="border rounded-1 flex-shrink-0 color-bg-tertiary px-1 color-text-tertiary ml-1 f6 d-none d-on-nav-focus js-jump-to-badge-jump">
+      Jump to
+      <span class="d-inline-block ml-1 v-align-middle">↵</span>
+    </div>
+  </a>
+</li>
+
+
+</ul>
+
+            </div>
+      </label>
+</form>  </div>
+</div>
+
+          </div>
+
+        <a href="/login?return_to=%2Fimsun%2Fgitment%2Fblob%2Fmaster%2Fsrc%2Fgitment.js"
+          class="HeaderMenu-link flex-shrink-0 no-underline mr-3"
+          data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="8ee9a2652cc0a64f3b28c22f9165ac53aaf23f9c23d5de7f65caf02f091e97f4"
+          data-ga-click="(Logged out) Header, clicked Sign in, text:sign-in">
+          Sign in
+        </a>
+            <a href="/join?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Fblob%2Fshow&amp;source=header-repo&amp;source_repo=imsun%2Fgitment"
+              class="HeaderMenu-link flex-shrink-0 d-inline-block no-underline border color-border-tertiary rounded px-2 py-1 js-signup-redesign-target js-signup-redesign-control"
+              data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="8ee9a2652cc0a64f3b28c22f9165ac53aaf23f9c23d5de7f65caf02f091e97f4"
+              data-hydro-click="{&quot;event_type&quot;:&quot;analytics.click&quot;,&quot;payload&quot;:{&quot;category&quot;:&quot;Sign up&quot;,&quot;action&quot;:&quot;click to sign up for account&quot;,&quot;label&quot;:&quot;ref_page:/&lt;user-name&gt;/&lt;repo-name&gt;/blob/show;ref_cta:Sign up;ref_loc:header logged out&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="d0d9dd8602fda015b6bad7bc88a3c895edf2ba100ae9ae735ec5cf2104055c3e"
+            >
+              Sign up
+            </a>
+            <a href="/join_next?ref_cta=Sign+up&amp;ref_loc=header+logged+out&amp;ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Fblob%2Fshow&amp;source=header-repo&amp;source_repo=imsun%2Fgitment"
+              class="HeaderMenu-link flex-shrink-0 d-inline-block no-underline border color-border-tertiary rounded-1 px-2 py-1 js-signup-redesign-target js-signup-redesign-variation"
+              hidden
+              data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;site header menu&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;SIGN_UP&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="8ee9a2652cc0a64f3b28c22f9165ac53aaf23f9c23d5de7f65caf02f091e97f4"
+              data-hydro-click="{&quot;event_type&quot;:&quot;analytics.click&quot;,&quot;payload&quot;:{&quot;category&quot;:&quot;Sign up&quot;,&quot;action&quot;:&quot;click to sign up for account&quot;,&quot;label&quot;:&quot;ref_page:/&lt;user-name&gt;/&lt;repo-name&gt;/blob/show;ref_cta:Sign up;ref_loc:header logged out&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="d0d9dd8602fda015b6bad7bc88a3c895edf2ba100ae9ae735ec5cf2104055c3e"
+            >
+              Sign up
+            </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+    </div>
+
+  <div id="start-of-content" class="show-on-focus"></div>
+
+
+
+
+
+    <div data-pjax-replace id="js-flash-container">
+
+
+  <template class="js-flash-template">
+    <div class="flash flash-full  {{ className }}">
+  <div class=" px-2" >
+    <button class="flash-close js-flash-close" type="button" aria-label="Dismiss this message">
+      <svg class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+    </button>
+    
+      <div>{{ message }}</div>
+
+  </div>
+</div>
+  </template>
+</div>
+
+
+    
+
+  <include-fragment class="js-notification-shelf-include-fragment" data-base-src="https://github.com/notifications/beta/shelf"></include-fragment>
+
+
+
+
+  <div
+    class="application-main "
+    data-commit-hovercards-enabled
+    data-discussion-hovercards-enabled
+    data-issue-and-pr-hovercards-enabled
+  >
+        <div itemscope itemtype="http://schema.org/SoftwareSourceCode" class="">
+    <main id="js-repo-pjax-container" data-pjax-container >
+      
+
+      
+
+
+
+
+
+
+  
+
+
+  <div class="color-bg-secondary pt-3 hide-full-screen mb-5">
+
+      <div class="d-flex mb-3 px-3 px-md-4 px-lg-5">
+
+        <div class="flex-auto min-width-0 width-fit mr-3">
+            <h1 class=" d-flex flex-wrap flex-items-center break-word f3 text-normal">
+    <svg class="octicon octicon-repo color-text-secondary mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"></path></svg>
+  <span class="author flex-self-stretch" itemprop="author">
+    <a class="url fn" rel="author" data-hovercard-type="user" data-hovercard-url="/users/imsun/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/imsun">imsun</a>
+  </span>
+  <span class="mx-1 flex-self-stretch color-text-secondary">/</span>
+  <strong itemprop="name" class="mr-2 flex-self-stretch">
+    <a data-pjax="#js-repo-pjax-container" href="/imsun/gitment">gitment</a>
+  </strong>
+  
+</h1>
+
+
+        </div>
+
+          <ul class="pagehead-actions flex-shrink-0 d-none d-md-inline" style="padding: 2px 0;">
+
+  <li>
+      <a class="tooltipped tooltipped-s btn btn-sm" aria-label="You must be signed in to change notification settings" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;notification subscription menu watch&quot;,&quot;repository_id&quot;:null,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="d9c0d33d59fa139ff8aa6a344d56422cddad82f1dd3e5c65e62852259cff0875" href="/login?return_to=%2Fimsun%2Fgitment">
+    <svg class="octicon octicon-bell" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path d="M8 16a2 2 0 001.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 008 16z"></path><path fill-rule="evenodd" d="M8 1.5A3.5 3.5 0 004.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.018.018 0 00-.003.01l.001.006c0 .002.002.004.004.006a.017.017 0 00.006.004l.007.001h10.964l.007-.001a.016.016 0 00.006-.004.016.016 0 00.004-.006l.001-.007a.017.017 0 00-.003-.01l-1.703-2.554a1.75 1.75 0 01-.294-.97V5A3.5 3.5 0 008 1.5zM3 5a5 5 0 0110 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.518 1.518 0 0113.482 13H2.518a1.518 1.518 0 01-1.263-2.36l1.703-2.554A.25.25 0 003 7.947V5z"></path></svg>
+    Notifications
+</a>
+  </li>
+
+  <li>
+          <a class="btn btn-sm btn-with-count  tooltipped tooltipped-s" aria-label="You must be signed in to star a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;star button&quot;,&quot;repository_id&quot;:86265277,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="224f28e879905d8de6a198fb8dfe1a6d3ffd48ab3ed7083fef6bf851e0001c40" href="/login?return_to=%2Fimsun%2Fgitment">
+      <svg class="octicon octicon-star v-align-text-bottom mr-1" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25zm0 2.445L6.615 5.5a.75.75 0 01-.564.41l-3.097.45 2.24 2.184a.75.75 0 01.216.664l-.528 3.084 2.769-1.456a.75.75 0 01.698 0l2.77 1.456-.53-3.084a.75.75 0 01.216-.664l2.24-2.183-3.096-.45a.75.75 0 01-.564-.41L8 2.694v.001z"></path></svg>
+      <span>
+        Star
+</span></a>
+    <a class="social-count js-social-count" href="/imsun/gitment/stargazers"
+      aria-label="3886 users starred this repository">
+      3.9k
+    </a>
+
+  </li>
+
+  <li>
+        <a class="btn btn-sm btn-with-count tooltipped tooltipped-s" aria-label="You must be signed in to fork a repository" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;authentication.click&quot;,&quot;payload&quot;:{&quot;location_in_page&quot;:&quot;repo details fork button&quot;,&quot;repository_id&quot;:86265277,&quot;auth_type&quot;:&quot;LOG_IN&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="263ee0597b38101332c7c62f5046455c64d3a63efbf130446825546f434338b0" href="/login?return_to=%2Fimsun%2Fgitment">
+          <svg class="octicon octicon-repo-forked" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>
+          Fork
+</a>
+      <a href="/imsun/gitment/network/members" class="social-count"
+         aria-label="365 users forked this repository">
+        365
+      </a>
+  </li>
+</ul>
+
+      </div>
+        
+<nav aria-label="Repository" data-pjax="#js-repo-pjax-container" class="js-repo-nav js-sidenav-container-pjax js-responsive-underlinenav overflow-hidden UnderlineNav px-3 px-md-4 px-lg-5 color-bg-secondary">
+  <ul class="UnderlineNav-body list-style-none ">        <li class="d-flex">
+          <a class="js-selected-navigation-item selected UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="i0code-tab" data-hotkey="g c" data-ga-click="Repository, Navigation click, Code tab" aria-current="page" data-selected-links="repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches repo_packages repo_deployments /imsun/gitment" href="/imsun/gitment">
+                <svg class="octicon octicon-code UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 10-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 101.06 1.06l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25z"></path></svg>
+              <span data-content="Code">Code</span>
+                <span title="Not available" class="Counter "></span>
+</a>        </li>
+        <li class="d-flex">
+          <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="i1issues-tab" data-hotkey="g i" data-ga-click="Repository, Navigation click, Issues tab" data-selected-links="repo_issues repo_labels repo_milestones /imsun/gitment/issues" href="/imsun/gitment/issues">
+                <svg class="octicon octicon-issue-opened UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9 3a1 1 0 11-2 0 1 1 0 012 0zm-.25-6.25a.75.75 0 00-1.5 0v3.5a.75.75 0 001.5 0v-3.5z"></path></svg>
+              <span data-content="Issues">Issues</span>
+                <span title="132" class="Counter ">132</span>
+</a>        </li>
+        <li class="d-flex">
+          <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="i2pull-requests-tab" data-hotkey="g p" data-ga-click="Repository, Navigation click, Pull requests tab" data-selected-links="repo_pulls checks /imsun/gitment/pulls" href="/imsun/gitment/pulls">
+                <svg class="octicon octicon-git-pull-request UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.177 3.073L9.573.677A.25.25 0 0110 .854v4.792a.25.25 0 01-.427.177L7.177 3.427a.25.25 0 010-.354zM3.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122v5.256a2.251 2.251 0 11-1.5 0V5.372A2.25 2.25 0 011.5 3.25zM11 2.5h-1V4h1a1 1 0 011 1v5.628a2.251 2.251 0 101.5 0V5A2.5 2.5 0 0011 2.5zm1 10.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0zM3.75 12a.75.75 0 100 1.5.75.75 0 000-1.5z"></path></svg>
+              <span data-content="Pull requests">Pull requests</span>
+                <span title="9" class="Counter ">9</span>
+</a>        </li>
+        <li class="d-flex">
+          <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="i3actions-tab" data-hotkey="g a" data-ga-click="Repository, Navigation click, Actions tab" data-selected-links="repo_actions /imsun/gitment/actions" href="/imsun/gitment/actions">
+                <svg class="octicon octicon-play UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>
+              <span data-content="Actions">Actions</span>
+                <span title="Not available" class="Counter "></span>
+</a>        </li>
+        <li class="d-flex">
+          <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="i4projects-tab" data-hotkey="g b" data-ga-click="Repository, Navigation click, Projects tab" data-selected-links="repo_projects new_repo_project repo_project /imsun/gitment/projects" href="/imsun/gitment/projects">
+                <svg class="octicon octicon-project UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.75 0A1.75 1.75 0 000 1.75v12.5C0 15.216.784 16 1.75 16h12.5A1.75 1.75 0 0016 14.25V1.75A1.75 1.75 0 0014.25 0H1.75zM1.5 1.75a.25.25 0 01.25-.25h12.5a.25.25 0 01.25.25v12.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25V1.75zM11.75 3a.75.75 0 00-.75.75v7.5a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75zm-8.25.75a.75.75 0 011.5 0v5.5a.75.75 0 01-1.5 0v-5.5zM8 3a.75.75 0 00-.75.75v3.5a.75.75 0 001.5 0v-3.5A.75.75 0 008 3z"></path></svg>
+              <span data-content="Projects">Projects</span>
+                <span title="0" hidden="hidden" class="Counter ">0</span>
+</a>        </li>
+        <li class="d-flex">
+          <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="i5security-tab" data-hotkey="g s" data-ga-click="Repository, Navigation click, Security tab" data-selected-links="security overview alerts policy token_scanning code_scanning /imsun/gitment/security" href="/imsun/gitment/security">
+                <svg class="octicon octicon-shield UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M7.467.133a1.75 1.75 0 011.066 0l5.25 1.68A1.75 1.75 0 0115 3.48V7c0 1.566-.32 3.182-1.303 4.682-.983 1.498-2.585 2.813-5.032 3.855a1.7 1.7 0 01-1.33 0c-2.447-1.042-4.049-2.357-5.032-3.855C1.32 10.182 1 8.566 1 7V3.48a1.75 1.75 0 011.217-1.667l5.25-1.68zm.61 1.429a.25.25 0 00-.153 0l-5.25 1.68a.25.25 0 00-.174.238V7c0 1.358.275 2.666 1.057 3.86.784 1.194 2.121 2.34 4.366 3.297a.2.2 0 00.154 0c2.245-.956 3.582-2.104 4.366-3.298C13.225 9.666 13.5 8.36 13.5 7V3.48a.25.25 0 00-.174-.237l-5.25-1.68zM9 10.5a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.75a.75.75 0 10-1.5 0v3a.75.75 0 001.5 0v-3z"></path></svg>
+              <span data-content="Security">Security</span>
+                <include-fragment src="/imsun/gitment/security/overall-count" accept="text/fragment+html"></include-fragment>
+</a>        </li>
+        <li class="d-flex">
+          <a class="js-selected-navigation-item UnderlineNav-item hx_underlinenav-item no-wrap js-responsive-underlinenav-item" data-tab-item="i6insights-tab" data-ga-click="Repository, Navigation click, Insights tab" data-selected-links="repo_graphs repo_contributors dependency_graph dependabot_updates pulse people community /imsun/gitment/pulse" href="/imsun/gitment/pulse">
+                <svg class="octicon octicon-graph UnderlineNav-octicon d-none d-sm-inline" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>
+              <span data-content="Insights">Insights</span>
+                <span title="Not available" class="Counter "></span>
+</a>        </li>
+</ul>
+    <div style="visibility:hidden;" class="UnderlineNav-actions  js-responsive-underlinenav-overflow position-absolute pr-3 pr-md-4 pr-lg-5 right-0">    <details class="details-overlay details-reset position-relative">
+  <summary role="button">        <div class="UnderlineNav-item mr-0 border-0">
+          <svg class="octicon octicon-kebab-horizontal" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+          <span class="sr-only">More</span>
+        </div>
+</summary>
+  <div>        <details-menu role="menu" class="dropdown-menu dropdown-menu-sw ">
+  
+          <ul>
+              <li data-menu-item="i0code-tab" hidden>
+                <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /imsun/gitment" href="/imsun/gitment">
+                  Code
+</a>              </li>
+              <li data-menu-item="i1issues-tab" hidden>
+                <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /imsun/gitment/issues" href="/imsun/gitment/issues">
+                  Issues
+</a>              </li>
+              <li data-menu-item="i2pull-requests-tab" hidden>
+                <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /imsun/gitment/pulls" href="/imsun/gitment/pulls">
+                  Pull requests
+</a>              </li>
+              <li data-menu-item="i3actions-tab" hidden>
+                <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /imsun/gitment/actions" href="/imsun/gitment/actions">
+                  Actions
+</a>              </li>
+              <li data-menu-item="i4projects-tab" hidden>
+                <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /imsun/gitment/projects" href="/imsun/gitment/projects">
+                  Projects
+</a>              </li>
+              <li data-menu-item="i5security-tab" hidden>
+                <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /imsun/gitment/security" href="/imsun/gitment/security">
+                  Security
+</a>              </li>
+              <li data-menu-item="i6insights-tab" hidden>
+                <a role="menuitem" class="js-selected-navigation-item dropdown-item" data-selected-links=" /imsun/gitment/pulse" href="/imsun/gitment/pulse">
+                  Insights
+</a>              </li>
+          </ul>
+
+</details-menu></div>
+</details></div>
+</nav>
+  </div>
+
+
+<div class="container-xl clearfix new-discussion-timeline px-3 px-md-4 px-lg-5">
+  <div id="repo-content-pjax-container" class="repository-content " >
+
+    
+      
+    
+
+<div>
+  
+
+
+    <a class="d-none js-permalink-shortcut" data-hotkey="y" href="/imsun/gitment/blob/474ab9738d73e894c49168cc7946e8f32aa72cd2/src/gitment.js">Permalink</a>
+
+    <!-- blob contrib key: blob_contributors:v22:36e159e3321f49ba46126415f58e6c63ed13fcf681910250271cd472dca9fbf8 -->
+
+    <div class="d-flex flex-items-start flex-shrink-0 pb-3 flex-wrap flex-md-nowrap flex-justify-between flex-md-justify-start">
+      
+<div class="position-relative">
+  <details class="details-reset details-overlay mr-0 mb-0 " id="branch-select-menu">
+    <summary class="btn css-truncate"
+            data-hotkey="w"
+            title="Switch branches or tags">
+      <svg class="octicon octicon-git-branch text-gray" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M11.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122V6A2.5 2.5 0 0110 8.5H6a1 1 0 00-1 1v1.128a2.251 2.251 0 11-1.5 0V5.372a2.25 2.25 0 111.5 0v1.836A2.492 2.492 0 016 7h4a1 1 0 001-1v-.628A2.25 2.25 0 019.5 3.25zM4.25 12a.75.75 0 100 1.5.75.75 0 000-1.5zM3.5 3.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0z"></path></svg>
+      <span class="css-truncate-target" data-menu-button>master</span>
+      <span class="dropdown-caret"></span>
+    </summary>
+
+      <div class="SelectMenu">
+  <div class="SelectMenu-modal">
+    <header class="SelectMenu-header">
+      <span class="SelectMenu-title">Switch branches/tags</span>
+      <button class="SelectMenu-closeButton" type="button" data-toggle-for="branch-select-menu"><svg aria-label="Close menu" aria-hidden="false" class="octicon octicon-x" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg></button>
+    </header>
+
+    <input-demux data-action="tab-container-change:input-demux#storeInput tab-container-changed:input-demux#updateInput">
+      <tab-container class="d-flex flex-column js-branches-tags-tabs" style="min-height: 0;">
+        <div class="SelectMenu-filter">
+          <input data-target="input-demux.source"
+                 id="context-commitish-filter-field"
+                 class="SelectMenu-input form-control"
+                 aria-owns="ref-list-branches"
+                 data-controls-ref-menu-id="ref-list-branches"
+                 autofocus
+                 autocomplete="off"
+                 aria-label="Filter branches/tags"
+                 placeholder="Filter branches/tags"
+                 type="text"
+          >
+        </div>
+
+        <div class="SelectMenu-tabs" role="tablist" data-target="input-demux.control">
+          <button class="SelectMenu-tab" type="button" role="tab" aria-selected="true">Branches</button>
+          <button class="SelectMenu-tab" type="button" role="tab">Tags</button>
+        </div>
+
+        <div role="tabpanel" id="ref-list-branches" data-filter-placeholder="Filter branches/tags" class="d-flex flex-column flex-auto overflow-auto" tabindex="">
+          <ref-selector
+            type="branch"
+            data-targets="input-demux.sinks"
+            data-action="
+              input-entered:ref-selector#inputEntered
+              tab-selected:ref-selector#tabSelected
+              focus-list:ref-selector#focusFirstListMember
+            "
+            query-endpoint="/imsun/gitment/refs"
+            
+            cache-key="v0:1491559042.0"
+            current-committish="bWFzdGVy"
+            default-branch="bWFzdGVy"
+            name-with-owner="aW1zdW4vZ2l0bWVudA=="
+          >
+
+            <template data-target="ref-selector.noMatchTemplate">
+                <div class="SelectMenu-message">Nothing to show</div>
+            </template>
+
+            <!-- TODO: this max-height is necessary or else the branch list won't scroll.  why? -->
+            <div data-target="ref-selector.listContainer" role="menu" class="SelectMenu-list" style="max-height: 330px">
+              <div class="SelectMenu-loading pt-3 pb-0" aria-label="Menu is loading">
+                <svg style="box-sizing: content-box; color: var(--color-icon-primary);" viewBox="0 0 16 16" fill="none" width="32" height="32" class="anim-rotate">
+  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25" stroke-width="2" vector-effect="non-scaling-stroke" />
+  <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+</svg>
+              </div>
+            </div>
+
+            <template data-target="ref-selector.itemTemplate">
+              <a href="https://github.com/imsun/gitment/blob/{{ urlEncodedRefName }}/src/gitment.js" class="SelectMenu-item" role="menuitemradio" rel="nofollow" aria-checked="{{ isCurrent }}" data-index="{{ index }}">
+                <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+                <span class="flex-1 css-truncate css-truncate-overflow {{ isFilteringClass }}">{{ refName }}</span>
+                <span hidden="{{ isNotDefault }}" class="Label Label--secondary flex-self-start">default</span> 
+              </a>
+            </template>
+            <footer class="SelectMenu-footer"><a href="/imsun/gitment/branches">View all branches</a></footer>
+          </ref-selector>
+
+        </div>
+
+        <div role="tabpanel" id="tags-menu" data-filter-placeholder="Find a tag" class="d-flex flex-column flex-auto overflow-auto" tabindex="" hidden>
+          <ref-selector
+            type="tag"
+            data-action="
+              input-entered:ref-selector#inputEntered
+              tab-selected:ref-selector#tabSelected
+              focus-list:ref-selector#focusFirstListMember
+            "
+            data-targets="input-demux.sinks"
+            query-endpoint="/imsun/gitment/refs"
+            cache-key="v0:1491559042.0"
+            current-committish="bWFzdGVy"
+            default-branch="bWFzdGVy"
+            name-with-owner="aW1zdW4vZ2l0bWVudA=="
+          >
+
+            <template data-target="ref-selector.noMatchTemplate">
+              <div class="SelectMenu-message" data-index="{{ index }}">Nothing to show</div>
+            </template>
+
+            <template data-target="ref-selector.itemTemplate">
+              <a href="https://github.com/imsun/gitment/blob/{{ urlEncodedRefName }}/src/gitment.js" class="SelectMenu-item" role="menuitemradio" rel="nofollow" aria-checked="{{ isCurrent }}" data-index="{{ index }}">
+                <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+                <span class="flex-1 css-truncate css-truncate-overflow {{ isFilteringClass }}">{{ refName }}</span>
+                <span hidden="{{ isNotDefault }}" class="Label Label--secondary flex-self-start">default</span>
+              </a>
+            </template>
+            <div data-target="ref-selector.listContainer" role="menu" class="SelectMenu-list" style="max-height: 330px">
+              <div class="SelectMenu-loading pt-3 pb-0" aria-label="Menu is loading">
+                <svg style="box-sizing: content-box; color: var(--color-icon-primary);" viewBox="0 0 16 16" fill="none" width="32" height="32" class="anim-rotate">
+  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25" stroke-width="2" vector-effect="non-scaling-stroke" />
+  <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+</svg>
+              </div>
+            </div>
+            <footer class="SelectMenu-footer"><a href="/imsun/gitment/tags">View all tags</a></footer>
+          </ref-selector>
+        </div>
+      </tab-container>
+    </input-demux>
+  </div>
+</div>
+
+  </details>
+
+</div>
+
+      <h2 id="blob-path" class="breadcrumb flex-auto flex-self-center min-width-0 text-normal mx-2 width-full width-md-auto flex-order-1 flex-md-order-none mt-3 mt-md-0">
+        <span class="js-repo-root text-bold"><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/imsun/gitment"><span>gitment</span></a></span></span><span class="separator">/</span><span class="js-path-segment d-inline-block wb-break-all"><a data-pjax="true" href="/imsun/gitment/tree/master/src"><span>src</span></a></span><span class="separator">/</span><strong class="final-path">gitment.js</strong>
+          <span class="separator">/</span><details class="details-reset details-overlay d-inline" id="jumpto-symbol-select-menu">
+  <summary class="btn-link Link--secondary css-truncate" aria-haspopup="true" data-hotkey="r" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.click_on_blob_definitions&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;click_on_blob_definitions&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="555c60b84374effea227428ea954da63e2165e0f8d0c4a7942cd86f32047aa8d">
+      <svg class="octicon octicon-code" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M4.72 3.22a.75.75 0 011.06 1.06L2.06 8l3.72 3.72a.75.75 0 11-1.06 1.06L.47 8.53a.75.75 0 010-1.06l4.25-4.25zm6.56 0a.75.75 0 10-1.06 1.06L13.94 8l-3.72 3.72a.75.75 0 101.06 1.06l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25z"></path></svg>
+    <span data-menu-button>Jump to</span>
+    <span class="dropdown-caret"></span>
+  </summary>
+  <details-menu class="SelectMenu SelectMenu--hasFilter" role="menu">
+    <div class="SelectMenu-modal">
+      <header class="SelectMenu-header">
+        <span class="SelectMenu-title">Code definitions</span>
+        <button class="SelectMenu-closeButton" type="button" data-toggle-for="jumpto-symbol-select-menu">
+          <svg aria-label="Close menu" class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" role="img"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+        </button>
+      </header>
+        <div class="SelectMenu-filter">
+          <input
+            class="SelectMenu-input form-control js-filterable-field"
+            id="jumpto-symbols-filter-field"
+            type="text"
+            autocomplete="off"
+            spellcheck="false"
+            autofocus
+            placeholder="Filter definitions"
+            aria-label="Filter definitions">
+        </div>
+      <div class="SelectMenu-list">
+        <div data-filterable-for="jumpto-symbols-filter-field" data-filterable-type="substring">
+            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L9">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>extendRenderer</span>
+              <span class="flex-auto d-flex flex-justify-end">Function</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L27">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>Gitment</span>
+              <span class="flex-auto d-flex flex-justify-end">Class</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L28">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>accessToken</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L31">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>accessToken</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L35">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>loginLink</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L120">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>init</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L129">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>useTheme</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L136">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>update</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L145">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>markdown</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L152">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>createIssue</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L166">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>getIssue</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L172">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>post</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L185">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>loadMeta</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L198">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>loadComments</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L207">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>loadUserInfo</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L221">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>loadReactions</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L238">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>loadCommentReactions</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L263">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>login</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L267">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>logout</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L273">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>goto</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L279">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>like</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L296">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>unlike</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L309">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>likeAComment</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>            <a class="SelectMenu-item d-flex flex-justify-between css-truncate" role="menuitemradio" aria-checked="false" rel="nofollow" data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.navigate_to_blob_definition&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;navigate_to_blob_definition&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="ae9b6782883294c57d8e77e8decf346f3e79c7ecc2255c4518547d263274cc20" href="/imsun/gitment/blob/master/src/gitment.js#L327">
+              <svg class="octicon octicon-check SelectMenu-icon SelectMenu-icon--check" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path></svg>
+              <span class="flex-auto css-truncate-target" data-menu-button-text>unlikeAComment</span>
+              <span class="flex-auto d-flex flex-justify-end">Method</span>
+</a>        </div>
+      </div>
+      <footer class="SelectMenu-footer">
+        <div class="d-flex flex-justify-between">
+          Code navigation index up-to-date
+          <svg class="octicon octicon-dot-fill text-green" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+        </div>
+      </footer>
+    </div>
+  </details-menu>
+</details>
+
+      </h2>
+      <a href="/imsun/gitment/find/master"
+            class="js-pjax-capture-input btn mr-2 d-none d-md-block"
+            data-pjax
+            data-hotkey="t">
+        Go to file
+      </a>
+
+      <details id="blob-more-options-details" class="details-overlay details-reset position-relative">
+  <summary role="button" type="button" class="btn ">          <svg aria-label="More options" class="octicon octicon-kebab-horizontal" height="16" viewBox="0 0 16 16" version="1.1" width="16" role="img"><path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+</summary>
+  <div>          <ul class="dropdown-menu dropdown-menu-sw">
+            <li class="d-block d-md-none">
+              <a class="dropdown-item d-flex flex-items-baseline" data-hydro-click="{&quot;event_type&quot;:&quot;repository.click&quot;,&quot;payload&quot;:{&quot;target&quot;:&quot;FIND_FILE_BUTTON&quot;,&quot;repository_id&quot;:86265277,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}" data-hydro-click-hmac="08fa2589c076e5b03aab3e35d42cf20ae629a7ebdb10efea9ab9a2d50864f477" data-ga-click="Repository, find file, location:repo overview" data-hotkey="t" data-pjax="true" href="/imsun/gitment/find/master">
+                <span class="flex-auto">Go to file</span>
+                <span class="text-small color-text-secondary" aria-hidden="true">T</span>
+</a>            </li>
+            <li data-toggle-for="blob-more-options-details">
+              <button type="button" data-toggle-for="jumpto-line-details-dialog" class="btn-link dropdown-item">
+                <span class="d-flex flex-items-baseline">
+                  <span class="flex-auto">Go to line</span>
+                  <span class="text-small color-text-secondary" aria-hidden="true">L</span>
+                </span>
+              </button>
+            </li>
+            <li data-toggle-for="blob-more-options-details">
+              <button type="button" data-toggle-for="jumpto-symbol-select-menu" class="btn-link dropdown-item">
+                <span class="d-flex flex-items-baseline">
+                  <span class="flex-auto">Go to definition</span>
+                  <span class="text-small color-text-secondary" aria-hidden="true">R</span>
+                </span>
+              </button>
+            </li>
+            <li class="dropdown-divider" role="none"></li>
+            <li>
+              <clipboard-copy value="src/gitment.js" class="dropdown-item cursor-pointer" data-toggle-for="blob-more-options-details">
+                Copy path
+              </clipboard-copy>
+            </li>
+            <li>
+              <clipboard-copy value="https://github.com/imsun/gitment/blob/474ab9738d73e894c49168cc7946e8f32aa72cd2/src/gitment.js" class="dropdown-item cursor-pointer" data-toggle-for="blob-more-options-details" >
+                <span class="d-flex flex-items-baseline">
+                  <span class="flex-auto">Copy permalink</span>
+                </span>
+              </clipboard-copy>
+            </li>
+          </ul>
+</div>
+</details>    </div>
+
+
+
+    <div class="Box d-flex flex-column flex-shrink-0 mb-3">
+      
+  <div class="Box-header Box-header--blue Details js-details-container">
+      <div class="d-flex flex-items-center">
+        <span class="flex-shrink-0 ml-n1 mr-n1 mt-n1 mb-n1">
+          <a rel="author" data-skip-pjax="true" data-hovercard-type="user" data-hovercard-url="/users/imsun/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/imsun"><img class="avatar avatar-user" src="https://avatars.githubusercontent.com/u/5890751?s=48&amp;v=4" width="24" height="24" alt="@imsun" /></a>
+        </span>
+        <div class="flex-1 d-flex flex-items-center ml-3 min-width-0">
+          <div class="css-truncate css-truncate-overflow">
+            <a class="text-bold Link--primary" rel="author" data-hovercard-type="user" data-hovercard-url="/users/imsun/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/imsun">imsun</a>
+
+              <span>
+                <a data-pjax="true" title="modify default `perPage` &amp;&amp; load more reactions" class="Link--secondary" href="/imsun/gitment/commit/b6e54ede333cee9a557fb2de070d2bc57cf7a8d6">modify default `perPage` &amp;&amp; load more reactions</a>
+              </span>
+          </div>
+
+
+          <span class="ml-2">
+            <include-fragment accept="text/fragment+html" src="/imsun/gitment/commit/b6e54ede333cee9a557fb2de070d2bc57cf7a8d6/rollup?direction=e" class="d-inline"></include-fragment>
+          </span>
+        </div>
+        <div class="ml-3 d-flex flex-shrink-0 flex-items-center flex-justify-end color-text-secondary no-wrap">
+          <span class="d-none d-md-inline">
+            <span>Latest commit</span>
+            <a class="text-small text-mono Link--secondary" href="/imsun/gitment/commit/b6e54ede333cee9a557fb2de070d2bc57cf7a8d6" data-pjax>b6e54ed</a>
+            <span itemprop="dateModified"><relative-time datetime="2017-04-04T20:59:52Z" class="no-wrap">Apr 5, 2017</relative-time></span>
+          </span>
+
+          <a data-pjax href="/imsun/gitment/commits/master/src/gitment.js" class="ml-3 no-wrap Link--primary no-underline">
+            <svg class="octicon octicon-history text-gray" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.643 3.143L.427 1.927A.25.25 0 000 2.104V5.75c0 .138.112.25.25.25h3.646a.25.25 0 00.177-.427L2.715 4.215a6.5 6.5 0 11-1.18 4.458.75.75 0 10-1.493.154 8.001 8.001 0 101.6-5.684zM7.75 4a.75.75 0 01.75.75v2.992l2.028.812a.75.75 0 01-.557 1.392l-2.5-1A.75.75 0 017 8.25v-3.5A.75.75 0 017.75 4z"></path></svg>
+            <span class="d-none d-sm-inline">
+              <strong>History</strong>
+            </span>
+          </a>
+        </div>
+      </div>
+
+  </div>
+
+  <div class="Box-body d-flex flex-items-center flex-auto border-bottom-0 flex-wrap" >
+    <details class="details-reset details-overlay details-overlay-dark lh-default color-text-primary float-left mr-3" id="blob_contributors_box">
+      <summary class="Link--primary">
+        <svg class="octicon octicon-people text-gray" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M5.5 3.5a2 2 0 100 4 2 2 0 000-4zM2 5.5a3.5 3.5 0 115.898 2.549 5.507 5.507 0 013.034 4.084.75.75 0 11-1.482.235 4.001 4.001 0 00-7.9 0 .75.75 0 01-1.482-.236A5.507 5.507 0 013.102 8.05 3.49 3.49 0 012 5.5zM11 4a.75.75 0 100 1.5 1.5 1.5 0 01.666 2.844.75.75 0 00-.416.672v.352a.75.75 0 00.574.73c1.2.289 2.162 1.2 2.522 2.372a.75.75 0 101.434-.44 5.01 5.01 0 00-2.56-3.012A3 3 0 0011 4z"></path></svg>
+        <strong>1</strong>
+        
+        contributor
+      </summary>
+      <details-dialog
+        class="Box Box--overlay d-flex flex-column anim-fade-in fast"
+        aria-label="Users who have contributed to this file"
+        src="/imsun/gitment/contributors-list/master/src/gitment.js" preload>
+        <div class="Box-header">
+          <button class="Box-btn-octicon btn-octicon float-right" type="button" aria-label="Close dialog" data-close-dialog>
+            <svg class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+          </button>
+          <h3 class="Box-title">
+            Users who have contributed to this file
+          </h3>
+        </div>
+        <include-fragment>
+          <svg style="box-sizing: content-box; color: var(--color-icon-primary);" viewBox="0 0 16 16" fill="none" width="32" height="32" class="my-3 mx-auto d-block anim-rotate">
+  <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25" stroke-width="2" vector-effect="non-scaling-stroke" />
+  <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke" />
+</svg>
+        </include-fragment>
+      </details-dialog>
+    </details>
+  </div>
+    </div>
+
+
+
+
+
+
+
+    <div class="Box mt-3 position-relative
+      ">
+      
+<div class="Box-header py-2 d-flex flex-column flex-shrink-0 flex-md-row flex-md-items-center">
+  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+
+      343 lines (289 sloc)
+      <span class="file-info-divider"></span>
+    8.43 KB
+  </div>
+
+  <div class="d-flex py-1 py-md-0 flex-auto flex-order-1 flex-md-order-2 flex-sm-grow-0 flex-justify-between">
+
+    <div class="BtnGroup">
+      <a href="/imsun/gitment/raw/master/src/gitment.js" id="raw-url" role="button" class="btn btn-sm BtnGroup-item ">Raw</a>
+        <a href="/imsun/gitment/blame/master/src/gitment.js" data-hotkey="b" role="button" class="btn js-update-url-with-hash btn-sm BtnGroup-item ">Blame</a>
+    </div>
+
+    <div>
+          <a class="btn-octicon tooltipped tooltipped-nw js-remove-unless-platform"
+             data-platforms="windows,mac"
+             href="https://desktop.github.com"
+             aria-label="Open this file in GitHub Desktop"
+             data-ga-click="Repository, open with desktop">
+              <svg class="octicon octicon-device-desktop" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.75 2.5h12.5a.25.25 0 01.25.25v7.5a.25.25 0 01-.25.25H1.75a.25.25 0 01-.25-.25v-7.5a.25.25 0 01.25-.25zM14.25 1H1.75A1.75 1.75 0 000 2.75v7.5C0 11.216.784 12 1.75 12h3.727c-.1 1.041-.52 1.872-1.292 2.757A.75.75 0 004.75 16h6.5a.75.75 0 00.565-1.243c-.772-.885-1.193-1.716-1.292-2.757h3.727A1.75 1.75 0 0016 10.25v-7.5A1.75 1.75 0 0014.25 1zM9.018 12H6.982a5.72 5.72 0 01-.765 2.5h3.566a5.72 5.72 0 01-.765-2.5z"></path></svg>
+          </a>
+
+          <a href="/login?return_to=%2Fimsun%2Fgitment%2Fblob%2Fmaster%2Fsrc%2Fgitment.js" class="btn-octicon disabled tooltipped tooltipped-nw"
+            aria-label="You must be signed in to make or propose changes">
+            <svg class="octicon octicon-pencil" height="16" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M11.013 1.427a1.75 1.75 0 012.474 0l1.086 1.086a1.75 1.75 0 010 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 01-.927-.928l.929-3.25a1.75 1.75 0 01.445-.758l8.61-8.61zm1.414 1.06a.25.25 0 00-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 000-.354l-1.086-1.086zM11.189 6.25L9.75 4.81l-6.286 6.287a.25.25 0 00-.064.108l-.558 1.953 1.953-.558a.249.249 0 00.108-.064l6.286-6.286z"></path></svg>
+          </a>
+          <a href="/login?return_to=%2Fimsun%2Fgitment%2Fblob%2Fmaster%2Fsrc%2Fgitment.js" class="btn-octicon btn-octicon-danger disabled tooltipped tooltipped-nw"
+            aria-label="You must be signed in to make or propose changes">
+            <svg class="octicon octicon-trash" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.5 1.75a.25.25 0 01.25-.25h2.5a.25.25 0 01.25.25V3h-3V1.75zm4.5 0V3h2.25a.75.75 0 010 1.5H2.75a.75.75 0 010-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75zM4.496 6.675a.75.75 0 10-1.492.15l.66 6.6A1.75 1.75 0 005.405 15h5.19c.9 0 1.652-.681 1.741-1.576l.66-6.6a.75.75 0 00-1.492-.149l-.66 6.6a.25.25 0 01-.249.225h-5.19a.25.25 0 01-.249-.225l-.66-6.6z"></path></svg>
+          </a>
+    </div>
+  </div>
+</div>
+
+      
+
+  <div itemprop="text" class="Box-body p-0 blob-wrapper data type-javascript  gist-border-0">
+      
+<table class="highlight tab-size js-file-line-container" data-tab-size="8" data-paste-markdown-skip>
+      <tr>
+        <td id="L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="LC1" class="blob-code blob-code-inner js-file-line"><span class=pl-k>import</span> <span class=pl-kos>{</span> <span class=pl-s1>autorun</span><span class=pl-kos>,</span> <span class=pl-s1>observable</span> <span class=pl-kos>}</span> <span class=pl-k>from</span> <span class=pl-s>&#39;mobx&#39;</span></td>
+      </tr>
+      <tr>
+        <td id="L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="LC2" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="LC3" class="blob-code blob-code-inner js-file-line"><span class=pl-k>import</span> <span class=pl-kos>{</span> <span class=pl-c1>LS_ACCESS_TOKEN_KEY</span><span class=pl-kos>,</span> <span class=pl-c1>LS_USER_KEY</span><span class=pl-kos>,</span> <span class=pl-c1>NOT_INITIALIZED_ERROR</span> <span class=pl-kos>}</span> <span class=pl-k>from</span> <span class=pl-s>&#39;./constants&#39;</span></td>
+      </tr>
+      <tr>
+        <td id="L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="LC4" class="blob-code blob-code-inner js-file-line"><span class=pl-k>import</span> <span class=pl-kos>{</span> <span class=pl-s1>getTargetContainer</span><span class=pl-kos>,</span> <span class=pl-s1>http</span><span class=pl-kos>,</span> <span class=pl-v>Query</span> <span class=pl-kos>}</span> <span class=pl-k>from</span> <span class=pl-s>&#39;./utils&#39;</span></td>
+      </tr>
+      <tr>
+        <td id="L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="LC5" class="blob-code blob-code-inner js-file-line"><span class=pl-k>import</span> <span class=pl-s1>defaultTheme</span> <span class=pl-k>from</span> <span class=pl-s>&#39;./theme/default&#39;</span></td>
+      </tr>
+      <tr>
+        <td id="L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="LC6" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="LC7" class="blob-code blob-code-inner js-file-line"><span class=pl-k>const</span> <span class=pl-s1>scope</span> <span class=pl-c1>=</span> <span class=pl-s>&#39;public_repo&#39;</span></td>
+      </tr>
+      <tr>
+        <td id="L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="LC8" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="LC9" class="blob-code blob-code-inner js-file-line"><span class=pl-k>function</span> <span class=pl-en>extendRenderer</span><span class=pl-kos>(</span><span class=pl-s1>instance</span><span class=pl-kos>,</span> <span class=pl-s1>renderer</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="LC10" class="blob-code blob-code-inner js-file-line">  <span class=pl-s1>instance</span><span class=pl-kos>[</span><span class=pl-s1>renderer</span><span class=pl-kos>]</span> <span class=pl-c1>=</span> <span class=pl-kos>(</span><span class=pl-s1>container</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="LC11" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>targetContainer</span> <span class=pl-c1>=</span> <span class=pl-en>getTargetContainer</span><span class=pl-kos>(</span><span class=pl-s1>container</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="LC12" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>render</span> <span class=pl-c1>=</span> <span class=pl-s1>instance</span><span class=pl-kos>.</span><span class=pl-c1>theme</span><span class=pl-kos>[</span><span class=pl-s1>renderer</span><span class=pl-kos>]</span> <span class=pl-c1>||</span> <span class=pl-s1>instance</span><span class=pl-kos>.</span><span class=pl-c1>defaultTheme</span><span class=pl-kos>[</span><span class=pl-s1>renderer</span><span class=pl-kos>]</span></td>
+      </tr>
+      <tr>
+        <td id="L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="LC13" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="LC14" class="blob-code blob-code-inner js-file-line">    <span class=pl-en>autorun</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="LC15" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>const</span> <span class=pl-s1>e</span> <span class=pl-c1>=</span> <span class=pl-s1>render</span><span class=pl-kos>(</span><span class=pl-s1>instance</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>,</span> <span class=pl-s1>instance</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="LC16" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-s1>targetContainer</span><span class=pl-kos>.</span><span class=pl-c1>firstChild</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="LC17" class="blob-code blob-code-inner js-file-line">        <span class=pl-s1>targetContainer</span><span class=pl-kos>.</span><span class=pl-en>replaceChild</span><span class=pl-kos>(</span><span class=pl-s1>e</span><span class=pl-kos>,</span> <span class=pl-s1>targetContainer</span><span class=pl-kos>.</span><span class=pl-c1>firstChild</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="LC18" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span> <span class=pl-k>else</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="LC19" class="blob-code blob-code-inner js-file-line">        <span class=pl-s1>targetContainer</span><span class=pl-kos>.</span><span class=pl-en>appendChild</span><span class=pl-kos>(</span><span class=pl-s1>e</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L20" class="blob-num js-line-number" data-line-number="20"></td>
+        <td id="LC20" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L21" class="blob-num js-line-number" data-line-number="21"></td>
+        <td id="LC21" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L22" class="blob-num js-line-number" data-line-number="22"></td>
+        <td id="LC22" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L23" class="blob-num js-line-number" data-line-number="23"></td>
+        <td id="LC23" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>targetContainer</span></td>
+      </tr>
+      <tr>
+        <td id="L24" class="blob-num js-line-number" data-line-number="24"></td>
+        <td id="LC24" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L25" class="blob-num js-line-number" data-line-number="25"></td>
+        <td id="LC25" class="blob-code blob-code-inner js-file-line"><span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L26" class="blob-num js-line-number" data-line-number="26"></td>
+        <td id="LC26" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L27" class="blob-num js-line-number" data-line-number="27"></td>
+        <td id="LC27" class="blob-code blob-code-inner js-file-line"><span class=pl-k>class</span> <span class=pl-v>Gitment</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L28" class="blob-num js-line-number" data-line-number="28"></td>
+        <td id="LC28" class="blob-code blob-code-inner js-file-line">  <span class=pl-k>get</span> <span class=pl-en>accessToken</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L29" class="blob-num js-line-number" data-line-number="29"></td>
+        <td id="LC29" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>localStorage</span><span class=pl-kos>.</span><span class=pl-en>getItem</span><span class=pl-kos>(</span><span class=pl-c1>LS_ACCESS_TOKEN_KEY</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L30" class="blob-num js-line-number" data-line-number="30"></td>
+        <td id="LC30" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L31" class="blob-num js-line-number" data-line-number="31"></td>
+        <td id="LC31" class="blob-code blob-code-inner js-file-line">  <span class=pl-k>set</span> <span class=pl-en>accessToken</span><span class=pl-kos>(</span><span class=pl-s1>token</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L32" class="blob-num js-line-number" data-line-number="32"></td>
+        <td id="LC32" class="blob-code blob-code-inner js-file-line">    <span class=pl-s1>localStorage</span><span class=pl-kos>.</span><span class=pl-en>setItem</span><span class=pl-kos>(</span><span class=pl-c1>LS_ACCESS_TOKEN_KEY</span><span class=pl-kos>,</span> <span class=pl-s1>token</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L33" class="blob-num js-line-number" data-line-number="33"></td>
+        <td id="LC33" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L34" class="blob-num js-line-number" data-line-number="34"></td>
+        <td id="LC34" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L35" class="blob-num js-line-number" data-line-number="35"></td>
+        <td id="LC35" class="blob-code blob-code-inner js-file-line">  <span class=pl-k>get</span> <span class=pl-en>loginLink</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L36" class="blob-num js-line-number" data-line-number="36"></td>
+        <td id="LC36" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>oauthUri</span> <span class=pl-c1>=</span> <span class=pl-s>&#39;https://github.com/login/oauth/authorize&#39;</span></td>
+      </tr>
+      <tr>
+        <td id="L37" class="blob-num js-line-number" data-line-number="37"></td>
+        <td id="LC37" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>redirect_uri</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>oauth</span><span class=pl-kos>.</span><span class=pl-c1>redirect_uri</span> <span class=pl-c1>||</span> <span class=pl-smi>window</span><span class=pl-kos>.</span><span class=pl-c1>location</span><span class=pl-kos>.</span><span class=pl-c1>href</span></td>
+      </tr>
+      <tr>
+        <td id="L38" class="blob-num js-line-number" data-line-number="38"></td>
+        <td id="LC38" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L39" class="blob-num js-line-number" data-line-number="39"></td>
+        <td id="LC39" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>oauthParams</span> <span class=pl-c1>=</span> <span class=pl-v>Object</span><span class=pl-kos>.</span><span class=pl-en>assign</span><span class=pl-kos>(</span><span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L40" class="blob-num js-line-number" data-line-number="40"></td>
+        <td id="LC40" class="blob-code blob-code-inner js-file-line">      scope<span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L41" class="blob-num js-line-number" data-line-number="41"></td>
+        <td id="LC41" class="blob-code blob-code-inner js-file-line">      redirect_uri<span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L42" class="blob-num js-line-number" data-line-number="42"></td>
+        <td id="LC42" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>,</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>oauth</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L43" class="blob-num js-line-number" data-line-number="43"></td>
+        <td id="LC43" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L44" class="blob-num js-line-number" data-line-number="44"></td>
+        <td id="LC44" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s>`<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>oauthUri</span><span class=pl-kos>}</span></span><span class=pl-s1><span class=pl-kos>${</span><span class=pl-v>Query</span><span class=pl-kos>.</span><span class=pl-en>stringify</span><span class=pl-kos>(</span><span class=pl-s1>oauthParams</span><span class=pl-kos>)</span><span class=pl-kos>}</span></span>`</span></td>
+      </tr>
+      <tr>
+        <td id="L45" class="blob-num js-line-number" data-line-number="45"></td>
+        <td id="LC45" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L46" class="blob-num js-line-number" data-line-number="46"></td>
+        <td id="LC46" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L47" class="blob-num js-line-number" data-line-number="47"></td>
+        <td id="LC47" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>constructor</span><span class=pl-kos>(</span><span class=pl-s1>options</span> <span class=pl-c1>=</span> <span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L48" class="blob-num js-line-number" data-line-number="48"></td>
+        <td id="LC48" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>defaultTheme</span> <span class=pl-c1>=</span> <span class=pl-s1>defaultTheme</span></td>
+      </tr>
+      <tr>
+        <td id="L49" class="blob-num js-line-number" data-line-number="49"></td>
+        <td id="LC49" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>useTheme</span><span class=pl-kos>(</span><span class=pl-s1>defaultTheme</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L50" class="blob-num js-line-number" data-line-number="50"></td>
+        <td id="LC50" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L51" class="blob-num js-line-number" data-line-number="51"></td>
+        <td id="LC51" class="blob-code blob-code-inner js-file-line">    <span class=pl-v>Object</span><span class=pl-kos>.</span><span class=pl-en>assign</span><span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L52" class="blob-num js-line-number" data-line-number="52"></td>
+        <td id="LC52" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>id</span>: <span class=pl-smi>window</span><span class=pl-kos>.</span><span class=pl-c1>location</span><span class=pl-kos>.</span><span class=pl-c1>href</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L53" class="blob-num js-line-number" data-line-number="53"></td>
+        <td id="LC53" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>title</span>: <span class=pl-smi>window</span><span class=pl-kos>.</span><span class=pl-c1>document</span><span class=pl-kos>.</span><span class=pl-c1>title</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L54" class="blob-num js-line-number" data-line-number="54"></td>
+        <td id="LC54" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>link</span>: <span class=pl-smi>window</span><span class=pl-kos>.</span><span class=pl-c1>location</span><span class=pl-kos>.</span><span class=pl-c1>href</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L55" class="blob-num js-line-number" data-line-number="55"></td>
+        <td id="LC55" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>desc</span>: <span class=pl-s>&#39;&#39;</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L56" class="blob-num js-line-number" data-line-number="56"></td>
+        <td id="LC56" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>labels</span>: <span class=pl-kos>[</span><span class=pl-kos>]</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L57" class="blob-num js-line-number" data-line-number="57"></td>
+        <td id="LC57" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>theme</span>: <span class=pl-s1>defaultTheme</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L58" class="blob-num js-line-number" data-line-number="58"></td>
+        <td id="LC58" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>oauth</span>: <span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L59" class="blob-num js-line-number" data-line-number="59"></td>
+        <td id="LC59" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>perPage</span>: <span class=pl-c1>20</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L60" class="blob-num js-line-number" data-line-number="60"></td>
+        <td id="LC60" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>maxCommentHeight</span>: <span class=pl-c1>250</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L61" class="blob-num js-line-number" data-line-number="61"></td>
+        <td id="LC61" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>,</span> <span class=pl-s1>options</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L62" class="blob-num js-line-number" data-line-number="62"></td>
+        <td id="LC62" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L63" class="blob-num js-line-number" data-line-number="63"></td>
+        <td id="LC63" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>useTheme</span><span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>theme</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L64" class="blob-num js-line-number" data-line-number="64"></td>
+        <td id="LC64" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L65" class="blob-num js-line-number" data-line-number="65"></td>
+        <td id="LC65" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>user</span> <span class=pl-c1>=</span> <span class=pl-kos>{</span><span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L66" class="blob-num js-line-number" data-line-number="66"></td>
+        <td id="LC66" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>try</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L67" class="blob-num js-line-number" data-line-number="67"></td>
+        <td id="LC67" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>const</span> <span class=pl-s1>userInfo</span> <span class=pl-c1>=</span> <span class=pl-s1>localStorage</span><span class=pl-kos>.</span><span class=pl-en>getItem</span><span class=pl-kos>(</span><span class=pl-c1>LS_USER_KEY</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L68" class="blob-num js-line-number" data-line-number="68"></td>
+        <td id="LC68" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span> <span class=pl-c1>&amp;&amp;</span> <span class=pl-s1>userInfo</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L69" class="blob-num js-line-number" data-line-number="69"></td>
+        <td id="LC69" class="blob-code blob-code-inner js-file-line">        <span class=pl-v>Object</span><span class=pl-kos>.</span><span class=pl-en>assign</span><span class=pl-kos>(</span><span class=pl-s1>user</span><span class=pl-kos>,</span> <span class=pl-c1>JSON</span><span class=pl-kos>.</span><span class=pl-en>parse</span><span class=pl-kos>(</span><span class=pl-s1>userInfo</span><span class=pl-kos>)</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L70" class="blob-num js-line-number" data-line-number="70"></td>
+        <td id="LC70" class="blob-code blob-code-inner js-file-line">          <span class=pl-c1>fromCache</span>: <span class=pl-c1>true</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L71" class="blob-num js-line-number" data-line-number="71"></td>
+        <td id="LC71" class="blob-code blob-code-inner js-file-line">        <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L72" class="blob-num js-line-number" data-line-number="72"></td>
+        <td id="LC72" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L73" class="blob-num js-line-number" data-line-number="73"></td>
+        <td id="LC73" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span> <span class=pl-k>catch</span> <span class=pl-kos>(</span><span class=pl-s1>e</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L74" class="blob-num js-line-number" data-line-number="74"></td>
+        <td id="LC74" class="blob-code blob-code-inner js-file-line">      <span class=pl-s1>localStorage</span><span class=pl-kos>.</span><span class=pl-en>removeItem</span><span class=pl-kos>(</span><span class=pl-c1>LS_USER_KEY</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L75" class="blob-num js-line-number" data-line-number="75"></td>
+        <td id="LC75" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L76" class="blob-num js-line-number" data-line-number="76"></td>
+        <td id="LC76" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L77" class="blob-num js-line-number" data-line-number="77"></td>
+        <td id="LC77" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span> <span class=pl-c1>=</span> <span class=pl-en>observable</span><span class=pl-kos>(</span><span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L78" class="blob-num js-line-number" data-line-number="78"></td>
+        <td id="LC78" class="blob-code blob-code-inner js-file-line">      user<span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L79" class="blob-num js-line-number" data-line-number="79"></td>
+        <td id="LC79" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>error</span>: <span class=pl-c1>null</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L80" class="blob-num js-line-number" data-line-number="80"></td>
+        <td id="LC80" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>meta</span>: <span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L81" class="blob-num js-line-number" data-line-number="81"></td>
+        <td id="LC81" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>comments</span>: <span class=pl-c1>undefined</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L82" class="blob-num js-line-number" data-line-number="82"></td>
+        <td id="LC82" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>reactions</span>: <span class=pl-kos>[</span><span class=pl-kos>]</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L83" class="blob-num js-line-number" data-line-number="83"></td>
+        <td id="LC83" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>commentReactions</span>: <span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L84" class="blob-num js-line-number" data-line-number="84"></td>
+        <td id="LC84" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>currentPage</span>: <span class=pl-c1>1</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L85" class="blob-num js-line-number" data-line-number="85"></td>
+        <td id="LC85" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L86" class="blob-num js-line-number" data-line-number="86"></td>
+        <td id="LC86" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L87" class="blob-num js-line-number" data-line-number="87"></td>
+        <td id="LC87" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>query</span> <span class=pl-c1>=</span> <span class=pl-v>Query</span><span class=pl-kos>.</span><span class=pl-en>parse</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L88" class="blob-num js-line-number" data-line-number="88"></td>
+        <td id="LC88" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-s1>query</span><span class=pl-kos>.</span><span class=pl-c1>code</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L89" class="blob-num js-line-number" data-line-number="89"></td>
+        <td id="LC89" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>const</span> <span class=pl-kos>{</span> client_id<span class=pl-kos>,</span> client_secret <span class=pl-kos>}</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>oauth</span></td>
+      </tr>
+      <tr>
+        <td id="L90" class="blob-num js-line-number" data-line-number="90"></td>
+        <td id="LC90" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>const</span> <span class=pl-s1>code</span> <span class=pl-c1>=</span> <span class=pl-s1>query</span><span class=pl-kos>.</span><span class=pl-c1>code</span></td>
+      </tr>
+      <tr>
+        <td id="L91" class="blob-num js-line-number" data-line-number="91"></td>
+        <td id="LC91" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>delete</span> <span class=pl-s1>query</span><span class=pl-kos>.</span><span class=pl-c1>code</span></td>
+      </tr>
+      <tr>
+        <td id="L92" class="blob-num js-line-number" data-line-number="92"></td>
+        <td id="LC92" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>const</span> <span class=pl-s1>search</span> <span class=pl-c1>=</span> <span class=pl-v>Query</span><span class=pl-kos>.</span><span class=pl-en>stringify</span><span class=pl-kos>(</span><span class=pl-s1>query</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L93" class="blob-num js-line-number" data-line-number="93"></td>
+        <td id="LC93" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>const</span> <span class=pl-s1>replacedUrl</span> <span class=pl-c1>=</span> <span class=pl-s>`<span class=pl-s1><span class=pl-kos>${</span><span class=pl-smi>window</span><span class=pl-kos>.</span><span class=pl-c1>location</span><span class=pl-kos>.</span><span class=pl-c1>origin</span><span class=pl-kos>}</span></span><span class=pl-s1><span class=pl-kos>${</span><span class=pl-smi>window</span><span class=pl-kos>.</span><span class=pl-c1>location</span><span class=pl-kos>.</span><span class=pl-c1>pathname</span><span class=pl-kos>}</span></span><span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>search</span><span class=pl-kos>}</span></span><span class=pl-s1><span class=pl-kos>${</span><span class=pl-smi>window</span><span class=pl-kos>.</span><span class=pl-c1>location</span><span class=pl-kos>.</span><span class=pl-c1>hash</span><span class=pl-kos>}</span></span>`</span></td>
+      </tr>
+      <tr>
+        <td id="L94" class="blob-num js-line-number" data-line-number="94"></td>
+        <td id="LC94" class="blob-code blob-code-inner js-file-line">      <span class=pl-s1>history</span><span class=pl-kos>.</span><span class=pl-en>replaceState</span><span class=pl-kos>(</span><span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>,</span> <span class=pl-s>&#39;&#39;</span><span class=pl-kos>,</span> <span class=pl-s1>replacedUrl</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L95" class="blob-num js-line-number" data-line-number="95"></td>
+        <td id="LC95" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L96" class="blob-num js-line-number" data-line-number="96"></td>
+        <td id="LC96" class="blob-code blob-code-inner js-file-line">      <span class=pl-v>Object</span><span class=pl-kos>.</span><span class=pl-en>assign</span><span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L97" class="blob-num js-line-number" data-line-number="97"></td>
+        <td id="LC97" class="blob-code blob-code-inner js-file-line">        <span class=pl-c1>id</span>: <span class=pl-s1>replacedUrl</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L98" class="blob-num js-line-number" data-line-number="98"></td>
+        <td id="LC98" class="blob-code blob-code-inner js-file-line">        <span class=pl-c1>link</span>: <span class=pl-s1>replacedUrl</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L99" class="blob-num js-line-number" data-line-number="99"></td>
+        <td id="LC99" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>,</span> <span class=pl-s1>options</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L100" class="blob-num js-line-number" data-line-number="100"></td>
+        <td id="LC100" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L101" class="blob-num js-line-number" data-line-number="101"></td>
+        <td id="LC101" class="blob-code blob-code-inner js-file-line">      <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>user</span><span class=pl-kos>.</span><span class=pl-c1>isLoggingIn</span> <span class=pl-c1>=</span> <span class=pl-c1>true</span></td>
+      </tr>
+      <tr>
+        <td id="L102" class="blob-num js-line-number" data-line-number="102"></td>
+        <td id="LC102" class="blob-code blob-code-inner js-file-line">      <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>post</span><span class=pl-kos>(</span><span class=pl-s>&#39;https://gh-oauth.imsun.net&#39;</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L103" class="blob-num js-line-number" data-line-number="103"></td>
+        <td id="LC103" class="blob-code blob-code-inner js-file-line">          code<span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L104" class="blob-num js-line-number" data-line-number="104"></td>
+        <td id="LC104" class="blob-code blob-code-inner js-file-line">          client_id<span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L105" class="blob-num js-line-number" data-line-number="105"></td>
+        <td id="LC105" class="blob-code blob-code-inner js-file-line">          client_secret<span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L106" class="blob-num js-line-number" data-line-number="106"></td>
+        <td id="LC106" class="blob-code blob-code-inner js-file-line">        <span class=pl-kos>}</span><span class=pl-kos>,</span> <span class=pl-s>&#39;&#39;</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L107" class="blob-num js-line-number" data-line-number="107"></td>
+        <td id="LC107" class="blob-code blob-code-inner js-file-line">        <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>data</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L108" class="blob-num js-line-number" data-line-number="108"></td>
+        <td id="LC108" class="blob-code blob-code-inner js-file-line">          <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span> <span class=pl-c1>=</span> <span class=pl-s1>data</span><span class=pl-kos>.</span><span class=pl-c1>access_token</span></td>
+      </tr>
+      <tr>
+        <td id="L109" class="blob-num js-line-number" data-line-number="109"></td>
+        <td id="LC109" class="blob-code blob-code-inner js-file-line">          <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>update</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L110" class="blob-num js-line-number" data-line-number="110"></td>
+        <td id="LC110" class="blob-code blob-code-inner js-file-line">        <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L111" class="blob-num js-line-number" data-line-number="111"></td>
+        <td id="LC111" class="blob-code blob-code-inner js-file-line">        <span class=pl-kos>.</span><span class=pl-en>catch</span><span class=pl-kos>(</span><span class=pl-s1>e</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L112" class="blob-num js-line-number" data-line-number="112"></td>
+        <td id="LC112" class="blob-code blob-code-inner js-file-line">          <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>user</span><span class=pl-kos>.</span><span class=pl-c1>isLoggingIn</span> <span class=pl-c1>=</span> <span class=pl-c1>false</span></td>
+      </tr>
+      <tr>
+        <td id="L113" class="blob-num js-line-number" data-line-number="113"></td>
+        <td id="LC113" class="blob-code blob-code-inner js-file-line">          <span class=pl-en>alert</span><span class=pl-kos>(</span><span class=pl-s1>e</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L114" class="blob-num js-line-number" data-line-number="114"></td>
+        <td id="LC114" class="blob-code blob-code-inner js-file-line">        <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L115" class="blob-num js-line-number" data-line-number="115"></td>
+        <td id="LC115" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span> <span class=pl-k>else</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L116" class="blob-num js-line-number" data-line-number="116"></td>
+        <td id="LC116" class="blob-code blob-code-inner js-file-line">      <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>update</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L117" class="blob-num js-line-number" data-line-number="117"></td>
+        <td id="LC117" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L118" class="blob-num js-line-number" data-line-number="118"></td>
+        <td id="LC118" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L119" class="blob-num js-line-number" data-line-number="119"></td>
+        <td id="LC119" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L120" class="blob-num js-line-number" data-line-number="120"></td>
+        <td id="LC120" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>init</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L121" class="blob-num js-line-number" data-line-number="121"></td>
+        <td id="LC121" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>createIssue</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L122" class="blob-num js-line-number" data-line-number="122"></td>
+        <td id="LC122" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>loadComments</span><span class=pl-kos>(</span><span class=pl-kos>)</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L123" class="blob-num js-line-number" data-line-number="123"></td>
+        <td id="LC123" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>comments</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L124" class="blob-num js-line-number" data-line-number="124"></td>
+        <td id="LC124" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>error</span> <span class=pl-c1>=</span> <span class=pl-c1>null</span></td>
+      </tr>
+      <tr>
+        <td id="L125" class="blob-num js-line-number" data-line-number="125"></td>
+        <td id="LC125" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>comments</span></td>
+      </tr>
+      <tr>
+        <td id="L126" class="blob-num js-line-number" data-line-number="126"></td>
+        <td id="LC126" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L127" class="blob-num js-line-number" data-line-number="127"></td>
+        <td id="LC127" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L128" class="blob-num js-line-number" data-line-number="128"></td>
+        <td id="LC128" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L129" class="blob-num js-line-number" data-line-number="129"></td>
+        <td id="LC129" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>useTheme</span><span class=pl-kos>(</span><span class=pl-s1>theme</span> <span class=pl-c1>=</span> <span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L130" class="blob-num js-line-number" data-line-number="130"></td>
+        <td id="LC130" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>theme</span> <span class=pl-c1>=</span> <span class=pl-s1>theme</span></td>
+      </tr>
+      <tr>
+        <td id="L131" class="blob-num js-line-number" data-line-number="131"></td>
+        <td id="LC131" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L132" class="blob-num js-line-number" data-line-number="132"></td>
+        <td id="LC132" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>renderers</span> <span class=pl-c1>=</span> <span class=pl-v>Object</span><span class=pl-kos>.</span><span class=pl-en>keys</span><span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>theme</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L133" class="blob-num js-line-number" data-line-number="133"></td>
+        <td id="LC133" class="blob-code blob-code-inner js-file-line">    <span class=pl-s1>renderers</span><span class=pl-kos>.</span><span class=pl-en>forEach</span><span class=pl-kos>(</span><span class=pl-s1>renderer</span> <span class=pl-c1>=&gt;</span> <span class=pl-en>extendRenderer</span><span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>,</span> <span class=pl-s1>renderer</span><span class=pl-kos>)</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L134" class="blob-num js-line-number" data-line-number="134"></td>
+        <td id="LC134" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L135" class="blob-num js-line-number" data-line-number="135"></td>
+        <td id="LC135" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L136" class="blob-num js-line-number" data-line-number="136"></td>
+        <td id="LC136" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>update</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L137" class="blob-num js-line-number" data-line-number="137"></td>
+        <td id="LC137" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>all</span><span class=pl-kos>(</span><span class=pl-kos>[</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>loadMeta</span><span class=pl-kos>(</span><span class=pl-kos>)</span><span class=pl-kos>,</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>loadUserInfo</span><span class=pl-kos>(</span><span class=pl-kos>)</span><span class=pl-kos>]</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L138" class="blob-num js-line-number" data-line-number="138"></td>
+        <td id="LC138" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>all</span><span class=pl-kos>(</span><span class=pl-kos>[</span></td>
+      </tr>
+      <tr>
+        <td id="L139" class="blob-num js-line-number" data-line-number="139"></td>
+        <td id="LC139" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>loadComments</span><span class=pl-kos>(</span><span class=pl-kos>)</span><span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>loadCommentReactions</span><span class=pl-kos>(</span><span class=pl-kos>)</span><span class=pl-kos>)</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L140" class="blob-num js-line-number" data-line-number="140"></td>
+        <td id="LC140" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>loadReactions</span><span class=pl-kos>(</span><span class=pl-kos>)</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L141" class="blob-num js-line-number" data-line-number="141"></td>
+        <td id="LC141" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>]</span><span class=pl-kos>)</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L142" class="blob-num js-line-number" data-line-number="142"></td>
+        <td id="LC142" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>catch</span><span class=pl-kos>(</span><span class=pl-s1>e</span> <span class=pl-c1>=&gt;</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>error</span> <span class=pl-c1>=</span> <span class=pl-s1>e</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L143" class="blob-num js-line-number" data-line-number="143"></td>
+        <td id="LC143" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L144" class="blob-num js-line-number" data-line-number="144"></td>
+        <td id="LC144" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L145" class="blob-num js-line-number" data-line-number="145"></td>
+        <td id="LC145" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>markdown</span><span class=pl-kos>(</span><span class=pl-s1>text</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L146" class="blob-num js-line-number" data-line-number="146"></td>
+        <td id="LC146" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>post</span><span class=pl-kos>(</span><span class=pl-s>&#39;/markdown&#39;</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L147" class="blob-num js-line-number" data-line-number="147"></td>
+        <td id="LC147" class="blob-code blob-code-inner js-file-line">      text<span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L148" class="blob-num js-line-number" data-line-number="148"></td>
+        <td id="LC148" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>mode</span>: <span class=pl-s>&#39;gfm&#39;</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L149" class="blob-num js-line-number" data-line-number="149"></td>
+        <td id="LC149" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L150" class="blob-num js-line-number" data-line-number="150"></td>
+        <td id="LC150" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L151" class="blob-num js-line-number" data-line-number="151"></td>
+        <td id="LC151" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L152" class="blob-num js-line-number" data-line-number="152"></td>
+        <td id="LC152" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>createIssue</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L153" class="blob-num js-line-number" data-line-number="153"></td>
+        <td id="LC153" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-kos>{</span> id<span class=pl-kos>,</span> owner<span class=pl-kos>,</span> repo<span class=pl-kos>,</span> title<span class=pl-kos>,</span> link<span class=pl-kos>,</span> desc<span class=pl-kos>,</span> labels <span class=pl-kos>}</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span></td>
+      </tr>
+      <tr>
+        <td id="L154" class="blob-num js-line-number" data-line-number="154"></td>
+        <td id="LC154" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L155" class="blob-num js-line-number" data-line-number="155"></td>
+        <td id="LC155" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>post</span><span class=pl-kos>(</span><span class=pl-s>`/repos/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>owner</span><span class=pl-kos>}</span></span>/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>repo</span><span class=pl-kos>}</span></span>/issues`</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L156" class="blob-num js-line-number" data-line-number="156"></td>
+        <td id="LC156" class="blob-code blob-code-inner js-file-line">      title<span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L157" class="blob-num js-line-number" data-line-number="157"></td>
+        <td id="LC157" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>labels</span>: <span class=pl-s1>labels</span><span class=pl-kos>.</span><span class=pl-en>concat</span><span class=pl-kos>(</span><span class=pl-kos>[</span><span class=pl-s>&#39;gitment&#39;</span><span class=pl-kos>,</span> <span class=pl-s1>id</span><span class=pl-kos>]</span><span class=pl-kos>)</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L158" class="blob-num js-line-number" data-line-number="158"></td>
+        <td id="LC158" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>body</span>: <span class=pl-s>`<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>link</span><span class=pl-kos>}</span></span>\n\n<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>desc</span><span class=pl-kos>}</span></span>`</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L159" class="blob-num js-line-number" data-line-number="159"></td>
+        <td id="LC159" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L160" class="blob-num js-line-number" data-line-number="160"></td>
+        <td id="LC160" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-s1>meta</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L161" class="blob-num js-line-number" data-line-number="161"></td>
+        <td id="LC161" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span> <span class=pl-c1>=</span> <span class=pl-s1>meta</span></td>
+      </tr>
+      <tr>
+        <td id="L162" class="blob-num js-line-number" data-line-number="162"></td>
+        <td id="LC162" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>meta</span></td>
+      </tr>
+      <tr>
+        <td id="L163" class="blob-num js-line-number" data-line-number="163"></td>
+        <td id="LC163" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L164" class="blob-num js-line-number" data-line-number="164"></td>
+        <td id="LC164" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L165" class="blob-num js-line-number" data-line-number="165"></td>
+        <td id="LC165" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L166" class="blob-num js-line-number" data-line-number="166"></td>
+        <td id="LC166" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>getIssue</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L167" class="blob-num js-line-number" data-line-number="167"></td>
+        <td id="LC167" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span><span class=pl-kos>.</span><span class=pl-c1>id</span><span class=pl-kos>)</span> <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>resolve</span><span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L168" class="blob-num js-line-number" data-line-number="168"></td>
+        <td id="LC168" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L169" class="blob-num js-line-number" data-line-number="169"></td>
+        <td id="LC169" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>loadMeta</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L170" class="blob-num js-line-number" data-line-number="170"></td>
+        <td id="LC170" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L171" class="blob-num js-line-number" data-line-number="171"></td>
+        <td id="LC171" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L172" class="blob-num js-line-number" data-line-number="172"></td>
+        <td id="LC172" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>post</span><span class=pl-kos>(</span><span class=pl-s1>body</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L173" class="blob-num js-line-number" data-line-number="173"></td>
+        <td id="LC173" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>getIssue</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L174" class="blob-num js-line-number" data-line-number="174"></td>
+        <td id="LC174" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>issue</span> <span class=pl-c1>=&gt;</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>post</span><span class=pl-kos>(</span><span class=pl-s1>issue</span><span class=pl-kos>.</span><span class=pl-c1>comments_url</span><span class=pl-kos>,</span> <span class=pl-kos>{</span> body <span class=pl-kos>}</span><span class=pl-kos>,</span> <span class=pl-s>&#39;&#39;</span><span class=pl-kos>)</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L175" class="blob-num js-line-number" data-line-number="175"></td>
+        <td id="LC175" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>data</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L176" class="blob-num js-line-number" data-line-number="176"></td>
+        <td id="LC176" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span><span class=pl-kos>.</span><span class=pl-c1>comments</span><span class=pl-c1>++</span></td>
+      </tr>
+      <tr>
+        <td id="L177" class="blob-num js-line-number" data-line-number="177"></td>
+        <td id="LC177" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>const</span> <span class=pl-s1>pageCount</span> <span class=pl-c1>=</span> <span class=pl-v>Math</span><span class=pl-kos>.</span><span class=pl-en>ceil</span><span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span><span class=pl-kos>.</span><span class=pl-c1>comments</span> <span class=pl-c1>/</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>perPage</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L178" class="blob-num js-line-number" data-line-number="178"></td>
+        <td id="LC178" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>currentPage</span> <span class=pl-c1>===</span> <span class=pl-s1>pageCount</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L179" class="blob-num js-line-number" data-line-number="179"></td>
+        <td id="LC179" class="blob-code blob-code-inner js-file-line">          <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>comments</span><span class=pl-kos>.</span><span class=pl-en>push</span><span class=pl-kos>(</span><span class=pl-s1>data</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L180" class="blob-num js-line-number" data-line-number="180"></td>
+        <td id="LC180" class="blob-code blob-code-inner js-file-line">        <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L181" class="blob-num js-line-number" data-line-number="181"></td>
+        <td id="LC181" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>data</span></td>
+      </tr>
+      <tr>
+        <td id="L182" class="blob-num js-line-number" data-line-number="182"></td>
+        <td id="LC182" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L183" class="blob-num js-line-number" data-line-number="183"></td>
+        <td id="LC183" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L184" class="blob-num js-line-number" data-line-number="184"></td>
+        <td id="LC184" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L185" class="blob-num js-line-number" data-line-number="185"></td>
+        <td id="LC185" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>loadMeta</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L186" class="blob-num js-line-number" data-line-number="186"></td>
+        <td id="LC186" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-kos>{</span> id<span class=pl-kos>,</span> owner<span class=pl-kos>,</span> repo <span class=pl-kos>}</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span></td>
+      </tr>
+      <tr>
+        <td id="L187" class="blob-num js-line-number" data-line-number="187"></td>
+        <td id="LC187" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>get</span><span class=pl-kos>(</span><span class=pl-s>`/repos/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>owner</span><span class=pl-kos>}</span></span>/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>repo</span><span class=pl-kos>}</span></span>/issues`</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L188" class="blob-num js-line-number" data-line-number="188"></td>
+        <td id="LC188" class="blob-code blob-code-inner js-file-line">        <span class=pl-c1>creator</span>: <span class=pl-s1>owner</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L189" class="blob-num js-line-number" data-line-number="189"></td>
+        <td id="LC189" class="blob-code blob-code-inner js-file-line">        <span class=pl-c1>labels</span>: <span class=pl-s1>id</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L190" class="blob-num js-line-number" data-line-number="190"></td>
+        <td id="LC190" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L191" class="blob-num js-line-number" data-line-number="191"></td>
+        <td id="LC191" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>issues</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L192" class="blob-num js-line-number" data-line-number="192"></td>
+        <td id="LC192" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-s1>issues</span><span class=pl-kos>.</span><span class=pl-c1>length</span><span class=pl-kos>)</span> <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>reject</span><span class=pl-kos>(</span><span class=pl-c1>NOT_INITIALIZED_ERROR</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L193" class="blob-num js-line-number" data-line-number="193"></td>
+        <td id="LC193" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span> <span class=pl-c1>=</span> <span class=pl-s1>issues</span><span class=pl-kos>[</span><span class=pl-c1>0</span><span class=pl-kos>]</span></td>
+      </tr>
+      <tr>
+        <td id="L194" class="blob-num js-line-number" data-line-number="194"></td>
+        <td id="LC194" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>issues</span><span class=pl-kos>[</span><span class=pl-c1>0</span><span class=pl-kos>]</span></td>
+      </tr>
+      <tr>
+        <td id="L195" class="blob-num js-line-number" data-line-number="195"></td>
+        <td id="LC195" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L196" class="blob-num js-line-number" data-line-number="196"></td>
+        <td id="LC196" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L197" class="blob-num js-line-number" data-line-number="197"></td>
+        <td id="LC197" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L198" class="blob-num js-line-number" data-line-number="198"></td>
+        <td id="LC198" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>loadComments</span><span class=pl-kos>(</span><span class=pl-s1>page</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>currentPage</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L199" class="blob-num js-line-number" data-line-number="199"></td>
+        <td id="LC199" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>getIssue</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L200" class="blob-num js-line-number" data-line-number="200"></td>
+        <td id="LC200" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>issue</span> <span class=pl-c1>=&gt;</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>get</span><span class=pl-kos>(</span><span class=pl-s1>issue</span><span class=pl-kos>.</span><span class=pl-c1>comments_url</span><span class=pl-kos>,</span> <span class=pl-kos>{</span> page<span class=pl-kos>,</span> <span class=pl-c1>per_page</span>: <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>perPage</span> <span class=pl-kos>}</span><span class=pl-kos>,</span> <span class=pl-s>&#39;&#39;</span><span class=pl-kos>)</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L201" class="blob-num js-line-number" data-line-number="201"></td>
+        <td id="LC201" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-s1>comments</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L202" class="blob-num js-line-number" data-line-number="202"></td>
+        <td id="LC202" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>comments</span> <span class=pl-c1>=</span> <span class=pl-s1>comments</span></td>
+      </tr>
+      <tr>
+        <td id="L203" class="blob-num js-line-number" data-line-number="203"></td>
+        <td id="LC203" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>comments</span></td>
+      </tr>
+      <tr>
+        <td id="L204" class="blob-num js-line-number" data-line-number="204"></td>
+        <td id="LC204" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L205" class="blob-num js-line-number" data-line-number="205"></td>
+        <td id="LC205" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L206" class="blob-num js-line-number" data-line-number="206"></td>
+        <td id="LC206" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L207" class="blob-num js-line-number" data-line-number="207"></td>
+        <td id="LC207" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>loadUserInfo</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L208" class="blob-num js-line-number" data-line-number="208"></td>
+        <td id="LC208" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L209" class="blob-num js-line-number" data-line-number="209"></td>
+        <td id="LC209" class="blob-code blob-code-inner js-file-line">      <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>logout</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L210" class="blob-num js-line-number" data-line-number="210"></td>
+        <td id="LC210" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>resolve</span><span class=pl-kos>(</span><span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L211" class="blob-num js-line-number" data-line-number="211"></td>
+        <td id="LC211" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L212" class="blob-num js-line-number" data-line-number="212"></td>
+        <td id="LC212" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L213" class="blob-num js-line-number" data-line-number="213"></td>
+        <td id="LC213" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>get</span><span class=pl-kos>(</span><span class=pl-s>&#39;/user&#39;</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L214" class="blob-num js-line-number" data-line-number="214"></td>
+        <td id="LC214" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-s1>user</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L215" class="blob-num js-line-number" data-line-number="215"></td>
+        <td id="LC215" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>user</span> <span class=pl-c1>=</span> <span class=pl-s1>user</span></td>
+      </tr>
+      <tr>
+        <td id="L216" class="blob-num js-line-number" data-line-number="216"></td>
+        <td id="LC216" class="blob-code blob-code-inner js-file-line">        <span class=pl-s1>localStorage</span><span class=pl-kos>.</span><span class=pl-en>setItem</span><span class=pl-kos>(</span><span class=pl-c1>LS_USER_KEY</span><span class=pl-kos>,</span> <span class=pl-c1>JSON</span><span class=pl-kos>.</span><span class=pl-en>stringify</span><span class=pl-kos>(</span><span class=pl-s1>user</span><span class=pl-kos>)</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L217" class="blob-num js-line-number" data-line-number="217"></td>
+        <td id="LC217" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>user</span></td>
+      </tr>
+      <tr>
+        <td id="L218" class="blob-num js-line-number" data-line-number="218"></td>
+        <td id="LC218" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L219" class="blob-num js-line-number" data-line-number="219"></td>
+        <td id="LC219" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L220" class="blob-num js-line-number" data-line-number="220"></td>
+        <td id="LC220" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L221" class="blob-num js-line-number" data-line-number="221"></td>
+        <td id="LC221" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>loadReactions</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L222" class="blob-num js-line-number" data-line-number="222"></td>
+        <td id="LC222" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L223" class="blob-num js-line-number" data-line-number="223"></td>
+        <td id="LC223" class="blob-code blob-code-inner js-file-line">      <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span> <span class=pl-c1>=</span> <span class=pl-kos>[</span><span class=pl-kos>]</span></td>
+      </tr>
+      <tr>
+        <td id="L224" class="blob-num js-line-number" data-line-number="224"></td>
+        <td id="LC224" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>resolve</span><span class=pl-kos>(</span><span class=pl-kos>[</span><span class=pl-kos>]</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L225" class="blob-num js-line-number" data-line-number="225"></td>
+        <td id="LC225" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L226" class="blob-num js-line-number" data-line-number="226"></td>
+        <td id="LC226" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L227" class="blob-num js-line-number" data-line-number="227"></td>
+        <td id="LC227" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>getIssue</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L228" class="blob-num js-line-number" data-line-number="228"></td>
+        <td id="LC228" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-s1>issue</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L229" class="blob-num js-line-number" data-line-number="229"></td>
+        <td id="LC229" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-s1>issue</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span><span class=pl-kos>.</span><span class=pl-c1>total_count</span><span class=pl-kos>)</span> <span class=pl-k>return</span> <span class=pl-kos>[</span><span class=pl-kos>]</span></td>
+      </tr>
+      <tr>
+        <td id="L230" class="blob-num js-line-number" data-line-number="230"></td>
+        <td id="LC230" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>get</span><span class=pl-kos>(</span><span class=pl-s1>issue</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span><span class=pl-kos>.</span><span class=pl-c1>url</span><span class=pl-kos>,</span> <span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>,</span> <span class=pl-s>&#39;&#39;</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L231" class="blob-num js-line-number" data-line-number="231"></td>
+        <td id="LC231" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L232" class="blob-num js-line-number" data-line-number="232"></td>
+        <td id="LC232" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-s1>reactions</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L233" class="blob-num js-line-number" data-line-number="233"></td>
+        <td id="LC233" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span> <span class=pl-c1>=</span> <span class=pl-s1>reactions</span></td>
+      </tr>
+      <tr>
+        <td id="L234" class="blob-num js-line-number" data-line-number="234"></td>
+        <td id="LC234" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>reactions</span></td>
+      </tr>
+      <tr>
+        <td id="L235" class="blob-num js-line-number" data-line-number="235"></td>
+        <td id="LC235" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L236" class="blob-num js-line-number" data-line-number="236"></td>
+        <td id="LC236" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L237" class="blob-num js-line-number" data-line-number="237"></td>
+        <td id="LC237" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L238" class="blob-num js-line-number" data-line-number="238"></td>
+        <td id="LC238" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>loadCommentReactions</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L239" class="blob-num js-line-number" data-line-number="239"></td>
+        <td id="LC239" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L240" class="blob-num js-line-number" data-line-number="240"></td>
+        <td id="LC240" class="blob-code blob-code-inner js-file-line">      <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>commentReactions</span> <span class=pl-c1>=</span> <span class=pl-kos>{</span><span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L241" class="blob-num js-line-number" data-line-number="241"></td>
+        <td id="LC241" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>resolve</span><span class=pl-kos>(</span><span class=pl-kos>[</span><span class=pl-kos>]</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L242" class="blob-num js-line-number" data-line-number="242"></td>
+        <td id="LC242" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L243" class="blob-num js-line-number" data-line-number="243"></td>
+        <td id="LC243" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L244" class="blob-num js-line-number" data-line-number="244"></td>
+        <td id="LC244" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>comments</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>comments</span></td>
+      </tr>
+      <tr>
+        <td id="L245" class="blob-num js-line-number" data-line-number="245"></td>
+        <td id="LC245" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>comentReactions</span> <span class=pl-c1>=</span> <span class=pl-kos>{</span><span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L246" class="blob-num js-line-number" data-line-number="246"></td>
+        <td id="LC246" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L247" class="blob-num js-line-number" data-line-number="247"></td>
+        <td id="LC247" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>all</span><span class=pl-kos>(</span><span class=pl-s1>comments</span><span class=pl-kos>.</span><span class=pl-en>map</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-s1>comment</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L248" class="blob-num js-line-number" data-line-number="248"></td>
+        <td id="LC248" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-s1>comment</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span><span class=pl-kos>.</span><span class=pl-c1>total_count</span><span class=pl-kos>)</span> <span class=pl-k>return</span> <span class=pl-kos>[</span><span class=pl-kos>]</span></td>
+      </tr>
+      <tr>
+        <td id="L249" class="blob-num js-line-number" data-line-number="249"></td>
+        <td id="LC249" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L250" class="blob-num js-line-number" data-line-number="250"></td>
+        <td id="LC250" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>const</span> <span class=pl-kos>{</span> owner<span class=pl-kos>,</span> repo <span class=pl-kos>}</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span></td>
+      </tr>
+      <tr>
+        <td id="L251" class="blob-num js-line-number" data-line-number="251"></td>
+        <td id="LC251" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>get</span><span class=pl-kos>(</span><span class=pl-s>`/repos/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>owner</span><span class=pl-kos>}</span></span>/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>repo</span><span class=pl-kos>}</span></span>/issues/comments/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>comment</span><span class=pl-kos>.</span><span class=pl-c1>id</span><span class=pl-kos>}</span></span>/reactions`</span><span class=pl-kos>,</span> <span class=pl-kos>{</span><span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L252" class="blob-num js-line-number" data-line-number="252"></td>
+        <td id="LC252" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>)</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L253" class="blob-num js-line-number" data-line-number="253"></td>
+        <td id="LC253" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>reactionsArray</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L254" class="blob-num js-line-number" data-line-number="254"></td>
+        <td id="LC254" class="blob-code blob-code-inner js-file-line">        <span class=pl-s1>comments</span><span class=pl-kos>.</span><span class=pl-en>forEach</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-s1>comment</span><span class=pl-kos>,</span> <span class=pl-s1>index</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L255" class="blob-num js-line-number" data-line-number="255"></td>
+        <td id="LC255" class="blob-code blob-code-inner js-file-line">          <span class=pl-s1>comentReactions</span><span class=pl-kos>[</span><span class=pl-s1>comment</span><span class=pl-kos>.</span><span class=pl-c1>id</span><span class=pl-kos>]</span> <span class=pl-c1>=</span> <span class=pl-s1>reactionsArray</span><span class=pl-kos>[</span><span class=pl-s1>index</span><span class=pl-kos>]</span></td>
+      </tr>
+      <tr>
+        <td id="L256" class="blob-num js-line-number" data-line-number="256"></td>
+        <td id="LC256" class="blob-code blob-code-inner js-file-line">        <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L257" class="blob-num js-line-number" data-line-number="257"></td>
+        <td id="LC257" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>commentReactions</span> <span class=pl-c1>=</span> <span class=pl-s1>comentReactions</span></td>
+      </tr>
+      <tr>
+        <td id="L258" class="blob-num js-line-number" data-line-number="258"></td>
+        <td id="LC258" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L259" class="blob-num js-line-number" data-line-number="259"></td>
+        <td id="LC259" class="blob-code blob-code-inner js-file-line">        <span class=pl-k>return</span> <span class=pl-s1>comentReactions</span></td>
+      </tr>
+      <tr>
+        <td id="L260" class="blob-num js-line-number" data-line-number="260"></td>
+        <td id="LC260" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L261" class="blob-num js-line-number" data-line-number="261"></td>
+        <td id="LC261" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L262" class="blob-num js-line-number" data-line-number="262"></td>
+        <td id="LC262" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L263" class="blob-num js-line-number" data-line-number="263"></td>
+        <td id="LC263" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>login</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L264" class="blob-num js-line-number" data-line-number="264"></td>
+        <td id="LC264" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>window</span><span class=pl-kos>.</span><span class=pl-c1>location</span><span class=pl-kos>.</span><span class=pl-c1>href</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>loginLink</span></td>
+      </tr>
+      <tr>
+        <td id="L265" class="blob-num js-line-number" data-line-number="265"></td>
+        <td id="LC265" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L266" class="blob-num js-line-number" data-line-number="266"></td>
+        <td id="LC266" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L267" class="blob-num js-line-number" data-line-number="267"></td>
+        <td id="LC267" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>logout</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L268" class="blob-num js-line-number" data-line-number="268"></td>
+        <td id="LC268" class="blob-code blob-code-inner js-file-line">    <span class=pl-s1>localStorage</span><span class=pl-kos>.</span><span class=pl-en>removeItem</span><span class=pl-kos>(</span><span class=pl-c1>LS_ACCESS_TOKEN_KEY</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L269" class="blob-num js-line-number" data-line-number="269"></td>
+        <td id="LC269" class="blob-code blob-code-inner js-file-line">    <span class=pl-s1>localStorage</span><span class=pl-kos>.</span><span class=pl-en>removeItem</span><span class=pl-kos>(</span><span class=pl-c1>LS_USER_KEY</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L270" class="blob-num js-line-number" data-line-number="270"></td>
+        <td id="LC270" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>user</span> <span class=pl-c1>=</span> <span class=pl-kos>{</span><span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L271" class="blob-num js-line-number" data-line-number="271"></td>
+        <td id="LC271" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L272" class="blob-num js-line-number" data-line-number="272"></td>
+        <td id="LC272" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L273" class="blob-num js-line-number" data-line-number="273"></td>
+        <td id="LC273" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>goto</span><span class=pl-kos>(</span><span class=pl-s1>page</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L274" class="blob-num js-line-number" data-line-number="274"></td>
+        <td id="LC274" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>currentPage</span> <span class=pl-c1>=</span> <span class=pl-s1>page</span></td>
+      </tr>
+      <tr>
+        <td id="L275" class="blob-num js-line-number" data-line-number="275"></td>
+        <td id="LC275" class="blob-code blob-code-inner js-file-line">    <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>comments</span> <span class=pl-c1>=</span> <span class=pl-c1>undefined</span></td>
+      </tr>
+      <tr>
+        <td id="L276" class="blob-num js-line-number" data-line-number="276"></td>
+        <td id="LC276" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-en>loadComments</span><span class=pl-kos>(</span><span class=pl-s1>page</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L277" class="blob-num js-line-number" data-line-number="277"></td>
+        <td id="LC277" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L278" class="blob-num js-line-number" data-line-number="278"></td>
+        <td id="LC278" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L279" class="blob-num js-line-number" data-line-number="279"></td>
+        <td id="LC279" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>like</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L280" class="blob-num js-line-number" data-line-number="280"></td>
+        <td id="LC280" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L281" class="blob-num js-line-number" data-line-number="281"></td>
+        <td id="LC281" class="blob-code blob-code-inner js-file-line">      <span class=pl-en>alert</span><span class=pl-kos>(</span><span class=pl-s>&#39;Login to Like&#39;</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L282" class="blob-num js-line-number" data-line-number="282"></td>
+        <td id="LC282" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>reject</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L283" class="blob-num js-line-number" data-line-number="283"></td>
+        <td id="LC283" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L284" class="blob-num js-line-number" data-line-number="284"></td>
+        <td id="LC284" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L285" class="blob-num js-line-number" data-line-number="285"></td>
+        <td id="LC285" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-kos>{</span> owner<span class=pl-kos>,</span> repo <span class=pl-kos>}</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span></td>
+      </tr>
+      <tr>
+        <td id="L286" class="blob-num js-line-number" data-line-number="286"></td>
+        <td id="LC286" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L287" class="blob-num js-line-number" data-line-number="287"></td>
+        <td id="LC287" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>post</span><span class=pl-kos>(</span><span class=pl-s>`/repos/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>owner</span><span class=pl-kos>}</span></span>/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>repo</span><span class=pl-kos>}</span></span>/issues/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span><span class=pl-kos>.</span><span class=pl-c1>number</span><span class=pl-kos>}</span></span>/reactions`</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L288" class="blob-num js-line-number" data-line-number="288"></td>
+        <td id="LC288" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>content</span>: <span class=pl-s>&#39;heart&#39;</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L289" class="blob-num js-line-number" data-line-number="289"></td>
+        <td id="LC289" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L290" class="blob-num js-line-number" data-line-number="290"></td>
+        <td id="LC290" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>reaction</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L291" class="blob-num js-line-number" data-line-number="291"></td>
+        <td id="LC291" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span><span class=pl-kos>.</span><span class=pl-en>push</span><span class=pl-kos>(</span><span class=pl-s1>reaction</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L292" class="blob-num js-line-number" data-line-number="292"></td>
+        <td id="LC292" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span><span class=pl-kos>.</span><span class=pl-c1>heart</span><span class=pl-c1>++</span></td>
+      </tr>
+      <tr>
+        <td id="L293" class="blob-num js-line-number" data-line-number="293"></td>
+        <td id="LC293" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L294" class="blob-num js-line-number" data-line-number="294"></td>
+        <td id="LC294" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L295" class="blob-num js-line-number" data-line-number="295"></td>
+        <td id="LC295" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L296" class="blob-num js-line-number" data-line-number="296"></td>
+        <td id="LC296" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>unlike</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L297" class="blob-num js-line-number" data-line-number="297"></td>
+        <td id="LC297" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span><span class=pl-kos>)</span> <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>reject</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L298" class="blob-num js-line-number" data-line-number="298"></td>
+        <td id="LC298" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L299" class="blob-num js-line-number" data-line-number="299"></td>
+        <td id="LC299" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L300" class="blob-num js-line-number" data-line-number="300"></td>
+        <td id="LC300" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-kos>{</span> user<span class=pl-kos>,</span> reactions <span class=pl-kos>}</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span></td>
+      </tr>
+      <tr>
+        <td id="L301" class="blob-num js-line-number" data-line-number="301"></td>
+        <td id="LC301" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>index</span> <span class=pl-c1>=</span> <span class=pl-s1>reactions</span><span class=pl-kos>.</span><span class=pl-en>findIndex</span><span class=pl-kos>(</span><span class=pl-s1>reaction</span> <span class=pl-c1>=&gt;</span> <span class=pl-s1>reaction</span><span class=pl-kos>.</span><span class=pl-c1>user</span><span class=pl-kos>.</span><span class=pl-c1>login</span> <span class=pl-c1>===</span> <span class=pl-s1>user</span><span class=pl-kos>.</span><span class=pl-c1>login</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L302" class="blob-num js-line-number" data-line-number="302"></td>
+        <td id="LC302" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>delete</span><span class=pl-kos>(</span><span class=pl-s>`/reactions/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>reactions</span><span class=pl-kos>[</span><span class=pl-s1>index</span><span class=pl-kos>]</span><span class=pl-kos>.</span><span class=pl-c1>id</span><span class=pl-kos>}</span></span>`</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L303" class="blob-num js-line-number" data-line-number="303"></td>
+        <td id="LC303" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L304" class="blob-num js-line-number" data-line-number="304"></td>
+        <td id="LC304" class="blob-code blob-code-inner js-file-line">        <span class=pl-s1>reactions</span><span class=pl-kos>.</span><span class=pl-en>splice</span><span class=pl-kos>(</span><span class=pl-s1>index</span><span class=pl-kos>,</span> <span class=pl-c1>1</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L305" class="blob-num js-line-number" data-line-number="305"></td>
+        <td id="LC305" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>meta</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span><span class=pl-kos>.</span><span class=pl-c1>heart</span><span class=pl-c1>--</span></td>
+      </tr>
+      <tr>
+        <td id="L306" class="blob-num js-line-number" data-line-number="306"></td>
+        <td id="LC306" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L307" class="blob-num js-line-number" data-line-number="307"></td>
+        <td id="LC307" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L308" class="blob-num js-line-number" data-line-number="308"></td>
+        <td id="LC308" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L309" class="blob-num js-line-number" data-line-number="309"></td>
+        <td id="LC309" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>likeAComment</span><span class=pl-kos>(</span><span class=pl-s1>commentId</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L310" class="blob-num js-line-number" data-line-number="310"></td>
+        <td id="LC310" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L311" class="blob-num js-line-number" data-line-number="311"></td>
+        <td id="LC311" class="blob-code blob-code-inner js-file-line">      <span class=pl-en>alert</span><span class=pl-kos>(</span><span class=pl-s>&#39;Login to Like&#39;</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L312" class="blob-num js-line-number" data-line-number="312"></td>
+        <td id="LC312" class="blob-code blob-code-inner js-file-line">      <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>reject</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L313" class="blob-num js-line-number" data-line-number="313"></td>
+        <td id="LC313" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L314" class="blob-num js-line-number" data-line-number="314"></td>
+        <td id="LC314" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L315" class="blob-num js-line-number" data-line-number="315"></td>
+        <td id="LC315" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-kos>{</span> owner<span class=pl-kos>,</span> repo <span class=pl-kos>}</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span></td>
+      </tr>
+      <tr>
+        <td id="L316" class="blob-num js-line-number" data-line-number="316"></td>
+        <td id="LC316" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>comment</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>comments</span><span class=pl-kos>.</span><span class=pl-en>find</span><span class=pl-kos>(</span><span class=pl-s1>comment</span> <span class=pl-c1>=&gt;</span> <span class=pl-s1>comment</span><span class=pl-kos>.</span><span class=pl-c1>id</span> <span class=pl-c1>===</span> <span class=pl-s1>commentId</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L317" class="blob-num js-line-number" data-line-number="317"></td>
+        <td id="LC317" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L318" class="blob-num js-line-number" data-line-number="318"></td>
+        <td id="LC318" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>post</span><span class=pl-kos>(</span><span class=pl-s>`/repos/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>owner</span><span class=pl-kos>}</span></span>/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>repo</span><span class=pl-kos>}</span></span>/issues/comments/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>commentId</span><span class=pl-kos>}</span></span>/reactions`</span><span class=pl-kos>,</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L319" class="blob-num js-line-number" data-line-number="319"></td>
+        <td id="LC319" class="blob-code blob-code-inner js-file-line">      <span class=pl-c1>content</span>: <span class=pl-s>&#39;heart&#39;</span><span class=pl-kos>,</span></td>
+      </tr>
+      <tr>
+        <td id="L320" class="blob-num js-line-number" data-line-number="320"></td>
+        <td id="LC320" class="blob-code blob-code-inner js-file-line">    <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L321" class="blob-num js-line-number" data-line-number="321"></td>
+        <td id="LC321" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-s1>reaction</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L322" class="blob-num js-line-number" data-line-number="322"></td>
+        <td id="LC322" class="blob-code blob-code-inner js-file-line">        <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>commentReactions</span><span class=pl-kos>[</span><span class=pl-s1>commentId</span><span class=pl-kos>]</span><span class=pl-kos>.</span><span class=pl-en>push</span><span class=pl-kos>(</span><span class=pl-s1>reaction</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L323" class="blob-num js-line-number" data-line-number="323"></td>
+        <td id="LC323" class="blob-code blob-code-inner js-file-line">        <span class=pl-s1>comment</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span><span class=pl-kos>.</span><span class=pl-c1>heart</span><span class=pl-c1>++</span></td>
+      </tr>
+      <tr>
+        <td id="L324" class="blob-num js-line-number" data-line-number="324"></td>
+        <td id="LC324" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L325" class="blob-num js-line-number" data-line-number="325"></td>
+        <td id="LC325" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L326" class="blob-num js-line-number" data-line-number="326"></td>
+        <td id="LC326" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L327" class="blob-num js-line-number" data-line-number="327"></td>
+        <td id="LC327" class="blob-code blob-code-inner js-file-line">  <span class=pl-en>unlikeAComment</span><span class=pl-kos>(</span><span class=pl-s1>commentId</span><span class=pl-kos>)</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L328" class="blob-num js-line-number" data-line-number="328"></td>
+        <td id="LC328" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>if</span> <span class=pl-kos>(</span><span class=pl-c1>!</span><span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>accessToken</span><span class=pl-kos>)</span> <span class=pl-k>return</span> <span class=pl-v>Promise</span><span class=pl-kos>.</span><span class=pl-en>reject</span><span class=pl-kos>(</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L329" class="blob-num js-line-number" data-line-number="329"></td>
+        <td id="LC329" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L330" class="blob-num js-line-number" data-line-number="330"></td>
+        <td id="LC330" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>reactions</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>commentReactions</span><span class=pl-kos>[</span><span class=pl-s1>commentId</span><span class=pl-kos>]</span></td>
+      </tr>
+      <tr>
+        <td id="L331" class="blob-num js-line-number" data-line-number="331"></td>
+        <td id="LC331" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>comment</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span><span class=pl-kos>.</span><span class=pl-c1>comments</span><span class=pl-kos>.</span><span class=pl-en>find</span><span class=pl-kos>(</span><span class=pl-s1>comment</span> <span class=pl-c1>=&gt;</span> <span class=pl-s1>comment</span><span class=pl-kos>.</span><span class=pl-c1>id</span> <span class=pl-c1>===</span> <span class=pl-s1>commentId</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L332" class="blob-num js-line-number" data-line-number="332"></td>
+        <td id="LC332" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-kos>{</span> user <span class=pl-kos>}</span> <span class=pl-c1>=</span> <span class=pl-smi>this</span><span class=pl-kos>.</span><span class=pl-c1>state</span></td>
+      </tr>
+      <tr>
+        <td id="L333" class="blob-num js-line-number" data-line-number="333"></td>
+        <td id="LC333" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>const</span> <span class=pl-s1>index</span> <span class=pl-c1>=</span> <span class=pl-s1>reactions</span><span class=pl-kos>.</span><span class=pl-en>findIndex</span><span class=pl-kos>(</span><span class=pl-s1>reaction</span> <span class=pl-c1>=&gt;</span> <span class=pl-s1>reaction</span><span class=pl-kos>.</span><span class=pl-c1>user</span><span class=pl-kos>.</span><span class=pl-c1>login</span> <span class=pl-c1>===</span> <span class=pl-s1>user</span><span class=pl-kos>.</span><span class=pl-c1>login</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L334" class="blob-num js-line-number" data-line-number="334"></td>
+        <td id="LC334" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L335" class="blob-num js-line-number" data-line-number="335"></td>
+        <td id="LC335" class="blob-code blob-code-inner js-file-line">    <span class=pl-k>return</span> <span class=pl-s1>http</span><span class=pl-kos>.</span><span class=pl-en>delete</span><span class=pl-kos>(</span><span class=pl-s>`/reactions/<span class=pl-s1><span class=pl-kos>${</span><span class=pl-s1>reactions</span><span class=pl-kos>[</span><span class=pl-s1>index</span><span class=pl-kos>]</span><span class=pl-kos>.</span><span class=pl-c1>id</span><span class=pl-kos>}</span></span>`</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L336" class="blob-num js-line-number" data-line-number="336"></td>
+        <td id="LC336" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>.</span><span class=pl-en>then</span><span class=pl-kos>(</span><span class=pl-kos>(</span><span class=pl-kos>)</span> <span class=pl-c1>=&gt;</span> <span class=pl-kos>{</span></td>
+      </tr>
+      <tr>
+        <td id="L337" class="blob-num js-line-number" data-line-number="337"></td>
+        <td id="LC337" class="blob-code blob-code-inner js-file-line">        <span class=pl-s1>reactions</span><span class=pl-kos>.</span><span class=pl-en>splice</span><span class=pl-kos>(</span><span class=pl-s1>index</span><span class=pl-kos>,</span> <span class=pl-c1>1</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L338" class="blob-num js-line-number" data-line-number="338"></td>
+        <td id="LC338" class="blob-code blob-code-inner js-file-line">        <span class=pl-s1>comment</span><span class=pl-kos>.</span><span class=pl-c1>reactions</span><span class=pl-kos>.</span><span class=pl-c1>heart</span><span class=pl-c1>--</span></td>
+      </tr>
+      <tr>
+        <td id="L339" class="blob-num js-line-number" data-line-number="339"></td>
+        <td id="LC339" class="blob-code blob-code-inner js-file-line">      <span class=pl-kos>}</span><span class=pl-kos>)</span></td>
+      </tr>
+      <tr>
+        <td id="L340" class="blob-num js-line-number" data-line-number="340"></td>
+        <td id="LC340" class="blob-code blob-code-inner js-file-line">  <span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L341" class="blob-num js-line-number" data-line-number="341"></td>
+        <td id="LC341" class="blob-code blob-code-inner js-file-line"><span class=pl-kos>}</span></td>
+      </tr>
+      <tr>
+        <td id="L342" class="blob-num js-line-number" data-line-number="342"></td>
+        <td id="LC342" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="L343" class="blob-num js-line-number" data-line-number="343"></td>
+        <td id="LC343" class="blob-code blob-code-inner js-file-line"><span class=pl-smi>module</span><span class=pl-kos>.</span><span class=pl-c1>exports</span> <span class=pl-c1>=</span> <span class=pl-v>Gitment</span></td>
+      </tr>
+</table>
+
+  <details class="details-reset details-overlay BlobToolbar position-absolute js-file-line-actions dropdown d-none" aria-hidden="true">
+    <summary class="btn-octicon ml-0 px-2 p-0 color-bg-primary border color-border-tertiary rounded-1" aria-label="Inline file action toolbar">
+      <svg class="octicon octicon-kebab-horizontal" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM1.5 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm13 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>
+    </summary>
+    <details-menu>
+      <ul class="BlobToolbar-dropdown dropdown-menu dropdown-menu-se mt-2" style="width:185px">
+        <li>
+          <clipboard-copy role="menuitem" class="dropdown-item" id="js-copy-lines" style="cursor:pointer;">
+            Copy lines
+          </clipboard-copy>
+        </li>
+        <li>
+          <clipboard-copy role="menuitem" class="dropdown-item" id="js-copy-permalink" style="cursor:pointer;">
+            Copy permalink
+          </clipboard-copy>
+        </li>
+        <li><a class="dropdown-item js-update-url-with-hash" id="js-view-git-blame" role="menuitem" href="/imsun/gitment/blame/474ab9738d73e894c49168cc7946e8f32aa72cd2/src/gitment.js">View git blame</a></li>
+          <li><a class="dropdown-item" id="js-new-issue" role="menuitem" href="/imsun/gitment/issues/new">Reference in new issue</a></li>
+      </ul>
+    </details-menu>
+  </details>
+
+  </div>
+
+    </div>
+
+  
+
+  <details class="details-reset details-overlay details-overlay-dark" id="jumpto-line-details-dialog">
+    <summary data-hotkey="l" aria-label="Jump to line"></summary>
+    <details-dialog class="Box Box--overlay d-flex flex-column anim-fade-in fast linejump" aria-label="Jump to line">
+      <!-- '"` --><!-- </textarea></xmp> --></option></form><form class="js-jump-to-line-form Box-body d-flex" action="" accept-charset="UTF-8" method="get">
+        <input class="form-control flex-auto mr-3 linejump-input js-jump-to-line-field" type="text" placeholder="Jump to line&hellip;" aria-label="Jump to line" autofocus>
+        <button type="submit" class="btn" data-close-dialog>Go</button>
+</form>    </details-dialog>
+  </details>
+
+    <div class="Popover anim-scale-in js-tagsearch-popover"
+     hidden
+     data-tagsearch-url="/imsun/gitment/find-definition"
+     data-tagsearch-ref="master"
+     data-tagsearch-path="src/gitment.js"
+     data-tagsearch-lang="JavaScript"
+     data-hydro-click="{&quot;event_type&quot;:&quot;code_navigation.click_on_symbol&quot;,&quot;payload&quot;:{&quot;action&quot;:&quot;click_on_symbol&quot;,&quot;repository_id&quot;:86265277,&quot;ref&quot;:&quot;master&quot;,&quot;language&quot;:&quot;JavaScript&quot;,&quot;originating_url&quot;:&quot;https://github.com/imsun/gitment/blob/master/src/gitment.js&quot;,&quot;user_id&quot;:null}}"
+     data-hydro-click-hmac="095bccdbaedb1a0e3ef7a48e26d8d67c5f44024740eb499f8bcccb49d898ee7e">
+  <div class="Popover-message Popover-message--large Popover-message--top-left TagsearchPopover mt-1 mb-4 mx-auto Box color-shadow-large">
+    <div class="TagsearchPopover-content js-tagsearch-popover-content overflow-auto" style="will-change:transform;">
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+
+
+  </div>
+</div>
+
+    </main>
+  </div>
+
+  </div>
+
+          
+<div class="footer container-xl width-full p-responsive" role="contentinfo">
+  <div class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between pt-6 pb-2 mt-6 f6 color-text-secondary border-top color-border-secondary ">
+    <ul class="list-style-none d-flex flex-wrap col-12 col-lg-5 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      <li class="mr-3 mr-lg-0">&copy; 2021 GitHub, Inc.</li>
+        <li class="mr-3 mr-lg-0"><a href="https://docs.github.com/en/github/site-policy/github-terms-of-service" data-ga-click="Footer, go to terms, text:terms">Terms</a></li>
+        <li class="mr-3 mr-lg-0"><a href="https://docs.github.com/en/github/site-policy/github-privacy-statement" data-ga-click="Footer, go to privacy, text:privacy">Privacy</a></li>
+        <li class="mr-3 mr-lg-0"><a data-ga-click="Footer, go to security, text:security" href="https://github.com/security">Security</a></li>
+        <li class="mr-3 mr-lg-0"><a href="https://www.githubstatus.com/" data-ga-click="Footer, go to status, text:status">Status</a></li>
+        <li><a data-ga-click="Footer, go to help, text:Docs" href="https://docs.github.com">Docs</a></li>
+    </ul>
+
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mx-lg-4" href="https://github.com">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+</a>
+    <ul class="list-style-none d-flex flex-wrap col-12 col-lg-5 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+        <li class="mr-3 mr-lg-0"><a href="https://support.github.com" data-ga-click="Footer, go to contact, text:contact">Contact GitHub</a></li>
+        <li class="mr-3 mr-lg-0"><a href="https://github.com/pricing" data-ga-click="Footer, go to Pricing, text:Pricing">Pricing</a></li>
+      <li class="mr-3 mr-lg-0"><a href="https://docs.github.com" data-ga-click="Footer, go to api, text:api">API</a></li>
+      <li class="mr-3 mr-lg-0"><a href="https://services.github.com" data-ga-click="Footer, go to training, text:training">Training</a></li>
+        <li class="mr-3 mr-lg-0"><a href="https://github.blog" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
+        <li><a data-ga-click="Footer, go to about, text:about" href="https://github.com/about">About</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 color-text-tertiary"></span>
+  </div>
+
+  
+</div>
+
+
+
+  <div id="ajax-error-message" class="ajax-error-message flash flash-error" hidden>
+    <svg class="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+    <button type="button" class="flash-close js-ajax-error-dismiss" aria-label="Dismiss error">
+      <svg class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+    </button>
+    You can’t perform that action at this time.
+  </div>
+
+  <div class="js-stale-session-flash flash flash-warn flash-banner" hidden
+    >
+    <svg class="octicon octicon-alert" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+    <span class="js-stale-session-flash-signed-in" hidden>You signed in with another tab or window. <a href="">Reload</a> to refresh your session.</span>
+    <span class="js-stale-session-flash-signed-out" hidden>You signed out in another tab or window. <a href="">Reload</a> to refresh your session.</span>
+  </div>
+    <template id="site-details-dialog">
+  <details class="details-reset details-overlay details-overlay-dark lh-default color-text-primary hx_rsm" open>
+    <summary role="button" aria-label="Close dialog"></summary>
+    <details-dialog class="Box Box--overlay d-flex flex-column anim-fade-in fast hx_rsm-dialog hx_rsm-modal">
+      <button class="Box-btn-octicon m-0 btn-octicon position-absolute right-0 top-0" type="button" aria-label="Close dialog" data-close-dialog>
+        <svg class="octicon octicon-x" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path></svg>
+      </button>
+      <div class="octocat-spinner my-6 js-details-dialog-spinner"></div>
+    </details-dialog>
+  </details>
+</template>
+
+    <div class="Popover js-hovercard-content position-absolute" style="display: none; outline: none;" tabindex="0">
+  <div class="Popover-message Popover-message--bottom-left Popover-message--large Box color-shadow-large" style="width:360px;">
+  </div>
+</div>
+
+
+
+
+  </body>
+</html>
+
