@@ -1,6 +1,6 @@
 ---
 layout: post
-title: search zombie
+title: search zombie process
 tags: [ linux ]
 categories: linux
 ---
