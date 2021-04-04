@@ -85,13 +85,13 @@ build_prompt() {
 
 prompt_newline() {
   if [[ -n $CURRENT_BG ]]; then
-    echo -n "%{%k%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR
+    echo -n "{% raw %}%{%k%F{$CURRENT_BG}%}{% endraw %}$SEGMENT_SEPARATOR
 %(?.%F{$CURRENT_BG}.%F{red})❯%f"
   else
-    echo -n "%{%k%}"
+    echo -n "{% raw %}%{%k%}{% endraw %}"
   fi
 
-  echo -n "%{%f%}"
+  echo -n "{% raw %}%{%f%}{% endraw %}"
   CURRENT_BG=''
 }
 ```
