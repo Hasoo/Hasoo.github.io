@@ -16,6 +16,7 @@ categories: db
 > \> vi $ORACLE_HOME/network/admin/sqlnet.ora
 >
 > SQLNET.ALLOWED_LOGON_VERSION_SERVER=11
+>
 > SQLNET.ALLOWED_LOGON_VERSION_CLIENT=11
 
 > \> lsnrctl stop && lsnrctl start
